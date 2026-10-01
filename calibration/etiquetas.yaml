@@ -1,0 +1,619 @@
+# Etiquetas del set de calibración (E-04).
+# autor: claude-opus-5.5 = etiquetada por Claude (que también escribió las candidatas);
+#        mano = confirmada o cambiada por una persona con bench/e04_etiquetar.py.
+# revisar: true = discutible o dependiente de la guía; conviene que la mire una persona.
+etiquetas:
+  C001:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C002:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: 'Mismo modelo: añadir un campo opcional mientras otro renombra otro campo.
+      Git probablemente marcará conflicto textual; semánticamente no chocan.'
+    fecha: '2026-09-28T15:58:07+00:00'
+    revisar: true
+  C003:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C004:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C005:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C006:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C007:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C008:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C009:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C010:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C011:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C012:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C013:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C014:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C015:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C016:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C017:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C018:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C019:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C020:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C021:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C022:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C023:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C024:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C025:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C026:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C027:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C028:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C029:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C030:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C031:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C032:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C033:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C034:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C035:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C036:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C037:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C038:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C039:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C040:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C041:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C042:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C043:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C044:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C045:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C046:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C047:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C048:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C049:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C050:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C051:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C052:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C053:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C054:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C055:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C056:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C057:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C058:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C059:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C060:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C061:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C062:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C063:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C064:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C065:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: 'Leer un fichero que otro está cambiando: la lectura no rompe nada, pero
+      el agente construirá sobre información que va a quedar vieja. La guía dice no_choca.'
+    fecha: '2026-09-28T15:58:07+00:00'
+    revisar: true
+  C066:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C067:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C068:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C069:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C070:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C071:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C072:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C073:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C074:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C075:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C076:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C077:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ruff format . no cambia el contenido del otro, solo el formato; pero su
+      siguiente Edit puede no encontrar el texto y tener que releer. Lo cuento como
+      sobrescribir trabajo en curso.
+    fecha: '2026-09-28T15:58:07+00:00'
+    revisar: true
+  C078:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C079:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C080:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: El sed puede incluso 'arreglar' el fichero del otro si ya existe; si lo
+      escribe después, queda roto. En ambos casos el trabajo del otro cambia bajo
+      sus pies.
+    fecha: '2026-09-28T15:58:07+00:00'
+    revisar: true
+  C081:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C082:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C083:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C084:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C085:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C086:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C087:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C088:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C089:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C090:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C091:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: 'Dos uv add a la vez: uv bloquea el entorno, pero las escrituras de pyproject.toml
+      y uv.lock pueden pisarse. Depende de la implementación de uv.'
+    fecha: '2026-09-28T15:58:07+00:00'
+    revisar: true
+  C092:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C093:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C094:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C095:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C096:
+    etiqueta: choca
+    propuesta: choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C097:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: 'Dos Edit en secciones distintas del mismo fichero: el riesgo de carrera
+      es mínimo. Lo dejo en no_choca.'
+    fecha: '2026-09-28T15:58:07+00:00'
+    revisar: true
+  C098:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C099:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'
+  C100:
+    etiqueta: no_choca
+    propuesta: no_choca
+    autor: claude-opus-5.5
+    nota: ''
+    fecha: '2026-09-28T15:58:07+00:00'

@@ -1,0 +1,250 @@
+{
+  "mode": "D",
+  "decisor": "jev",
+  "run_id": "d1",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "umbrales": {
+    "umbral_bajo": 0.2,
+    "umbral_alto": 0.8,
+    "umbral_aviso": 0.5,
+    "espera_max": 60
+  },
+  "started_at": "2026-09-29T07:54:39Z",
+  "completed": true,
+  "wall_time_s": 232.0,
+  "base_sha": "4d9123b711bb80098c1c526ae29ea00300d5a406",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 157.0
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 66.8
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 138.5,
+      "cost_usd": 0.28099870000000005,
+      "num_turns": 17,
+      "session_id": "22a988fa-25d5-4bdb-bb59-706e459e5172",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 34,
+        "output_tokens": 6550,
+        "cache_read_input_tokens": 764516,
+        "cache_creation_input_tokens": 25011
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 97.3,
+      "cost_usd": 0.1218429,
+      "num_turns": 13,
+      "session_id": "30d4a88b-4bfb-4114-8ecd-afddb2dd61c2",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 12,
+        "output_tokens": 2301,
+        "cache_read_input_tokens": 240732,
+        "cache_creation_input_tokens": 20265
+      }
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 134.4,
+      "cost_usd": 0.20902040000000002,
+      "num_turns": 18,
+      "session_id": "36389d7e-1ee6-4b3a-bcd5-b5fc54969d68",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 22,
+        "output_tokens": 4726,
+        "cache_read_input_tokens": 485482,
+        "cache_creation_input_tokens": 25848
+      }
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 156.8,
+      "cost_usd": 0.2310918,
+      "num_turns": 18,
+      "session_id": "08f21114-3e53-4064-bb8f-a8f47672c88f",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 26,
+        "output_tokens": 5324,
+        "cache_read_input_tokens": 576149,
+        "cache_creation_input_tokens": 25028
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 53.0,
+      "cost_usd": 0.1465516,
+      "num_turns": 12,
+      "session_id": "ae90cdca-4bb2-490c-926d-50043b3d619e",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 2208,
+        "cache_read_input_tokens": 494643,
+        "cache_creation_input_tokens": 10198
+      }
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 66.5,
+      "cost_usd": 0.1905031,
+      "num_turns": 15,
+      "session_id": "9a06c21e-18cc-4294-9db9-bec71ee23956",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 30,
+        "output_tokens": 3367,
+        "cache_read_input_tokens": 633753,
+        "cache_creation_input_tokens": 12009
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 94,
+    "decisiones_modelo": 51,
+    "por_decisor": {
+      "jev": 51,
+      "regla": 28,
+      "sonnet": 15
+    },
+    "latencia_p50_ms": 297.7309999987483,
+    "latencia_p95_ms": 616.1372910137288,
+    "coste_decisiones_usd": 0.167032,
+    "escaladas_sonnet": 15,
+    "escaladas_opus": 0,
+    "reservas": 0,
+    "errores_decisor": 0,
+    "esperas": [
+      {
+        "agente": "A2",
+        "espera_a": "A1",
+        "recurso": "app/routes_export.py",
+        "estado": "avisado",
+        "segundos": 101.9
+      },
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "app/consultas.py",
+        "estado": "avisado",
+        "segundos": 94.6
+      },
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "app/consultas.py",
+        "estado": "concedido",
+        "segundos": 16.9
+      }
+    ],
+    "avisos_posibles": 50,
+    "avisos_enviados": 11,
+    "pares_con_espera": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "pares_con_aviso": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": []
+  },
+  "totals": {
+    "agents_cost_usd": 1.18,
+    "decision_cost_usd": 0.167032,
+    "cost_usd": 1.347,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/d1/repo",
+    "timestamp": "2026-09-29T07:58:31+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 0,
+        "failed": 5,
+        "failed_tests": [
+          "_acceptance.test_t2::test_export_csv",
+          "_acceptance.test_t2::test_export_sin_reservas_solo_cabecera",
+          "_acceptance.test_t2::test_export_sin_credenciales",
+          "_acceptance.test_t2::test_export_contrasena_incorrecta",
+          "_acceptance.test_t2::test_export_valida_con_login"
+        ]
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 3,
+      "failed": 2,
+      "failed_tests": [
+        "_acceptance.test_integration::test_export_con_otp_y_campo_renombrado",
+        "_acceptance.test_integration::test_export_exige_segundo_factor"
+      ]
+    },
+    "total": {
+      "passed": 30,
+      "failed": 7
+    },
+    "all_green": false
+  },
+  "red_tests": 7
+}

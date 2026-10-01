@@ -1,0 +1,12 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+*.db
+.pytest_cache/
+*.db-wal
+*.db-shm
+# Los resultados sí se publican, incluidas las bases de datos de Médula de cada ejecución.
+!results/**/*.db
+# Scripts locales de producción (no forman parte del experimento).
+bench/grabaciones/

@@ -1,0 +1,445 @@
+diff --git a/app/auth.py b/app/auth.py
+index f11d49a..100212a 100644
+--- a/app/auth.py
++++ b/app/auth.py
+@@ -1,7 +1,11 @@
+-"""Autenticación: login con usuario y contraseña y sesiones en memoria."""
++"""Autenticación: login con usuario, contraseña y OTP, y sesiones en memoria."""
+ import secrets
+ from dataclasses import dataclass
+ 
++import pyotp
++from fastapi import Header
++
++import app.auth
+ from app.config import USERS
+ 
+ 
+@@ -18,11 +22,33 @@ class Session:
+ _sessions: dict[str, Session] = {}
+ 
+ 
+-def login(username: str, password: str) -> Session:
+-    """Valida las credenciales y abre una sesión. Lanza AuthError si no son válidas."""
++def verificar_otp(username: str, code: str) -> bool:
++    """Comprueba un código TOTP (RFC 6238, pasos de 30s, tolerancia ±1 paso)."""
++    user = USERS.get(username)
++    if user is None or not code:
++        return False
++    totp = pyotp.TOTP(user["otp_secret"])
++    return totp.verify(code, valid_window=1)
++
++
++def otp_header(x_otp: str = Header(default="", alias="X-OTP")) -> str:
++    """Dependencia de FastAPI que lee el OTP de la cabecera X-OTP.
++
++    Regla general: todo endpoint que autentique con usuario y contraseña
++    exige además el OTP. En POST /login se envía como campo `otp` del
++    body; en cualquier otro endpoint se envía en la cabecera X-OTP y se
++    lee con esta dependencia.
++    """
++    return x_otp
++
++
++def login(username: str, password: str, otp: str) -> Session:
++    """Valida credenciales y OTP y abre una sesión. Lanza AuthError si no son válidos."""
+     user = USERS.get(username)
+     if user is None or not secrets.compare_digest(user["password"], password):
+         raise AuthError("credenciales invalidas")
++    if not otp or not app.auth.verificar_otp(username, otp):
++        raise AuthError("otp invalido")
+     session = Session(token=secrets.token_urlsafe(24), username=username)
+     _sessions[session.token] = session
+     return session
+diff --git a/app/config.py b/app/config.py
+index 6355a58..a05beb9 100644
+--- a/app/config.py
++++ b/app/config.py
+@@ -3,8 +3,8 @@ import os
+ 
+ # Usuarios de demo: nombre -> datos de acceso.
+ USERS = {
+-    "alice": {"password": "alice-pass"},
+-    "bob": {"password": "bob-pass"},
++    "alice": {"password": "alice-pass", "otp_secret": "JBSWY3DPEHPK3PXP"},
++    "bob": {"password": "bob-pass", "otp_secret": "KRSXG5CTMVRXEZLU"},
+ }
+ 
+ SALAS = ("Atlas", "Boreal", "Cierzo")
+diff --git a/app/consultas.py b/app/consultas.py
+new file mode 100644
+index 0000000..991c1e0
+--- /dev/null
++++ b/app/consultas.py
+@@ -0,0 +1,15 @@
++"""Consultas filtradas sobre reservas."""
++from datetime import date
++
++from app import db
++from app.models import Reserva
++
++
++def listar_reservas_desde(desde: date) -> list[Reserva]:
++    with db.conectar() as conn:
++        filas = conn.execute(
++            "SELECT id, sala, inicio, duracion_min, usuario FROM reservas "
++            "WHERE inicio >= ? ORDER BY inicio",
++            (desde.isoformat(),),
++        ).fetchall()
++    return [Reserva(**dict(f)) for f in filas]
+diff --git a/app/db.py b/app/db.py
+index f99cb5c..eeca3fa 100644
+--- a/app/db.py
++++ b/app/db.py
+@@ -24,7 +24,7 @@ def init_db() -> None:
+             CREATE TABLE IF NOT EXISTS reservas (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 sala TEXT NOT NULL,
+-                fecha TEXT NOT NULL,
++                inicio TEXT NOT NULL,
+                 duracion_min INTEGER NOT NULL,
+                 usuario TEXT NOT NULL
+             )
+@@ -35,8 +35,8 @@ def init_db() -> None:
+ def insertar_reserva(r: ReservaIn, usuario: str) -> Reserva:
+     with conectar() as conn:
+         cur = conn.execute(
+-            "INSERT INTO reservas (sala, fecha, duracion_min, usuario) VALUES (?, ?, ?, ?)",
+-            (r.sala, r.fecha.isoformat(), r.duracion_min, usuario),
++            "INSERT INTO reservas (sala, inicio, duracion_min, usuario) VALUES (?, ?, ?, ?)",
++            (r.sala, r.inicio.isoformat(), r.duracion_min, usuario),
+         )
+         return Reserva(id=cur.lastrowid, usuario=usuario, **r.model_dump())
+ 
+@@ -44,6 +44,6 @@ def insertar_reserva(r: ReservaIn, usuario: str) -> Reserva:
+ def listar_reservas() -> list[Reserva]:
+     with conectar() as conn:
+         filas = conn.execute(
+-            "SELECT id, sala, fecha, duracion_min, usuario FROM reservas ORDER BY fecha"
++            "SELECT id, sala, inicio, duracion_min, usuario FROM reservas ORDER BY inicio"
+         ).fetchall()
+     return [Reserva(**dict(f)) for f in filas]
+diff --git a/app/models.py b/app/models.py
+index cd32894..460aba5 100644
+--- a/app/models.py
++++ b/app/models.py
+@@ -6,7 +6,7 @@ from pydantic import BaseModel
+ 
+ class ReservaIn(BaseModel):
+     sala: str
+-    fecha: datetime  # inicio de la reserva
++    inicio: datetime
+     duracion_min: int
+ 
+ 
+diff --git a/app/routes_auth.py b/app/routes_auth.py
+index 176c71f..9d22c05 100644
+--- a/app/routes_auth.py
++++ b/app/routes_auth.py
+@@ -9,12 +9,13 @@ router = APIRouter()
+ class LoginIn(BaseModel):
+     username: str
+     password: str
++    otp: str = ""
+ 
+ 
+ @router.post("/login")
+ def post_login(body: LoginIn) -> dict:
+     try:
+-        session = login(body.username, body.password)
++        session = login(body.username, body.password, body.otp)
+     except AuthError:
+         raise HTTPException(status_code=401, detail="credenciales invalidas")
+     return {"token": session.token}
+diff --git a/app/routes_consulta.py b/app/routes_consulta.py
+index 9a7da68..bca4ecc 100644
+--- a/app/routes_consulta.py
++++ b/app/routes_consulta.py
+@@ -1,12 +1,16 @@
+ """Consulta pública de reservas."""
++from datetime import date
++
+ from fastapi import APIRouter
+ 
+-from app import db
++from app import consultas, db
+ from app.models import Reserva
+ 
+ router = APIRouter()
+ 
+ 
+ @router.get("/reservas")
+-def listar_reservas() -> list[Reserva]:
+-    return db.listar_reservas()
++def listar_reservas(desde: date | None = None) -> list[Reserva]:
++    if desde is None:
++        return db.listar_reservas()
++    return consultas.listar_reservas_desde(desde)
+diff --git a/app/routes_reservas.py b/app/routes_reservas.py
+index 5d00d94..07dcb77 100644
+--- a/app/routes_reservas.py
++++ b/app/routes_reservas.py
+@@ -21,7 +21,7 @@ def sesion_actual(authorization: str | None = Header(default=None)) -> Session:
+ def crear_reserva(r: ReservaIn, session: Session = Depends(sesion_actual)) -> Reserva:
+     try:
+         validar_sala(r.sala)
+-        validar_horario(r.fecha, r.duracion_min)
++        validar_horario(r.inicio, r.duracion_min)
+     except ValidationError as e:
+         raise HTTPException(status_code=422, detail=str(e))
+     return db.insertar_reserva(r, session.username)
+diff --git a/app/validators.py b/app/validators.py
+index ffca5ea..0eb164d 100644
+--- a/app/validators.py
++++ b/app/validators.py
+@@ -13,15 +13,20 @@ class ValidationError(Exception):
+ 
+ def validar_sala(sala: str) -> None:
+     if not sala:
+-        raise ValidationError("sala requerida")
++        raise ValidationError("La sala es obligatoria.")
+     if sala not in SALAS:
+-        raise ValidationError("sala invalida")
++        salas_disponibles = ", ".join(SALAS)
++        raise ValidationError(
++            f"La sala «{sala}» no existe. Salas disponibles: {salas_disponibles}."
++        )
+ 
+ 
+ # --- Parámetros de reserva -------------------------------------------------
+ 
+ DURACION_MAXIMA_MIN = 240
+ MINUTOS_PERMITIDOS = (0, 30)
++HORA_APERTURA_MIN = 8 * 60
++HORA_CIERRE_MIN = 20 * 60
+ 
+ 
+ def _es_duracion_valida(duracion_min: int) -> bool:
+@@ -36,3 +41,7 @@ def validar_horario(fecha: datetime, duracion_min: int) -> None:
+         raise ValidationError("duracion invalida")
+     if fecha.minute not in MINUTOS_PERMITIDOS or fecha.second or fecha.microsecond:
+         raise ValidationError("minutos invalidos")
++    inicio_min = fecha.hour * 60 + fecha.minute
++    fin_min = inicio_min + duracion_min
++    if inicio_min < HORA_APERTURA_MIN or fin_min > HORA_CIERRE_MIN:
++        raise ValidationError("fuera de horario (8:00-20:00)")
+diff --git a/tests/conftest.py b/tests/conftest.py
+index 0a829b1..3e1739b 100644
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -1,3 +1,4 @@
++import pyotp
+ import pytest
+ from fastapi.testclient import TestClient
+ 
+@@ -13,7 +14,8 @@ def client(tmp_path, monkeypatch):
+ 
+ @pytest.fixture
+ def token(client):
+-    r = client.post("/login", json={"username": "alice", "password": "alice-pass"})
++    otp = pyotp.TOTP("JBSWY3DPEHPK3PXP").now()
++    r = client.post("/login", json={"username": "alice", "password": "alice-pass", "otp": otp})
+     return r.json()["token"]
+ 
+ 
+diff --git a/tests/test_auth.py b/tests/test_auth.py
+index 6c2a82c..0a184cf 100644
+--- a/tests/test_auth.py
++++ b/tests/test_auth.py
+@@ -1,21 +1,58 @@
++import pyotp
+ import pytest
+ 
++import app.auth as auth_module
+ from app.auth import AuthError, get_session, login
+ 
++ALICE_SECRET = "JBSWY3DPEHPK3PXP"
++
++
++def _otp(secret: str = ALICE_SECRET) -> str:
++    return pyotp.TOTP(secret).now()
++
+ 
+ def test_login_correcto_abre_sesion():
+-    s = login("alice", "alice-pass")
++    s = login("alice", "alice-pass", _otp())
+     assert s.username == "alice"
+     assert get_session(s.token) == s
+ 
+ 
+ def test_login_incorrecto():
+     with pytest.raises(AuthError):
+-        login("alice", "mal")
++        login("alice", "mal", _otp())
++    with pytest.raises(AuthError):
++        login("nadie", "alice-pass", _otp())
++
++
++def test_login_con_otp_invalido_o_vacio_falla():
++    with pytest.raises(AuthError):
++        login("alice", "alice-pass", "000000")
+     with pytest.raises(AuthError):
+-        login("nadie", "alice-pass")
++        login("alice", "alice-pass", "")
++
++
++def test_login_sin_otp_falla():
++    with pytest.raises(TypeError):
++        login("alice", "alice-pass")
++
++
++def test_verificar_otp_sustituible(monkeypatch):
++    monkeypatch.setattr(auth_module, "verificar_otp", lambda username, code: True)
++    s = login("alice", "alice-pass", "cualquier-cosa")
++    assert s.username == "alice"
+ 
+ 
+ def test_endpoint_login(client):
+-    assert client.post("/login", json={"username": "bob", "password": "bob-pass"}).status_code == 200
+-    assert client.post("/login", json={"username": "bob", "password": "x"}).status_code == 401
++    otp = pyotp.TOTP("KRSXG5CTMVRXEZLU").now()
++    assert client.post("/login", json={"username": "bob", "password": "bob-pass", "otp": otp}).status_code == 200
++    assert client.post("/login", json={"username": "bob", "password": "x", "otp": otp}).status_code == 401
++
++
++def test_endpoint_login_sin_otp_o_invalido(client):
++    assert client.post("/login", json={"username": "bob", "password": "bob-pass"}).status_code == 401
++    assert (
++        client.post(
++            "/login", json={"username": "bob", "password": "bob-pass", "otp": "000000"}
++        ).status_code
++        == 401
++    )
+diff --git a/tests/test_consultas.py b/tests/test_consultas.py
+new file mode 100644
+index 0000000..e89896f
+--- /dev/null
++++ b/tests/test_consultas.py
+@@ -0,0 +1,34 @@
++RESERVA = {"sala": "Atlas", "inicio": "2026-10-05T10:00", "duracion_min": 60}
++
++
++def test_filtra_reservas_desde_una_fecha(client, auth):
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-05T10:00"}, headers=auth)
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-06T10:00"}, headers=auth)
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-08T10:00"}, headers=auth)
++
++    r = client.get("/reservas", params={"desde": "2026-10-06"})
++    assert r.status_code == 200
++    inicios = [res["inicio"] for res in r.json()]
++    assert inicios == ["2026-10-06T10:00:00", "2026-10-08T10:00:00"]
++
++
++def test_incluye_reserva_del_mismo_dia(client, auth):
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-06T08:00"}, headers=auth)
++
++    r = client.get("/reservas", params={"desde": "2026-10-06"})
++    assert r.status_code == 200
++    assert len(r.json()) == 1
++
++
++def test_desde_con_formato_invalido_devuelve_422(client):
++    r = client.get("/reservas", params={"desde": "06-10-2026"})
++    assert r.status_code == 422
++
++
++def test_sin_desde_devuelve_todas(client, auth):
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-05T10:00"}, headers=auth)
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-08T10:00"}, headers=auth)
++
++    r = client.get("/reservas")
++    assert r.status_code == 200
++    assert len(r.json()) == 2
+diff --git a/tests/test_reservas.py b/tests/test_reservas.py
+index b7101bd..6bcc6d9 100644
+--- a/tests/test_reservas.py
++++ b/tests/test_reservas.py
+@@ -1,4 +1,4 @@
+-RESERVA = {"sala": "Atlas", "fecha": "2026-10-05T10:00", "duracion_min": 60}
++RESERVA = {"sala": "Atlas", "inicio": "2026-10-05T10:00", "duracion_min": 60}
+ 
+ 
+ def test_crear_y_listar(client, auth):
+@@ -9,11 +9,11 @@ def test_crear_y_listar(client, auth):
+     assert client.get("/reservas").json() == [creada]
+ 
+ 
+-def test_listado_ordenado_por_fecha(client, auth):
+-    client.post("/reservas", json={**RESERVA, "fecha": "2026-10-07T10:00"}, headers=auth)
++def test_listado_ordenado_por_inicio(client, auth):
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-07T10:00"}, headers=auth)
+     client.post("/reservas", json=RESERVA, headers=auth)
+-    fechas = [r["fecha"] for r in client.get("/reservas").json()]
+-    assert fechas == sorted(fechas)
++    inicios = [r["inicio"] for r in client.get("/reservas").json()]
++    assert inicios == sorted(inicios)
+ 
+ 
+ def test_crear_sin_sesion(client):
+@@ -25,3 +25,9 @@ def test_error_de_validacion_devuelve_422(client, auth):
+     r = client.post("/reservas", json={**RESERVA, "sala": "Delta"}, headers=auth)
+     assert r.status_code == 422
+     assert r.json()["detail"]
++
++
++def test_crear_con_fecha_en_vez_de_inicio_devuelve_422(client, auth):
++    payload = {"sala": "Atlas", "fecha": "2026-10-05T10:00", "duracion_min": 60}
++    r = client.post("/reservas", json=payload, headers=auth)
++    assert r.status_code == 422
+diff --git a/tests/test_validators.py b/tests/test_validators.py
+index e85d620..6cf33d6 100644
+--- a/tests/test_validators.py
++++ b/tests/test_validators.py
+@@ -1,3 +1,4 @@
++import re
+ from datetime import datetime
+ 
+ import pytest
+@@ -9,9 +10,18 @@ def test_sala_valida():
+     validar_sala("Boreal")
+ 
+ 
+-@pytest.mark.parametrize("sala,mensaje", [("", "sala requerida"), ("Delta", "sala invalida")])
++@pytest.mark.parametrize(
++    "sala,mensaje",
++    [
++        ("", "La sala es obligatoria."),
++        (
++            "Delta",
++            "La sala «Delta» no existe. Salas disponibles: Atlas, Boreal, Cierzo.",
++        ),
++    ],
++)
+ def test_sala_errores(sala, mensaje):
+-    with pytest.raises(ValidationError, match=f"^{mensaje}$"):
++    with pytest.raises(ValidationError, match=f"^{re.escape(mensaje)}$"):
+         validar_sala(sala)
+ 
+ 
+@@ -28,3 +38,26 @@ def test_horario_duracion_invalida(duracion):
+ def test_horario_minutos_invalidos():
+     with pytest.raises(ValidationError, match="^minutos invalidos$"):
+         validar_horario(datetime(2026, 10, 5, 9, 15), 60)
++
++
++@pytest.mark.parametrize(
++    "hora,minuto,duracion",
++    [
++        (8, 0, 60),
++        (19, 0, 60),
++    ],
++)
++def test_horario_dentro_de_franja(hora, minuto, duracion):
++    validar_horario(datetime(2026, 10, 5, hora, minuto), duracion)
++
++
++@pytest.mark.parametrize(
++    "hora,minuto,duracion",
++    [
++        (7, 30, 60),
++        (19, 30, 60),
++    ],
++)
++def test_horario_fuera_de_franja(hora, minuto, duracion):
++    with pytest.raises(ValidationError, match=r"^fuera de horario \(8:00-20:00\)$"):
++        validar_horario(datetime(2026, 10, 5, hora, minuto), duracion)

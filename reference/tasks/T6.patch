@@ -1,0 +1,34 @@
+diff --git a/app/validators.py b/app/validators.py
+index ffca5ea..28201dd 100644
+--- a/app/validators.py
++++ b/app/validators.py
+@@ -2,7 +2,7 @@
+ 
+ validar_sala() y validar_horario() son independientes entre sí.
+ """
+-from datetime import datetime
++from datetime import datetime, timedelta
+ 
+ from app.config import SALAS
+ 
+@@ -36,3 +36,6 @@ def validar_horario(fecha: datetime, duracion_min: int) -> None:
+         raise ValidationError("duracion invalida")
+     if fecha.minute not in MINUTOS_PERMITIDOS or fecha.second or fecha.microsecond:
+         raise ValidationError("minutos invalidos")
++    fin = fecha + timedelta(minutes=duracion_min)
++    if fecha.hour < 8 or fin > fecha.replace(hour=20, minute=0):
++        raise ValidationError("fuera de horario (8:00-20:00)")
+diff --git a/tests/test_validators.py b/tests/test_validators.py
+index e85d620..79fb3b5 100644
+--- a/tests/test_validators.py
++++ b/tests/test_validators.py
+@@ -28,3 +28,9 @@ def test_horario_duracion_invalida(duracion):
+ def test_horario_minutos_invalidos():
+     with pytest.raises(ValidationError, match="^minutos invalidos$"):
+         validar_horario(datetime(2026, 10, 5, 9, 15), 60)
++
++
++@pytest.mark.parametrize("hora,minuto,duracion", [(7, 30, 60), (19, 30, 60)])
++def test_horario_fuera_de_franja(hora, minuto, duracion):
++    with pytest.raises(ValidationError, match="^fuera de horario"):
++        validar_horario(datetime(2026, 10, 5, hora, minuto), duracion)

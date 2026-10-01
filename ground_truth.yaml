@@ -1,0 +1,24 @@
+# Verdad de referencia: qué pares de tareas chocan de verdad.
+# Es contra lo que se miden detecciones y bloqueos innecesarios.
+#   semantic                 chocan: distinto fichero, mismo contrato; git fusiona limpio y el resultado rompe
+# Verificado con bench/self_check.sh sobre reference/tasks/*.patch.
+#   false_positive_same_file no chocan aunque tocan el mismo fichero
+#   none                     no chocan
+version: 1
+tasks: [T1, T2, T3, T4, T5, T6]
+pairs:
+  - {a: T1, b: T2, conflict: true,  type: semantic, reason: "T1 cambia la firma de login() y exige OTP; T2 llama a login(username, password) y deja /export sin segundo factor"}
+  - {a: T1, b: T3, conflict: false, type: none, reason: "autenticación frente a nombre de campo de Reserva; sin contrato compartido"}
+  - {a: T1, b: T4, conflict: false, type: none, reason: "autenticación frente a filtro de listado público; sin contrato compartido"}
+  - {a: T1, b: T5, conflict: false, type: none, reason: "autenticación frente a mensajes de validar_sala()"}
+  - {a: T1, b: T6, conflict: false, type: none, reason: "autenticación frente a franja horaria de validar_horario()"}
+  - {a: T2, b: T3, conflict: false, type: none, reason: "T2 saca las columnas de Reserva.model_fields y lee con listar_reservas(), así que el renombrado se propaga solo"}
+  - {a: T2, b: T4, conflict: false, type: none, reason: "T2 lee con db.listar_reservas(), que T4 no toca; el filtro de T4 vive en consultas.py"}
+  - {a: T2, b: T5, conflict: false, type: none, reason: "export frente a mensajes de validación"}
+  - {a: T2, b: T6, conflict: false, type: none, reason: "export frente a franja horaria"}
+  - {a: T3, b: T4, conflict: true,  type: semantic, reason: "T3 renombra la columna fecha a inicio (models, db, routes_reservas); el filtro de T4 (consultas.py, routes_consulta.py) hace WHERE fecha >= ? y rompe"}
+  - {a: T3, b: T5, conflict: false, type: none, reason: "T3 deja validators.py fuera de alcance; T5 solo cambia textos de validar_sala()"}
+  - {a: T3, b: T6, conflict: false, type: none, reason: "validar_horario() recibe el inicio por parámetro; T3 no toca validators.py"}
+  - {a: T4, b: T5, conflict: false, type: none, reason: "filtro de listado frente a mensajes de validación"}
+  - {a: T4, b: T6, conflict: false, type: none, reason: "filtro de listado frente a franja horaria"}
+  - {a: T5, b: T6, conflict: false, type: false_positive_same_file, reason: "mismo fichero (validators.py), funciones distintas y trozos no contiguos"}

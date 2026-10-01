@@ -1,0 +1,12 @@
+# Umbrales del camino rápido de Médula por decisor (E-04b, 2026-09-29).
+# p < bajo: conceder · p > alto: choque · entre medias: camino lento (Sonnet -> Opus).
+# Procedimiento común (bench/e04b_firma.py, rejilla de 0,05): máxima cobertura del camino rápido con un
+# acierto >= 95 % en lo que decide, sin más falsos negativos que con 0,2/0,8 y con como mucho un falso
+# positivo más. Medido sobre las 100 parejas de calibration/ (etiquetas de Claude, sin tocar), 2 repeticiones,
+# con la pregunta del kernel: probabilidad de choque entre 0 y 1 (Jev: noul «¿choca?»).
+# Ojo: ajustados sobre las mismas parejas con las que se miden (no hay conjunto aparte de validación).
+fuente: [results/e04b/20260929-103843, results/e04b/20260929-104619]
+decisores:
+  jev:    {bajo: 0.25, alto: 0.50, decide: 0.87, acierto: 0.983, fn: 2, fp: 1}
+  haiku:  {bajo: 0.40, alto: 0.85, decide: 0.74, acierto: 0.980, fn: 0, fp: 3}
+  sonnet: {bajo: 0.55, alto: 0.55, decide: 0.995, acierto: 0.990, fn: 2, fp: 0}

@@ -1,0 +1,5 @@
+{"mode": "D", "decisor": "jev", "run_id": "d3", "model": "anthropic/claude-sonnet-5", "effort": "high",
+ "claude_version": "2.1.284", "effort_check": "passed",
+ "umbral_bajo": 0.25, "umbral_alto": 0.5, "umbral_aviso": 0.5, "espera_max": 600,
+ "demo": false, "pregunta": "choca", "regla_simbolos": false,
+ "started_at": "2026-09-29T13:56:25Z", "t0": 1790690185.333, "run_dir": "<runs>/d3"}

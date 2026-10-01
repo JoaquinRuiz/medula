@@ -1,0 +1,3 @@
+{"mode": "B", "run_id": "b1", "model": "anthropic/claude-sonnet-5", "effort": "high",
+ "claude_version": "2.1.284", "effort_check": "passed",
+ "started_at": "2026-09-29T07:06:23Z", "t0": 1790665583.197, "run_dir": "<runs>/b1"}

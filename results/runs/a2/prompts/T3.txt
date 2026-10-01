@@ -1,0 +1,29 @@
+# T3 — Renombrar `fecha` a `inicio` en las reservas
+
+## Objetivo
+El campo `fecha` de una reserva es en realidad su hora de inicio, y el nombre confunde. Hay que renombrarlo a `inicio` en todo el sistema.
+
+## Contexto
+`fecha` aparece en el modelo (`app/models.py`), en la tabla `reservas` de SQLite (`app/db.py`) y, por tanto, en el JSON de entrada y salida de la API.
+
+## Alcance
+- `app/models.py`: `ReservaIn.fecha` pasa a ser `ReservaIn.inicio` (mismo tipo).
+- `app/db.py`: la columna pasa a llamarse `inicio` en `CREATE TABLE`, en los `INSERT` y en los `SELECT`, y el orden del listado usa `inicio`. No hay datos que migrar: la base de datos se crea al arrancar.
+- `app/routes_reservas.py` y cualquier otro punto de la API que use el campo.
+- La API deja de aceptar y de devolver `fecha`; en su lugar, `inicio`.
+- Fuera de alcance: `app/validators.py`. Sus funciones reciben valores por parámetro y no cambian.
+
+## Criterios de aceptación
+1. `POST /reservas` con `{"sala", "inicio", "duracion_min"}` → `201`, y la respuesta contiene `inicio` y no `fecha`.
+2. `GET /reservas` devuelve objetos con `inicio` y sin `fecha`, ordenados por `inicio`.
+3. `POST /reservas` con `fecha` y sin `inicio` → `422`.
+4. La tabla `reservas` tiene una columna `inicio` y ninguna `fecha`.
+5. Los tests del repo (`uv run pytest`) quedan en verde, actualizados al nuevo nombre.
+
+---
+Instrucciones de trabajo:
+- Trabajas en un repositorio git en el directorio actual. No salgas de él.
+- Otras tareas se han hecho o se harán en este mismo directorio, una detrás de otra.
+- Es un proyecto uv con las dependencias ya instaladas. No añadas paquetes.
+- Ejecuta los tests con `uv run pytest`.
+- No hagas commit ni cambies de rama: al terminar, el banco hace el commit.

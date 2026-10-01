@@ -1,0 +1,2 @@
+2026-09-29T08:26:55Z	informe regenerado: nueva métrica avisos_innecesarios
+2026-09-29T16:42:39Z	avisos recalculados: find -exec con comando de lectura cuenta como lectura

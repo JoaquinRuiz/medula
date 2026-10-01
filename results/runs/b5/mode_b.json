@@ -1,0 +1,283 @@
+{
+  "mode": "B",
+  "run_id": "b5",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "started_at": "2026-09-29T17:09:04Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 338.3,
+  "base_sha": "3cf75959f618f7596bda820ccd7399a25cee34ae",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 126.5
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 56.4
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 126.2,
+      "cost_usd": 0.3228918,
+      "num_turns": 26,
+      "session_id": "665a09ff-51ef-4837-8a06-43aecb88eb2a",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 40,
+        "output_tokens": 8380,
+        "cache_read_input_tokens": 851384,
+        "cache_creation_input_tokens": 27494
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 63.0,
+      "cost_usd": 0.2175352,
+      "num_turns": 24,
+      "session_id": "5244ade4-51c2-4107-8338-0d1dfdb27ee5",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 30,
+        "output_tokens": 3981,
+        "cache_read_input_tokens": 609601,
+        "cache_creation_input_tokens": 22298
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 54.8,
+      "cost_usd": 0.1814552,
+      "num_turns": 21,
+      "session_id": "9237c709-04d0-4a45-8236-5b426eb7199a",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 3563,
+        "cache_read_input_tokens": 469561,
+        "cache_creation_input_tokens": 20746
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 52.9,
+      "cost_usd": 0.16548310000000002,
+      "num_turns": 16,
+      "session_id": "87f1418f-31ea-41ae-aaeb-0920192318ea",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 20,
+        "output_tokens": 3827,
+        "cache_read_input_tokens": 382653,
+        "cache_creation_input_tokens": 20257
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 47.4,
+      "cost_usd": 0.1537133,
+      "num_turns": 12,
+      "session_id": "824ddff9-e94f-4c7f-99ba-266241adc9a1",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 2269,
+        "cache_read_input_tokens": 437689,
+        "cache_creation_input_tokens": 17375
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 56.2,
+      "cost_usd": 0.1892334,
+      "num_turns": 16,
+      "session_id": "7a994b75-ba83-4230-a864-fc883e0692b5",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 30,
+        "output_tokens": 3060,
+        "cache_read_input_tokens": 561717,
+        "cache_creation_input_tokens": 18492
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    }
+  },
+  "merge": {
+    "order": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6"
+    ],
+    "merged": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6"
+    ],
+    "failed": [],
+    "textual_conflicts": [
+      {
+        "branch": "task/T4",
+        "task": "T4",
+        "against": [
+          "T3"
+        ],
+        "files": [
+          "tests/test_reservas.py"
+        ],
+        "resolved": true,
+        "resolver": {
+          "exit_code": 0,
+          "duration_s": 79.5,
+          "cost_usd": 0.2155434,
+          "num_turns": 18,
+          "session_id": "23ffaa8f-02a4-40d9-bc98-f6d30a9ee197",
+          "is_error": false,
+          "terminal_reason": "completed",
+          "api_error": false,
+          "tokens": {
+            "input_tokens": 26,
+            "output_tokens": 4880,
+            "cache_read_input_tokens": 537357,
+            "cache_creation_input_tokens": 23688
+          }
+        },
+        "failure_reason": null
+      },
+      {
+        "branch": "task/T6",
+        "task": "T6",
+        "against": [
+          "T3",
+          "T4"
+        ],
+        "files": [
+          "tests/test_reservas.py"
+        ],
+        "resolved": true,
+        "resolver": {
+          "exit_code": 0,
+          "duration_s": 63.3,
+          "cost_usd": 0.15701790000000002,
+          "num_turns": 14,
+          "session_id": "9fdc9374-c655-4a7a-86c9-9ae9b51cc547",
+          "is_error": false,
+          "terminal_reason": "completed",
+          "api_error": false,
+          "tokens": {
+            "input_tokens": 16,
+            "output_tokens": 4180,
+            "cache_read_input_tokens": 340767,
+            "cache_creation_input_tokens": 18813
+          }
+        },
+        "failure_reason": null
+      }
+    ],
+    "textual_conflict_count": 2,
+    "resolved_count": 2
+  },
+  "totals": {
+    "agents_cost_usd": 1.2303,
+    "resolver_cost_usd": 0.3726,
+    "cost_usd": 1.6029,
+    "cost_note": "total_cost_usd de Claude Code (tarifa de Anthropic); cuadrar con OpenRouter por session_id"
+  },
+  "evaluation": {
+    "workspace": "<runs>/b5/repo",
+    "timestamp": "2026-09-29T17:14:42+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 1,
+        "failed": 4,
+        "failed_tests": [
+          "_acceptance.test_t2::test_export_csv",
+          "_acceptance.test_t2::test_export_sin_reservas_solo_cabecera",
+          "_acceptance.test_t2::test_export_contrasena_incorrecta",
+          "_acceptance.test_t2::test_export_valida_con_login"
+        ]
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 3,
+      "failed": 2,
+      "failed_tests": [
+        "_acceptance.test_integration::test_export_con_otp_y_campo_renombrado",
+        "_acceptance.test_integration::test_export_exige_segundo_factor"
+      ]
+    },
+    "total": {
+      "passed": 31,
+      "failed": 6
+    },
+    "all_green": false
+  },
+  "red_tests": 6
+}

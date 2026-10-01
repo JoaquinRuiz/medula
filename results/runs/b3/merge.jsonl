@@ -1,0 +1,6 @@
+{"task": "T1", "status": "clean"}
+{"task": "T2", "status": "clean"}
+{"task": "T3", "status": "clean"}
+{"task": "T4", "status": "resolved", "against": ["T3"], "files": ["tests/test_reservas.py"]}
+{"task": "T5", "status": "clean"}
+{"task": "T6", "status": "resolved", "against": ["T3","T4"], "files": ["tests/test_reservas.py"]}

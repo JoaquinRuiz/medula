@@ -1,0 +1,422 @@
+diff --git a/app/auth.py b/app/auth.py
+index f11d49a..eb4796d 100644
+--- a/app/auth.py
++++ b/app/auth.py
+@@ -1,7 +1,11 @@
+ """Autenticación: login con usuario y contraseña y sesiones en memoria."""
+ import secrets
++import sys
+ from dataclasses import dataclass
+ 
++import pyotp
++from fastapi import Header
++
+ from app.config import USERS
+ 
+ 
+@@ -18,11 +22,29 @@ class Session:
+ _sessions: dict[str, Session] = {}
+ 
+ 
+-def login(username: str, password: str) -> Session:
+-    """Valida las credenciales y abre una sesión. Lanza AuthError si no son válidas."""
++def verificar_otp(username: str, code: str) -> bool:
++    """Comprueba un código TOTP (RFC 6238, 30 s, ±1 paso). Sustituible en tests."""
++    user = USERS.get(username)
++    return bool(user and code) and pyotp.TOTP(user["otp_secret"]).verify(code, valid_window=1)
++
++
++def otp_header(x_otp: str = Header(default="")) -> str:
++    """Dependencia de FastAPI que lee el OTP de la cabecera X-OTP.
++
++    Regla general: todo endpoint HTTP que autentique con usuario y contraseña
++    exige además el OTP. En POST /login va en el campo `otp` del body; en
++    cualquier otro endpoint, en la cabecera X-OTP (léela con esta dependencia).
++    """
++    return x_otp
++
++
++def login(username: str, password: str, otp: str) -> Session:
++    """Valida credenciales y OTP y abre una sesión. Lanza AuthError si no son válidos."""
+     user = USERS.get(username)
+     if user is None or not secrets.compare_digest(user["password"], password):
+         raise AuthError("credenciales invalidas")
++    if not sys.modules[__name__].verificar_otp(username, otp):
++        raise AuthError("otp invalido")
+     session = Session(token=secrets.token_urlsafe(24), username=username)
+     _sessions[session.token] = session
+     return session
+diff --git a/app/config.py b/app/config.py
+index 6355a58..a05beb9 100644
+--- a/app/config.py
++++ b/app/config.py
+@@ -3,8 +3,8 @@ import os
+ 
+ # Usuarios de demo: nombre -> datos de acceso.
+ USERS = {
+-    "alice": {"password": "alice-pass"},
+-    "bob": {"password": "bob-pass"},
++    "alice": {"password": "alice-pass", "otp_secret": "JBSWY3DPEHPK3PXP"},
++    "bob": {"password": "bob-pass", "otp_secret": "KRSXG5CTMVRXEZLU"},
+ }
+ 
+ SALAS = ("Atlas", "Boreal", "Cierzo")
+diff --git a/app/consultas.py b/app/consultas.py
+new file mode 100644
+index 0000000..9e60a79
+--- /dev/null
++++ b/app/consultas.py
+@@ -0,0 +1,11 @@
++"""Consultas de lectura con filtros."""
++from app.db import conectar
++from app.models import Reserva
++
++
++def listar_reservas_desde(desde: str) -> list[Reserva]:
++    with conectar() as conn:
++        filas = conn.execute(
++            "SELECT * FROM reservas WHERE inicio >= ? ORDER BY inicio", (desde,)
++        ).fetchall()
++    return [Reserva(**dict(f)) for f in filas]
+diff --git a/app/db.py b/app/db.py
+index f99cb5c..eeca3fa 100644
+--- a/app/db.py
++++ b/app/db.py
+@@ -24,7 +24,7 @@ def init_db() -> None:
+             CREATE TABLE IF NOT EXISTS reservas (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 sala TEXT NOT NULL,
+-                fecha TEXT NOT NULL,
++                inicio TEXT NOT NULL,
+                 duracion_min INTEGER NOT NULL,
+                 usuario TEXT NOT NULL
+             )
+@@ -35,8 +35,8 @@ def init_db() -> None:
+ def insertar_reserva(r: ReservaIn, usuario: str) -> Reserva:
+     with conectar() as conn:
+         cur = conn.execute(
+-            "INSERT INTO reservas (sala, fecha, duracion_min, usuario) VALUES (?, ?, ?, ?)",
+-            (r.sala, r.fecha.isoformat(), r.duracion_min, usuario),
++            "INSERT INTO reservas (sala, inicio, duracion_min, usuario) VALUES (?, ?, ?, ?)",
++            (r.sala, r.inicio.isoformat(), r.duracion_min, usuario),
+         )
+         return Reserva(id=cur.lastrowid, usuario=usuario, **r.model_dump())
+ 
+@@ -44,6 +44,6 @@ def insertar_reserva(r: ReservaIn, usuario: str) -> Reserva:
+ def listar_reservas() -> list[Reserva]:
+     with conectar() as conn:
+         filas = conn.execute(
+-            "SELECT id, sala, fecha, duracion_min, usuario FROM reservas ORDER BY fecha"
++            "SELECT id, sala, inicio, duracion_min, usuario FROM reservas ORDER BY inicio"
+         ).fetchall()
+     return [Reserva(**dict(f)) for f in filas]
+diff --git a/app/main.py b/app/main.py
+index e34df5a..5a0fd5d 100644
+--- a/app/main.py
++++ b/app/main.py
+@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
+ 
+ from fastapi import FastAPI
+ 
+-from app import db, routes_auth, routes_consulta, routes_reservas
++from app import db, routes_auth, routes_consulta, routes_export, routes_reservas
+ 
+ 
+ @asynccontextmanager
+@@ -15,3 +15,4 @@ app = FastAPI(title="Reservas de salas", lifespan=lifespan)
+ app.include_router(routes_auth.router)
+ app.include_router(routes_reservas.router)
+ app.include_router(routes_consulta.router)
++app.include_router(routes_export.router)
+diff --git a/app/models.py b/app/models.py
+index cd32894..fb6e0d3 100644
+--- a/app/models.py
++++ b/app/models.py
+@@ -6,7 +6,7 @@ from pydantic import BaseModel
+ 
+ class ReservaIn(BaseModel):
+     sala: str
+-    fecha: datetime  # inicio de la reserva
++    inicio: datetime  # inicio de la reserva
+     duracion_min: int
+ 
+ 
+diff --git a/app/routes_auth.py b/app/routes_auth.py
+index 176c71f..9d22c05 100644
+--- a/app/routes_auth.py
++++ b/app/routes_auth.py
+@@ -9,12 +9,13 @@ router = APIRouter()
+ class LoginIn(BaseModel):
+     username: str
+     password: str
++    otp: str = ""
+ 
+ 
+ @router.post("/login")
+ def post_login(body: LoginIn) -> dict:
+     try:
+-        session = login(body.username, body.password)
++        session = login(body.username, body.password, body.otp)
+     except AuthError:
+         raise HTTPException(status_code=401, detail="credenciales invalidas")
+     return {"token": session.token}
+diff --git a/app/routes_consulta.py b/app/routes_consulta.py
+index 9a7da68..ca06a7b 100644
+--- a/app/routes_consulta.py
++++ b/app/routes_consulta.py
+@@ -1,12 +1,16 @@
+ """Consulta pública de reservas."""
++from datetime import date
++
+ from fastapi import APIRouter
+ 
+-from app import db
++from app import consultas, db
+ from app.models import Reserva
+ 
+ router = APIRouter()
+ 
+ 
+ @router.get("/reservas")
+-def listar_reservas() -> list[Reserva]:
+-    return db.listar_reservas()
++def listar_reservas(desde: date | None = None) -> list[Reserva]:
++    if desde is None:
++        return db.listar_reservas()
++    return consultas.listar_reservas_desde(desde.isoformat())
+diff --git a/app/routes_export.py b/app/routes_export.py
+new file mode 100644
+index 0000000..5e618ce
+--- /dev/null
++++ b/app/routes_export.py
+@@ -0,0 +1,32 @@
++import csv
++import io
++
++from fastapi import APIRouter, Depends, HTTPException, Response
++from fastapi.security import HTTPBasic, HTTPBasicCredentials
++
++from app import db
++from app.auth import AuthError, login, otp_header
++from app.models import Reserva
++
++router = APIRouter()
++basic = HTTPBasic(auto_error=False)
++
++
++@router.get("/export")
++def export(
++    cred: HTTPBasicCredentials | None = Depends(basic), otp: str = Depends(otp_header)
++) -> Response:
++    if cred is None:
++        raise HTTPException(status_code=401)
++    try:
++        login(cred.username, cred.password, otp)
++    except AuthError:
++        raise HTTPException(status_code=401)
++    columnas = list(Reserva.model_fields)
++    buf = io.StringIO()
++    w = csv.writer(buf)
++    w.writerow(columnas)
++    for r in db.listar_reservas():
++        d = r.model_dump(mode="json")
++        w.writerow([d[c] for c in columnas])
++    return Response(buf.getvalue(), media_type="text/csv; charset=utf-8")
+diff --git a/app/routes_reservas.py b/app/routes_reservas.py
+index 5d00d94..07dcb77 100644
+--- a/app/routes_reservas.py
++++ b/app/routes_reservas.py
+@@ -21,7 +21,7 @@ def sesion_actual(authorization: str | None = Header(default=None)) -> Session:
+ def crear_reserva(r: ReservaIn, session: Session = Depends(sesion_actual)) -> Reserva:
+     try:
+         validar_sala(r.sala)
+-        validar_horario(r.fecha, r.duracion_min)
++        validar_horario(r.inicio, r.duracion_min)
+     except ValidationError as e:
+         raise HTTPException(status_code=422, detail=str(e))
+     return db.insertar_reserva(r, session.username)
+diff --git a/app/validators.py b/app/validators.py
+index ffca5ea..a487dd7 100644
+--- a/app/validators.py
++++ b/app/validators.py
+@@ -2,7 +2,7 @@
+ 
+ validar_sala() y validar_horario() son independientes entre sí.
+ """
+-from datetime import datetime
++from datetime import datetime, timedelta
+ 
+ from app.config import SALAS
+ 
+@@ -13,9 +13,11 @@ class ValidationError(Exception):
+ 
+ def validar_sala(sala: str) -> None:
+     if not sala:
+-        raise ValidationError("sala requerida")
++        raise ValidationError("La sala es obligatoria.")
+     if sala not in SALAS:
+-        raise ValidationError("sala invalida")
++        raise ValidationError(
++            f"La sala «{sala}» no existe. Salas disponibles: {', '.join(SALAS)}."
++        )
+ 
+ 
+ # --- Parámetros de reserva -------------------------------------------------
+@@ -36,3 +38,6 @@ def validar_horario(fecha: datetime, duracion_min: int) -> None:
+         raise ValidationError("duracion invalida")
+     if fecha.minute not in MINUTOS_PERMITIDOS or fecha.second or fecha.microsecond:
+         raise ValidationError("minutos invalidos")
++    fin = fecha + timedelta(minutes=duracion_min)
++    if fecha.hour < 8 or fin > fecha.replace(hour=20, minute=0):
++        raise ValidationError("fuera de horario (8:00-20:00)")
+diff --git a/tests/conftest.py b/tests/conftest.py
+index 0a829b1..09ad21a 100644
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -1,3 +1,4 @@
++import pyotp
+ import pytest
+ from fastapi.testclient import TestClient
+ 
+@@ -13,7 +14,7 @@ def client(tmp_path, monkeypatch):
+ 
+ @pytest.fixture
+ def token(client):
+-    r = client.post("/login", json={"username": "alice", "password": "alice-pass"})
++    r = client.post("/login", json={"username": "alice", "password": "alice-pass", "otp": pyotp.TOTP("JBSWY3DPEHPK3PXP").now()})
+     return r.json()["token"]
+ 
+ 
+diff --git a/tests/test_auth.py b/tests/test_auth.py
+index 6c2a82c..a384340 100644
+--- a/tests/test_auth.py
++++ b/tests/test_auth.py
+@@ -1,21 +1,25 @@
++import pyotp
+ import pytest
+ 
+ from app.auth import AuthError, get_session, login
+ 
++ALICE = pyotp.TOTP("JBSWY3DPEHPK3PXP")
++
+ 
+ def test_login_correcto_abre_sesion():
+-    s = login("alice", "alice-pass")
++    s = login("alice", "alice-pass", ALICE.now())
+     assert s.username == "alice"
+     assert get_session(s.token) == s
+ 
+ 
+ def test_login_incorrecto():
+     with pytest.raises(AuthError):
+-        login("alice", "mal")
++        login("alice", "mal", ALICE.now())
+     with pytest.raises(AuthError):
+-        login("nadie", "alice-pass")
++        login("alice", "alice-pass", "")
+ 
+ 
+ def test_endpoint_login(client):
+-    assert client.post("/login", json={"username": "bob", "password": "bob-pass"}).status_code == 200
+-    assert client.post("/login", json={"username": "bob", "password": "x"}).status_code == 401
++    otp = pyotp.TOTP("KRSXG5CTMVRXEZLU").now()
++    assert client.post("/login", json={"username": "bob", "password": "bob-pass", "otp": otp}).status_code == 200
++    assert client.post("/login", json={"username": "bob", "password": "bob-pass"}).status_code == 401
+diff --git a/tests/test_consulta.py b/tests/test_consulta.py
+new file mode 100644
+index 0000000..c0aa218
+--- /dev/null
++++ b/tests/test_consulta.py
+@@ -0,0 +1,14 @@
++def _crear(client, auth, dia):
++    r = client.post("/reservas", json={"sala": "Atlas", "inicio": dia + "T10:00", "duracion_min": 60}, headers=auth)
++    assert r.status_code == 201
++
++
++def test_filtro_desde(client, auth):
++    for dia in ("2026-10-05", "2026-10-06", "2026-10-08"):
++        _crear(client, auth, dia)
++    r = client.get("/reservas", params={"desde": "2026-10-06"})
++    assert [x["inicio"][:10] for x in r.json()] == ["2026-10-06", "2026-10-08"]
++
++
++def test_filtro_formato_invalido(client):
++    assert client.get("/reservas", params={"desde": "06-10-2026"}).status_code == 422
+diff --git a/tests/test_export.py b/tests/test_export.py
+new file mode 100644
+index 0000000..7bae82b
+--- /dev/null
++++ b/tests/test_export.py
+@@ -0,0 +1,15 @@
++import pyotp
++
++from app.models import Reserva
++
++
++def test_export_vacio_solo_cabecera(client):
++    r = client.get("/export", auth=("alice", "alice-pass"), headers={"X-OTP": pyotp.TOTP("JBSWY3DPEHPK3PXP").now()})
++    assert r.status_code == 200
++    assert r.headers["content-type"].startswith("text/csv")
++    assert r.text.strip() == ",".join(Reserva.model_fields)
++
++
++def test_export_sin_credenciales(client):
++    assert client.get("/export").status_code == 401
++    assert client.get("/export", auth=("alice", "mal")).status_code == 401
+diff --git a/tests/test_reservas.py b/tests/test_reservas.py
+index b7101bd..c02a4ca 100644
+--- a/tests/test_reservas.py
++++ b/tests/test_reservas.py
+@@ -1,4 +1,4 @@
+-RESERVA = {"sala": "Atlas", "fecha": "2026-10-05T10:00", "duracion_min": 60}
++RESERVA = {"sala": "Atlas", "inicio": "2026-10-05T10:00", "duracion_min": 60}
+ 
+ 
+ def test_crear_y_listar(client, auth):
+@@ -9,11 +9,11 @@ def test_crear_y_listar(client, auth):
+     assert client.get("/reservas").json() == [creada]
+ 
+ 
+-def test_listado_ordenado_por_fecha(client, auth):
+-    client.post("/reservas", json={**RESERVA, "fecha": "2026-10-07T10:00"}, headers=auth)
++def test_listado_ordenado_por_inicio(client, auth):
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-07T10:00"}, headers=auth)
+     client.post("/reservas", json=RESERVA, headers=auth)
+-    fechas = [r["fecha"] for r in client.get("/reservas").json()]
+-    assert fechas == sorted(fechas)
++    inicios = [r["inicio"] for r in client.get("/reservas").json()]
++    assert inicios == sorted(inicios)
+ 
+ 
+ def test_crear_sin_sesion(client):
+diff --git a/tests/test_validators.py b/tests/test_validators.py
+index e85d620..4ae7b21 100644
+--- a/tests/test_validators.py
++++ b/tests/test_validators.py
+@@ -1,3 +1,4 @@
++import re
+ from datetime import datetime
+ 
+ import pytest
+@@ -9,9 +10,9 @@ def test_sala_valida():
+     validar_sala("Boreal")
+ 
+ 
+-@pytest.mark.parametrize("sala,mensaje", [("", "sala requerida"), ("Delta", "sala invalida")])
++@pytest.mark.parametrize("sala,mensaje", [("", "La sala es obligatoria."), ("Delta", "La sala «Delta» no existe. Salas disponibles: Atlas, Boreal, Cierzo.")])
+ def test_sala_errores(sala, mensaje):
+-    with pytest.raises(ValidationError, match=f"^{mensaje}$"):
++    with pytest.raises(ValidationError, match=f"^{re.escape(mensaje)}$"):
+         validar_sala(sala)
+ 
+ 
+@@ -28,3 +29,9 @@ def test_horario_duracion_invalida(duracion):
+ def test_horario_minutos_invalidos():
+     with pytest.raises(ValidationError, match="^minutos invalidos$"):
+         validar_horario(datetime(2026, 10, 5, 9, 15), 60)
++
++
++@pytest.mark.parametrize("hora,minuto,duracion", [(7, 30, 60), (19, 30, 60)])
++def test_horario_fuera_de_franja(hora, minuto, duracion):
++    with pytest.raises(ValidationError, match="^fuera de horario"):
++        validar_horario(datetime(2026, 10, 5, hora, minuto), duracion)

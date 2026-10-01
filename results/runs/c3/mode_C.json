@@ -1,0 +1,264 @@
+{
+  "mode": "C",
+  "decisor": "locks",
+  "demo": false,
+  "run_id": "c3",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "umbrales": {
+    "umbral_bajo": 0.2,
+    "umbral_alto": 0.8,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": "choca",
+    "regla_simbolos": false
+  },
+  "started_at": "2026-09-29T14:02:32Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 372.9,
+  "base_sha": "ecc555c7856b8c1aeec48f85405f90086ddaf4d2",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 267.4
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 97.3
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 149.6,
+      "cost_usd": 0.2591828,
+      "num_turns": 14,
+      "session_id": "8ab36c73-2321-41d1-ba18-559b918cd35a",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 28,
+        "output_tokens": 7067,
+        "cache_read_input_tokens": 585159,
+        "cache_creation_input_tokens": 28570
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 127.4,
+      "cost_usd": 0.30669009999999997,
+      "num_turns": 31,
+      "session_id": "e755a447-8ce5-4461-8a8a-9f7bf75e8d57",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 34,
+        "output_tokens": 7877,
+        "cache_read_input_tokens": 741948,
+        "cache_creation_input_tokens": 31785
+      }
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 191.4,
+      "cost_usd": 0.2878017,
+      "num_turns": 27,
+      "session_id": "aca8e19c-cea6-43da-90bc-fc12cd71d67f",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 42,
+        "output_tokens": 5347,
+        "cache_read_input_tokens": 871076,
+        "cache_creation_input_tokens": 24013
+      }
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 267.0,
+      "cost_usd": 0.2415864,
+      "num_turns": 16,
+      "session_id": "dcdbe0b4-8e56-4172-a5e8-4c4f622326df",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 7600,
+        "cache_read_input_tokens": 486842,
+        "cache_creation_input_tokens": 27268
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 97.2,
+      "cost_usd": 0.1310754,
+      "num_turns": 11,
+      "session_id": "930cedb8-3bee-4f00-a598-2e36ca029da3",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 22,
+        "output_tokens": 2584,
+        "cache_read_input_tokens": 410257,
+        "cache_creation_input_tokens": 9256
+      }
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 56.5,
+      "cost_usd": 0.1315087,
+      "num_turns": 10,
+      "session_id": "f31ce7d4-f966-4673-8766-28ab50fa5ca8",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 20,
+        "output_tokens": 2753,
+        "cache_read_input_tokens": 380981,
+        "cache_creation_input_tokens": 11097
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 73,
+    "decisiones_modelo": 29,
+    "por_decisor": {
+      "locks": 29,
+      "regla": 44
+    },
+    "latencia_p50_ms": 0.0072080292738974094,
+    "latencia_p95_ms": 0.009125040378421545,
+    "coste_decisiones_usd": 0,
+    "escaladas_sonnet": 0,
+    "escaladas_opus": 0,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "errores_decisor": 0,
+    "esperas": [
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "tests/test_reservas.py",
+        "estado": "concedido",
+        "segundos": 147.2
+      },
+      {
+        "agente": "A3",
+        "espera_a": "A2",
+        "recurso": "tests/test_export.py",
+        "estado": "concedido",
+        "segundos": 69.5
+      },
+      {
+        "agente": "A1",
+        "espera_a": "A2",
+        "recurso": "app/routes_export.py",
+        "estado": "concedido",
+        "segundos": 40.1
+      },
+      {
+        "agente": "A5",
+        "espera_a": "A6",
+        "recurso": "app/validators.py",
+        "estado": "concedido",
+        "segundos": 41.0
+      }
+    ],
+    "avisos_posibles": 0,
+    "avisos_enviados": 0,
+    "avisos_descartados_lectura": 0,
+    "notificaciones_de_lectura": 0,
+    "pares_con_espera": [
+      "T1-T2",
+      "T2-T3",
+      "T3-T4",
+      "T5-T6"
+    ],
+    "pares_con_aviso": [],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": [
+      "T2-T3",
+      "T5-T6"
+    ],
+    "avisos_innecesarios": []
+  },
+  "totals": {
+    "agents_cost_usd": 1.3578,
+    "decision_cost_usd": 0,
+    "cost_usd": 1.3578,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/c3/repo",
+    "timestamp": "2026-09-29T14:08:45+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 5,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 5,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "total": {
+      "passed": 37,
+      "failed": 0
+    },
+    "all_green": true
+  },
+  "red_tests": 0
+}

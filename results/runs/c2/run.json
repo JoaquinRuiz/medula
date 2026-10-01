@@ -1,0 +1,5 @@
+{"mode": "C", "decisor": "locks", "run_id": "c2", "model": "anthropic/claude-sonnet-5", "effort": "high",
+ "claude_version": "2.1.284", "effort_check": "passed",
+ "umbral_bajo": 0.2, "umbral_alto": 0.8, "umbral_aviso": 0.5, "espera_max": 600,
+ "demo": false, "pregunta": "choca", "regla_simbolos": false,
+ "started_at": "2026-09-29T13:49:19Z", "t0": 1790689759.511, "run_dir": "<runs>/c2"}

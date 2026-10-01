@@ -1,0 +1,274 @@
+{
+  "mode": "B",
+  "run_id": "b2",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "started_at": "2026-09-29T13:28:49Z",
+  "completed": true,
+  "wall_time_s": 390.5,
+  "base_sha": "56ae86c3aabb777c4a2bf1169e804e0826661a55",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 133.3
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 57.7
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 132.9,
+      "cost_usd": 0.4141440999999999,
+      "num_turns": 31,
+      "session_id": "ea95da19-1f89-4e26-9533-b1803b70ed7d",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 44,
+        "output_tokens": 9257,
+        "cache_read_input_tokens": 976768,
+        "cache_creation_input_tokens": 50453
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 52.5,
+      "cost_usd": 0.1741157,
+      "num_turns": 20,
+      "session_id": "d7cd94a4-6a35-4c44-a55f-0811b6fb1a38",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 20,
+        "output_tokens": 2942,
+        "cache_read_input_tokens": 389041,
+        "cache_creation_input_tokens": 26739
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 69.1,
+      "cost_usd": 0.1882731,
+      "num_turns": 22,
+      "session_id": "86041efb-6d91-4867-a048-3c377bca1f69",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 26,
+        "output_tokens": 3507,
+        "cache_read_input_tokens": 510668,
+        "cache_creation_input_tokens": 20407
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 56.9,
+      "cost_usd": 0.1618335,
+      "num_turns": 11,
+      "session_id": "bf2a516a-d1d0-4364-8bc2-bd5b09ee16cf",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 20,
+        "output_tokens": 3872,
+        "cache_read_input_tokens": 376280,
+        "cache_creation_input_tokens": 19127
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 54.1,
+      "cost_usd": 0.15507110000000002,
+      "num_turns": 12,
+      "session_id": "d15613a2-1a57-4e55-82f1-5fc5cd8ac4db",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 2416,
+        "cache_read_input_tokens": 438203,
+        "cache_creation_input_tokens": 17289
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 57.4,
+      "cost_usd": 0.184767,
+      "num_turns": 14,
+      "session_id": "e4aa1b1e-e532-4a05-abe7-22d55e67dbe1",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 28,
+        "output_tokens": 3052,
+        "cache_read_input_tokens": 528430,
+        "cache_creation_input_tokens": 19402
+      },
+      "commits": 1,
+      "committed_by": "agent"
+    }
+  },
+  "merge": {
+    "order": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6"
+    ],
+    "merged": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6"
+    ],
+    "failed": [],
+    "textual_conflicts": [
+      {
+        "branch": "task/T4",
+        "task": "T4",
+        "against": [
+          "T3"
+        ],
+        "files": [
+          "tests/test_reservas.py"
+        ],
+        "resolved": true,
+        "resolver": {
+          "exit_code": 0,
+          "duration_s": 123.0,
+          "cost_usd": 0.30090839999999996,
+          "num_turns": 17,
+          "session_id": "f03222b4-d2be-460d-85ea-1035cfea76ad",
+          "is_error": false,
+          "terminal_reason": "completed",
+          "tokens": {
+            "input_tokens": 30,
+            "output_tokens": 7260,
+            "cache_read_input_tokens": 681892,
+            "cache_creation_input_tokens": 36748
+          }
+        },
+        "failure_reason": null
+      },
+      {
+        "branch": "task/T6",
+        "task": "T6",
+        "against": [
+          "T3",
+          "T4"
+        ],
+        "files": [
+          "tests/test_reservas.py"
+        ],
+        "resolved": true,
+        "resolver": {
+          "exit_code": 0,
+          "duration_s": 64.6,
+          "cost_usd": 0.1690371,
+          "num_turns": 17,
+          "session_id": "11922976-8929-4816-aa8e-494479dd77ed",
+          "is_error": false,
+          "terminal_reason": "completed",
+          "tokens": {
+            "input_tokens": 22,
+            "output_tokens": 3474,
+            "cache_read_input_tokens": 464678,
+            "cache_creation_input_tokens": 16527
+          }
+        },
+        "failure_reason": null
+      }
+    ],
+    "textual_conflict_count": 2,
+    "resolved_count": 2
+  },
+  "totals": {
+    "agents_cost_usd": 1.2782,
+    "resolver_cost_usd": 0.4699,
+    "cost_usd": 1.7481,
+    "cost_note": "total_cost_usd de Claude Code (tarifa de Anthropic); cuadrar con OpenRouter por session_id"
+  },
+  "evaluation": {
+    "workspace": "<runs>/b2/repo",
+    "timestamp": "2026-09-29T13:35:20+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 1,
+        "failed": 4,
+        "failed_tests": [
+          "_acceptance.test_t2::test_export_csv",
+          "_acceptance.test_t2::test_export_sin_reservas_solo_cabecera",
+          "_acceptance.test_t2::test_export_contrasena_incorrecta",
+          "_acceptance.test_t2::test_export_valida_con_login"
+        ]
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 3,
+      "failed": 2,
+      "failed_tests": [
+        "_acceptance.test_integration::test_export_con_otp_y_campo_renombrado",
+        "_acceptance.test_integration::test_export_exige_segundo_factor"
+      ]
+    },
+    "total": {
+      "passed": 31,
+      "failed": 6
+    },
+    "all_green": false
+  },
+  "red_tests": 6
+}

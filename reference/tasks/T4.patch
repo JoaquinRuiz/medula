@@ -1,0 +1,61 @@
+diff --git a/app/consultas.py b/app/consultas.py
+new file mode 100644
+index 0000000..d32d562
+--- /dev/null
++++ b/app/consultas.py
+@@ -0,0 +1,11 @@
++"""Consultas de lectura con filtros."""
++from app.db import conectar
++from app.models import Reserva
++
++
++def listar_reservas_desde(desde: str) -> list[Reserva]:
++    with conectar() as conn:
++        filas = conn.execute(
++            "SELECT * FROM reservas WHERE fecha >= ? ORDER BY fecha", (desde,)
++        ).fetchall()
++    return [Reserva(**dict(f)) for f in filas]
+diff --git a/app/routes_consulta.py b/app/routes_consulta.py
+index 9a7da68..ca06a7b 100644
+--- a/app/routes_consulta.py
++++ b/app/routes_consulta.py
+@@ -1,12 +1,16 @@
+ """Consulta pública de reservas."""
++from datetime import date
++
+ from fastapi import APIRouter
+ 
+-from app import db
++from app import consultas, db
+ from app.models import Reserva
+ 
+ router = APIRouter()
+ 
+ 
+ @router.get("/reservas")
+-def listar_reservas() -> list[Reserva]:
+-    return db.listar_reservas()
++def listar_reservas(desde: date | None = None) -> list[Reserva]:
++    if desde is None:
++        return db.listar_reservas()
++    return consultas.listar_reservas_desde(desde.isoformat())
+diff --git a/tests/test_consulta.py b/tests/test_consulta.py
+new file mode 100644
+index 0000000..804fb0a
+--- /dev/null
++++ b/tests/test_consulta.py
+@@ -0,0 +1,14 @@
++def _crear(client, auth, dia):
++    r = client.post("/reservas", json={"sala": "Atlas", "fecha": dia + "T10:00", "duracion_min": 60}, headers=auth)
++    assert r.status_code == 201
++
++
++def test_filtro_desde(client, auth):
++    for dia in ("2026-10-05", "2026-10-06", "2026-10-08"):
++        _crear(client, auth, dia)
++    r = client.get("/reservas", params={"desde": "2026-10-06"})
++    assert [x["fecha"][:10] for x in r.json()] == ["2026-10-06", "2026-10-08"]
++
++
++def test_filtro_formato_invalido(client):
++    assert client.get("/reservas", params={"desde": "06-10-2026"}).status_code == 422

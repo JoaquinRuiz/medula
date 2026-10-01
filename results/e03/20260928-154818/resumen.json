@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "fecha_utc": "2026-09-28T14:07:33.392984+00:00",
+    "llamadas_por_modelo": 200,
+    "calentamiento": 3,
+    "modelos": {
+      "jev": "typesafe/jev-1.13",
+      "haiku": "anthropic/claude-haiku-4.5",
+      "sonnet": "anthropic/claude-sonnet-5"
+    },
+    "esfuerzos": {
+      "jev": null,
+      "haiku": null,
+      "sonnet": "low"
+    },
+    "umbrales": {
+      "conceder": 0.2,
+      "choque": 0.8
+    },
+    "max_tokens": 2048,
+    "escenarios": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08"
+    ],
+    "nota": "Latencias de extremo a extremo desde esta máquina, con el paso por OpenRouter incluido; costes en USD según OpenRouter."
+  },
+  "modelos": {
+    "jev": {
+      "modelo": "typesafe/jev-1.13",
+      "llamadas": 200,
+      "errores": 1,
+      "p50_ms": 264.6,
+      "p95_ms": 732.6,
+      "coste_medio_usd": 2.9125628140703517e-05,
+      "coste_por_1000_usd": 0.029125628140703515,
+      "llamadas_con_coste": 199,
+      "veredictos": {
+        "conceder": 25,
+        "esperar": 0,
+        "conflicto": 64,
+        "dudoso": 110
+      },
+      "dudosos": 0.5527638190954773,
+      "acuerdo_decididos": 0.5617977528089888,
+      "p_choca_media_si_choca": 0.7679199999999999,
+      "p_choca_media_si_no_choca": 0.21594594594594596,
+      "tokens_razonamiento_medios": null
+    },
+    "haiku": {
+      "modelo": "anthropic/claude-haiku-4.5",
+      "llamadas": 200,
+      "errores": 0,
+      "p50_ms": 1268.4,
+      "p95_ms": 1895.2,
+      "coste_medio_usd": 0.0008733249999999999,
+      "coste_por_1000_usd": 0.8733249999999999,
+      "llamadas_con_coste": 200,
+      "veredictos": {
+        "conceder": 25,
+        "esperar": 17,
+        "conflicto": 133,
+        "dudoso": 25
+      },
+      "dudosos": 0.125,
+      "acuerdo_decididos": 0.42857142857142855,
+      "p_choca_media_si_choca": 0.9471999999999999,
+      "p_choca_media_si_no_choca": 0.4666666666666667,
+      "tokens_razonamiento_medios": 0.0
+    },
+    "sonnet": {
+      "modelo": "anthropic/claude-sonnet-5",
+      "llamadas": 200,
+      "errores": 0,
+      "p50_ms": 3219.1,
+      "p95_ms": 6180.4,
+      "coste_medio_usd": 0.0021555,
+      "coste_por_1000_usd": 2.1555,
+      "llamadas_con_coste": 200,
+      "veredictos": {
+        "conceder": 25,
+        "esperar": 19,
+        "conflicto": 68,
+        "dudoso": 88
+      },
+      "dudosos": 0.44,
+      "acuerdo_decididos": 0.8035714285714286,
+      "p_choca_media_si_choca": 0.8276,
+      "p_choca_media_si_no_choca": 0.3193333333333333,
+      "tokens_razonamiento_medios": 0.0
+    }
+  },
+  "datos_clave": {
+    "latencia p50 de Jev (ms)": 264.6,
+    "latencia p95 de Jev (ms)": 732.6,
+    "coste por decisión de Jev (USD)": 2.9125628140703517e-05,
+    "latencia p50 de Haiku (ms)": 1268.4,
+    "coste por decisión de Haiku (USD)": 0.0008733249999999999,
+    "latencia p50 de Sonnet (ms)": 3219.1,
+    "coste por decisión de Sonnet (USD)": 0.0021555
+  }
+}

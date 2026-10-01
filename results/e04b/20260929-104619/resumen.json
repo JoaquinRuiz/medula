@@ -1,0 +1,61 @@
+{
+  "haiku": {
+    "decisiones": 200,
+    "errores": 0,
+    "acierto_0.5": 0.915,
+    "acierto_firma": 1.0,
+    "acierto_firma_compatible": 0.6,
+    "acierto_resto": 0.9252873563218391,
+    "p_media_firma": 0.884375,
+    "p_media_firma_compatible": 0.39,
+    "falsos_negativos_0.5": 0,
+    "resueltas_por_regla": 0,
+    "umbrales": {
+      "bajo": 0.8,
+      "alto": 0.85,
+      "cobertura": 0.775,
+      "acierto": 0.9548387096774194,
+      "falsos_negativos": 4,
+      "camino_lento": 0.22499999999999998
+    },
+    "umbrales_actuales_0.2_0.8": {
+      "camino_lento": 0.09,
+      "acierto_rapido": 0.9285714285714286
+    },
+    "coste_usd": 0.275095,
+    "latencia_p50_ms": 2137.697000056505
+  },
+  "sonnet": {
+    "decisiones": 200,
+    "errores": 0,
+    "acierto_0.5": 0.985,
+    "acierto_firma": 1.0,
+    "acierto_firma_compatible": 1.0,
+    "acierto_resto": 0.9827586206896551,
+    "p_media_firma": 0.884375,
+    "p_media_firma_compatible": 0.13999999999999999,
+    "falsos_negativos_0.5": 2,
+    "resueltas_por_regla": 0,
+    "umbrales": {
+      "bajo": 0.45,
+      "alto": 0.45,
+      "cobertura": 1.0,
+      "acierto": 0.975,
+      "falsos_negativos": 2,
+      "camino_lento": 0.0
+    },
+    "umbrales_actuales_0.2_0.8": {
+      "camino_lento": 0.19,
+      "acierto_rapido": 0.9876543209876543
+    },
+    "coste_usd": 0.61294,
+    "latencia_p50_ms": 2750.3969170502387
+  },
+  "_meta": {
+    "modelo": "typesafe/jev-1.13",
+    "parejas": 100,
+    "repeticiones": 2,
+    "objetivo": 0.95,
+    "fecha": "2026-09-29T10:49:11"
+  }
+}

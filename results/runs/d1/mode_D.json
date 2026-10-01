@@ -1,0 +1,253 @@
+{
+  "mode": "D",
+  "decisor": "jev",
+  "demo": false,
+  "run_id": "d1",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "umbrales": {
+    "umbral_bajo": 0.2,
+    "umbral_alto": 0.8,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": null,
+    "regla_simbolos": null
+  },
+  "started_at": "2026-09-29T08:14:16Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 312.2,
+  "base_sha": "978438e9db60eab3c9a00b90f70c6470091583a2",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 243.8
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 61.1
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 168.3,
+      "cost_usd": 0.24145869999999994,
+      "num_turns": 20,
+      "session_id": "eacf172f-933e-4b27-9928-d1edd4446211",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 34,
+        "output_tokens": 6258,
+        "cache_read_input_tokens": 700716,
+        "cache_creation_input_tokens": 15467
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 243.5,
+      "cost_usd": 0.22587940000000004,
+      "num_turns": 25,
+      "session_id": "24ce431f-85ea-48ab-9999-07a244abb7f0",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 28,
+        "output_tokens": 5627,
+        "cache_read_input_tokens": 606117,
+        "cache_creation_input_tokens": 19332
+      }
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 175.3,
+      "cost_usd": 0.20061610000000002,
+      "num_turns": 24,
+      "session_id": "85c0c490-543b-41e4-ae73-d6a60420aa3b",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 26,
+        "output_tokens": 3827,
+        "cache_read_input_tokens": 563633,
+        "cache_creation_input_tokens": 19827
+      }
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 228.3,
+      "cost_usd": 0.19673580000000002,
+      "num_turns": 21,
+      "session_id": "87388745-09ef-4884-bf6f-003217d999c6",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 5474,
+        "cache_read_input_tokens": 498164,
+        "cache_creation_input_tokens": 16926
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 45.1,
+      "cost_usd": 0.10481839999999998,
+      "num_turns": 9,
+      "session_id": "cf0d0207-d32e-4a85-9c0e-e981bbff2991",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 18,
+        "output_tokens": 1867,
+        "cache_read_input_tokens": 331387,
+        "cache_creation_input_tokens": 7934
+      }
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 60.8,
+      "cost_usd": 0.15165209999999998,
+      "num_turns": 12,
+      "session_id": "220344f8-0bdc-4ad6-89fe-e6bacc14c32f",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 3026,
+        "cache_read_input_tokens": 464033,
+        "cache_creation_input_tokens": 11415
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 115,
+    "decisiones_modelo": 60,
+    "por_decisor": {
+      "jev": 60,
+      "opus": 1,
+      "regla": 33,
+      "sonnet": 21
+    },
+    "latencia_p50_ms": 294.9932500196155,
+    "latencia_p95_ms": 426.9888330018148,
+    "coste_decisiones_usd": 0.244497,
+    "escaladas_sonnet": 21,
+    "escaladas_opus": 1,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "errores_decisor": 0,
+    "esperas": [
+      {
+        "agente": "A2",
+        "espera_a": "A1",
+        "recurso": "app/routes_export.py",
+        "estado": "concedido",
+        "segundos": 148.1
+      },
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "app/consultas.py",
+        "estado": "concedido",
+        "segundos": 142.7
+      }
+    ],
+    "avisos_posibles": 60,
+    "avisos_enviados": 12,
+    "avisos_descartados_lectura": 1,
+    "notificaciones_de_lectura": 1,
+    "pares_con_espera": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "pares_con_aviso": [
+      "T1-T2",
+      "T2-T3",
+      "T3-T4"
+    ],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": [],
+    "avisos_innecesarios": [
+      "T2-T3"
+    ]
+  },
+  "totals": {
+    "agents_cost_usd": 1.1212,
+    "decision_cost_usd": 0.244497,
+    "cost_usd": 1.3657,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/d1/repo",
+    "timestamp": "2026-09-29T08:26:55+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 5,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 5,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "total": {
+      "passed": 37,
+      "failed": 0
+    },
+    "all_green": true
+  },
+  "red_tests": 0
+}

@@ -1,0 +1,5 @@
+Auto-merging app/validators.py
+Auto-merging tests/test_reservas.py
+CONFLICT (content): Merge conflict in tests/test_reservas.py
+Auto-merging tests/test_validators.py
+Automatic merge failed; fix conflicts and then commit the result.

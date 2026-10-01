@@ -1,0 +1,73 @@
+diff --git a/app/main.py b/app/main.py
+index e34df5a..5a0fd5d 100644
+--- a/app/main.py
++++ b/app/main.py
+@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
+ 
+ from fastapi import FastAPI
+ 
+-from app import db, routes_auth, routes_consulta, routes_reservas
++from app import db, routes_auth, routes_consulta, routes_export, routes_reservas
+ 
+ 
+ @asynccontextmanager
+@@ -15,3 +15,4 @@ app = FastAPI(title="Reservas de salas", lifespan=lifespan)
+ app.include_router(routes_auth.router)
+ app.include_router(routes_reservas.router)
+ app.include_router(routes_consulta.router)
++app.include_router(routes_export.router)
+diff --git a/app/routes_export.py b/app/routes_export.py
+new file mode 100644
+index 0000000..9304045
+--- /dev/null
++++ b/app/routes_export.py
+@@ -0,0 +1,30 @@
++import csv
++import io
++
++from fastapi import APIRouter, Depends, HTTPException, Response
++from fastapi.security import HTTPBasic, HTTPBasicCredentials
++
++from app import db
++from app.auth import AuthError, login
++from app.models import Reserva
++
++router = APIRouter()
++basic = HTTPBasic(auto_error=False)
++
++
++@router.get("/export")
++def export(cred: HTTPBasicCredentials | None = Depends(basic)) -> Response:
++    if cred is None:
++        raise HTTPException(status_code=401)
++    try:
++        login(cred.username, cred.password)
++    except AuthError:
++        raise HTTPException(status_code=401)
++    columnas = list(Reserva.model_fields)
++    buf = io.StringIO()
++    w = csv.writer(buf)
++    w.writerow(columnas)
++    for r in db.listar_reservas():
++        d = r.model_dump(mode="json")
++        w.writerow([d[c] for c in columnas])
++    return Response(buf.getvalue(), media_type="text/csv; charset=utf-8")
+diff --git a/tests/test_export.py b/tests/test_export.py
+new file mode 100644
+index 0000000..18a7173
+--- /dev/null
++++ b/tests/test_export.py
+@@ -0,0 +1,13 @@
++from app.models import Reserva
++
++
++def test_export_vacio_solo_cabecera(client):
++    r = client.get("/export", auth=("alice", "alice-pass"))
++    assert r.status_code == 200
++    assert r.headers["content-type"].startswith("text/csv")
++    assert r.text.strip() == ",".join(Reserva.model_fields)
++
++
++def test_export_sin_credenciales(client):
++    assert client.get("/export").status_code == 401
++    assert client.get("/export", auth=("alice", "mal")).status_code == 401

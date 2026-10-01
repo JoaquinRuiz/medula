@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "fecha_utc": "2026-09-28T15:51:06.834620+00:00",
+    "modelos": {
+      "jev": "typesafe/jev-1.13"
+    },
+    "esfuerzos": {
+      "jev": null
+    },
+    "parejas": 10,
+    "balance": {
+      "choca": 5,
+      "no_choca": 5
+    },
+    "repeticiones": 1,
+    "etiquetas_a_mano": 10,
+    "pregunta": "¿Choca la acción del solicitante con lo que está haciendo el otro agente? Las lecturas y los comandos que no escriben nada nunca chocan; un comando que escribe se juzga por lo que escribe. Tocar el mismo fichero no implica choque.",
+    "criterios": {
+      "choca": "Si la acción se ejecuta ahora y el otro agente completa su intención sin coordinarse, el resultado combinado rompe algo (una llamada, un contrato, datos o tests), una de las dos tareas tiene que rehacerse, o la acción destruye o sobrescribe el trabajo del otro.",
+      "no_choca": "Las dos cosas pueden completarse en cualquier orden y el resultado es correcto, aunque toquen el mismo fichero."
+    }
+  },
+  "modelos": {
+    "jev": {
+      "modelo": "typesafe/jev-1.13",
+      "llamadas": 10,
+      "errores": 0,
+      "no_validas": 0,
+      "acierto": 0.5,
+      "falsos_negativos": 5,
+      "tasa_falsos_negativos": 1.0,
+      "falsos_positivos": 0,
+      "con_confianza": 10,
+      "conf90_n": 8,
+      "conf90_cobertura": 0.8,
+      "conf90_acierto": 0.5,
+      "ece": 0.41899999999999993,
+      "tramos": [
+        {
+          "tramo": "0.00-0.50",
+          "n": 1,
+          "confianza_media": 0.47,
+          "acierto": 0.0
+        },
+        {
+          "tramo": "0.50-0.60",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.60-0.70",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.70-0.80",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.80-0.90",
+          "n": 1,
+          "confianza_media": 0.89,
+          "acierto": 1.0
+        },
+        {
+          "tramo": "0.90-0.95",
+          "n": 3,
+          "confianza_media": 0.9166666666666666,
+          "acierto": 0.6666666666666666
+        },
+        {
+          "tramo": "0.95-1.00",
+          "n": 5,
+          "confianza_media": 0.9719999999999999,
+          "acierto": 0.4
+        }
+      ],
+      "umbrales": [
+        {
+          "umbral": 0.5,
+          "cubiertas": 9,
+          "cobertura": 0.9,
+          "acierto": 0.5555555555555556,
+          "falsos_negativos": 4
+        },
+        {
+          "umbral": 0.6,
+          "cubiertas": 9,
+          "cobertura": 0.9,
+          "acierto": 0.5555555555555556,
+          "falsos_negativos": 4
+        },
+        {
+          "umbral": 0.7,
+          "cubiertas": 9,
+          "cobertura": 0.9,
+          "acierto": 0.5555555555555556,
+          "falsos_negativos": 4
+        },
+        {
+          "umbral": 0.8,
+          "cubiertas": 9,
+          "cobertura": 0.9,
+          "acierto": 0.5555555555555556,
+          "falsos_negativos": 4
+        },
+        {
+          "umbral": 0.85,
+          "cubiertas": 9,
+          "cobertura": 0.9,
+          "acierto": 0.5555555555555556,
+          "falsos_negativos": 4
+        },
+        {
+          "umbral": 0.9,
+          "cubiertas": 8,
+          "cobertura": 0.8,
+          "acierto": 0.5,
+          "falsos_negativos": 4
+        },
+        {
+          "umbral": 0.95,
+          "cubiertas": 5,
+          "cobertura": 0.5,
+          "acierto": 0.4,
+          "falsos_negativos": 3
+        },
+        {
+          "umbral": 0.99,
+          "cubiertas": 1,
+          "cobertura": 0.1,
+          "acierto": 0.0,
+          "falsos_negativos": 1
+        }
+      ],
+      "por_categoria": {
+        "mismo_fichero_sin_relacion": {
+          "n": 10,
+          "acierto": 0.5
+        }
+      },
+      "por_dificultad": {
+        "dificil": {
+          "n": 6,
+          "acierto": 0.5
+        },
+        "facil": {
+          "n": 4,
+          "acierto": 0.5
+        }
+      },
+      "coste_total_usd": 0.00026103,
+      "fallos": [
+        "C002",
+        "C004",
+        "C005",
+        "C006",
+        "C007"
+      ]
+    }
+  },
+  "jev_menos_haiku": null,
+  "puerta": {
+    "veredicto": "PARAR",
+    "motivos": [
+      "La confianza de Jev no se corresponde con su acierto: ECE 0.419 > 0.1."
+    ],
+    "notas": [
+      "Solo 8 decisiones de Jev con confianza ≥ 0,9: el acierto con confianza ≥ 0,9 es poco fiable."
+    ]
+  },
+  "umbral_recomendado": null,
+  "datos_clave": {
+    "acierto de Jev": 0.5,
+    "acierto de Haiku": null,
+    "acierto de Sonnet": null,
+    "acierto de Jev con confianza ≥ 0,9": 0.5,
+    "parejas que Jev cubre con confianza ≥ 0,9": 0.8,
+    "falsos negativos de Jev": 5,
+    "choques reales que Jev deja pasar (%)": 1.0,
+    "número de parejas": 10
+  }
+}

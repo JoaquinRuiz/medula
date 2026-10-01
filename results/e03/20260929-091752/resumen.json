@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "fecha_utc": "2026-09-29T07:31:08.468804+00:00",
+    "llamadas_por_modelo": 200,
+    "calentamiento": 3,
+    "modelos": {
+      "jev": "typesafe/jev-1.13",
+      "haiku": "anthropic/claude-haiku-4.5",
+      "sonnet": "anthropic/claude-sonnet-5"
+    },
+    "esfuerzos": {
+      "jev": null,
+      "haiku": null,
+      "sonnet": "low"
+    },
+    "umbrales": {
+      "conceder": 0.2,
+      "choque": 0.8
+    },
+    "max_tokens": 2048,
+    "escenarios": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08"
+    ],
+    "nota": "Latencias de extremo a extremo desde esta máquina, con el paso por OpenRouter incluido; costes en USD según OpenRouter."
+  },
+  "modelos": {
+    "jev": {
+      "modelo": "typesafe/jev-1.13",
+      "llamadas": 200,
+      "errores": 0,
+      "p50_ms": 279.4,
+      "p95_ms": 408.8,
+      "coste_medio_usd": 2.912175e-05,
+      "coste_por_1000_usd": 0.02912175,
+      "llamadas_con_coste": 200,
+      "veredictos": {
+        "conceder": 25,
+        "esperar": 0,
+        "conflicto": 63,
+        "dudoso": 112
+      },
+      "dudosos": 0.56,
+      "acuerdo_decididos": 0.5681818181818182,
+      "p_choca_media_si_choca": 0.7684,
+      "p_choca_media_si_no_choca": 0.2152,
+      "tokens_razonamiento_medios": null
+    },
+    "haiku": {
+      "modelo": "anthropic/claude-haiku-4.5",
+      "llamadas": 200,
+      "errores": 0,
+      "p50_ms": 1337.5,
+      "p95_ms": 1714.8,
+      "coste_medio_usd": 0.000874375,
+      "coste_por_1000_usd": 0.874375,
+      "llamadas_con_coste": 200,
+      "veredictos": {
+        "conceder": 25,
+        "esperar": 16,
+        "conflicto": 136,
+        "dudoso": 23
+      },
+      "dudosos": 0.115,
+      "acuerdo_decididos": 0.4293785310734463,
+      "p_choca_media_si_choca": 0.9431999999999999,
+      "p_choca_media_si_no_choca": 0.4686666666666666,
+      "tokens_razonamiento_medios": 0.0
+    },
+    "sonnet": {
+      "modelo": "anthropic/claude-sonnet-5",
+      "llamadas": 200,
+      "errores": 0,
+      "p50_ms": 2201.1,
+      "p95_ms": 2489.3,
+      "coste_medio_usd": 0.0021559500000000002,
+      "coste_por_1000_usd": 2.1559500000000003,
+      "llamadas_con_coste": 200,
+      "veredictos": {
+        "conceder": 25,
+        "esperar": 13,
+        "conflicto": 72,
+        "dudoso": 90
+      },
+      "dudosos": 0.45,
+      "acuerdo_decididos": 0.7636363636363637,
+      "p_choca_media_si_choca": 0.8264,
+      "p_choca_media_si_no_choca": 0.32133333333333336,
+      "tokens_razonamiento_medios": 0.0
+    }
+  },
+  "datos_clave": {
+    "latencia p50 de Jev (ms)": 279.4,
+    "latencia p95 de Jev (ms)": 408.8,
+    "coste por decisión de Jev (USD)": 2.912175e-05,
+    "latencia p50 de Haiku (ms)": 1337.5,
+    "coste por decisión de Haiku (USD)": 0.000874375,
+    "latencia p50 de Sonnet (ms)": 2201.1,
+    "coste por decisión de Sonnet (USD)": 0.0021559500000000002
+  }
+}

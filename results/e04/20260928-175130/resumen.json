@@ -1,0 +1,709 @@
+{
+  "meta": {
+    "fecha_utc": "2026-09-28T15:53:13.507824+00:00",
+    "modelos": {
+      "jev": "typesafe/jev-1.13",
+      "haiku": "anthropic/claude-haiku-4.5",
+      "sonnet": "anthropic/claude-sonnet-5"
+    },
+    "esfuerzos": {
+      "jev": null,
+      "haiku": null,
+      "sonnet": "low"
+    },
+    "parejas": 100,
+    "balance": {
+      "choca": 53,
+      "no_choca": 47
+    },
+    "repeticiones": 1,
+    "etiquetas_a_mano": 100,
+    "pregunta": "¿Choca la acción del solicitante con lo que está haciendo el otro agente? Las lecturas y los comandos que no escriben nada nunca chocan; un comando que escribe se juzga por lo que escribe. Tocar el mismo fichero no implica choque.",
+    "criterios": {
+      "choca": "Si la acción se ejecuta ahora y el otro agente completa su intención sin coordinarse, el resultado combinado rompe algo (una llamada, un contrato, datos o tests), una de las dos tareas tiene que rehacerse, o la acción destruye o sobrescribe el trabajo del otro.",
+      "no_choca": "Las dos cosas pueden completarse en cualquier orden y el resultado es correcto, aunque toquen el mismo fichero."
+    }
+  },
+  "modelos": {
+    "jev": {
+      "modelo": "typesafe/jev-1.13",
+      "llamadas": 100,
+      "errores": 0,
+      "no_validas": 0,
+      "acierto": 0.68,
+      "falsos_negativos": 25,
+      "tasa_falsos_negativos": 0.4716981132075472,
+      "falsos_positivos": 7,
+      "con_confianza": 100,
+      "conf90_n": 52,
+      "conf90_cobertura": 0.52,
+      "conf90_acierto": 0.7692307692307693,
+      "ece": 0.15449999999999997,
+      "tramos": [
+        {
+          "tramo": "0.00-0.50",
+          "n": 18,
+          "confianza_media": 0.23944444444444443,
+          "acierto": 0.3333333333333333
+        },
+        {
+          "tramo": "0.50-0.60",
+          "n": 8,
+          "confianza_media": 0.5387500000000001,
+          "acierto": 0.75
+        },
+        {
+          "tramo": "0.60-0.70",
+          "n": 7,
+          "confianza_media": 0.6542857142857142,
+          "acierto": 0.7142857142857143
+        },
+        {
+          "tramo": "0.70-0.80",
+          "n": 4,
+          "confianza_media": 0.7525,
+          "acierto": 0.75
+        },
+        {
+          "tramo": "0.80-0.90",
+          "n": 11,
+          "confianza_media": 0.8518181818181817,
+          "acierto": 0.7272727272727273
+        },
+        {
+          "tramo": "0.90-0.95",
+          "n": 15,
+          "confianza_media": 0.9213333333333333,
+          "acierto": 0.8
+        },
+        {
+          "tramo": "0.95-1.00",
+          "n": 37,
+          "confianza_media": 0.9851351351351352,
+          "acierto": 0.7567567567567568
+        }
+      ],
+      "umbrales": [
+        {
+          "umbral": 0.5,
+          "cubiertas": 82,
+          "cobertura": 0.82,
+          "acierto": 0.7560975609756098,
+          "falsos_negativos": 15
+        },
+        {
+          "umbral": 0.6,
+          "cubiertas": 74,
+          "cobertura": 0.74,
+          "acierto": 0.7567567567567568,
+          "falsos_negativos": 13
+        },
+        {
+          "umbral": 0.7,
+          "cubiertas": 67,
+          "cobertura": 0.67,
+          "acierto": 0.7611940298507462,
+          "falsos_negativos": 12
+        },
+        {
+          "umbral": 0.8,
+          "cubiertas": 63,
+          "cobertura": 0.63,
+          "acierto": 0.7619047619047619,
+          "falsos_negativos": 12
+        },
+        {
+          "umbral": 0.85,
+          "cubiertas": 58,
+          "cobertura": 0.58,
+          "acierto": 0.7758620689655172,
+          "falsos_negativos": 11
+        },
+        {
+          "umbral": 0.9,
+          "cubiertas": 52,
+          "cobertura": 0.52,
+          "acierto": 0.7692307692307693,
+          "falsos_negativos": 11
+        },
+        {
+          "umbral": 0.95,
+          "cubiertas": 37,
+          "cobertura": 0.37,
+          "acierto": 0.7567567567567568,
+          "falsos_negativos": 9
+        },
+        {
+          "umbral": 0.99,
+          "cubiertas": 24,
+          "cobertura": 0.24,
+          "acierto": 0.7916666666666666,
+          "falsos_negativos": 5
+        }
+      ],
+      "por_categoria": {
+        "mismo_fichero_sin_relacion": {
+          "n": 12,
+          "acierto": 0.5833333333333334
+        },
+        "mismo_fichero_con_relacion": {
+          "n": 6,
+          "acierto": 0.6666666666666666
+        },
+        "distinto_fichero_con_relacion": {
+          "n": 8,
+          "acierto": 0.75
+        },
+        "firma": {
+          "n": 8,
+          "acierto": 0.375
+        },
+        "firma_compatible": {
+          "n": 5,
+          "acierto": 1.0
+        },
+        "renombrado": {
+          "n": 8,
+          "acierto": 0.75
+        },
+        "renombrado_sin_dependencias": {
+          "n": 4,
+          "acierto": 0.75
+        },
+        "comportamiento": {
+          "n": 10,
+          "acierto": 0.5
+        },
+        "comportamiento_sin_efecto": {
+          "n": 3,
+          "acierto": 0.0
+        },
+        "lectura": {
+          "n": 12,
+          "acierto": 1.0
+        },
+        "bash_que_escribe": {
+          "n": 4,
+          "acierto": 0.75
+        },
+        "distinto_fichero_sin_relacion": {
+          "n": 10,
+          "acierto": 0.7
+        },
+        "configuracion": {
+          "n": 6,
+          "acierto": 0.5
+        },
+        "configuracion_sin_efecto": {
+          "n": 4,
+          "acierto": 1.0
+        }
+      },
+      "por_dificultad": {
+        "dificil": {
+          "n": 55,
+          "acierto": 0.6909090909090909
+        },
+        "facil": {
+          "n": 45,
+          "acierto": 0.6666666666666666
+        }
+      },
+      "coste_total_usd": 0.002572206,
+      "fallos": [
+        "C002",
+        "C004",
+        "C005",
+        "C006",
+        "C007",
+        "C016",
+        "C017",
+        "C022",
+        "C026",
+        "C027",
+        "C028",
+        "C029",
+        "C030",
+        "C031",
+        "C040",
+        "C041",
+        "C048",
+        "C052",
+        "C053",
+        "C054",
+        "C055",
+        "C058",
+        "C062",
+        "C063",
+        "C064",
+        "C077",
+        "C081",
+        "C082",
+        "C083",
+        "C093",
+        "C094",
+        "C095"
+      ]
+    },
+    "haiku": {
+      "modelo": "anthropic/claude-haiku-4.5",
+      "llamadas": 100,
+      "errores": 0,
+      "no_validas": 0,
+      "acierto": 0.67,
+      "falsos_negativos": 23,
+      "tasa_falsos_negativos": 0.4339622641509434,
+      "falsos_positivos": 10,
+      "con_confianza": 100,
+      "conf90_n": 92,
+      "conf90_cobertura": 0.92,
+      "conf90_acierto": 0.6847826086956522,
+      "ece": 0.2667,
+      "tramos": [
+        {
+          "tramo": "0.00-0.50",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.50-0.60",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.60-0.70",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.70-0.80",
+          "n": 1,
+          "confianza_media": 0.75,
+          "acierto": 1.0
+        },
+        {
+          "tramo": "0.80-0.90",
+          "n": 7,
+          "confianza_media": 0.85,
+          "acierto": 0.42857142857142855
+        },
+        {
+          "tramo": "0.90-0.95",
+          "n": 34,
+          "confianza_media": 0.92,
+          "acierto": 0.6176470588235294
+        },
+        {
+          "tramo": "0.95-1.00",
+          "n": 58,
+          "confianza_media": 0.951551724137931,
+          "acierto": 0.7241379310344828
+        }
+      ],
+      "umbrales": [
+        {
+          "umbral": 0.5,
+          "cubiertas": 100,
+          "cobertura": 1.0,
+          "acierto": 0.67,
+          "falsos_negativos": 23
+        },
+        {
+          "umbral": 0.6,
+          "cubiertas": 100,
+          "cobertura": 1.0,
+          "acierto": 0.67,
+          "falsos_negativos": 23
+        },
+        {
+          "umbral": 0.7,
+          "cubiertas": 100,
+          "cobertura": 1.0,
+          "acierto": 0.67,
+          "falsos_negativos": 23
+        },
+        {
+          "umbral": 0.8,
+          "cubiertas": 99,
+          "cobertura": 0.99,
+          "acierto": 0.6666666666666666,
+          "falsos_negativos": 23
+        },
+        {
+          "umbral": 0.85,
+          "cubiertas": 99,
+          "cobertura": 0.99,
+          "acierto": 0.6666666666666666,
+          "falsos_negativos": 23
+        },
+        {
+          "umbral": 0.9,
+          "cubiertas": 92,
+          "cobertura": 0.92,
+          "acierto": 0.6847826086956522,
+          "falsos_negativos": 22
+        },
+        {
+          "umbral": 0.95,
+          "cubiertas": 58,
+          "cobertura": 0.58,
+          "acierto": 0.7241379310344828,
+          "falsos_negativos": 12
+        },
+        {
+          "umbral": 0.99,
+          "cubiertas": 0,
+          "cobertura": 0.0,
+          "acierto": null,
+          "falsos_negativos": 0
+        }
+      ],
+      "por_categoria": {
+        "mismo_fichero_sin_relacion": {
+          "n": 12,
+          "acierto": 0.5833333333333334
+        },
+        "mismo_fichero_con_relacion": {
+          "n": 6,
+          "acierto": 0.6666666666666666
+        },
+        "distinto_fichero_con_relacion": {
+          "n": 8,
+          "acierto": 1.0
+        },
+        "firma": {
+          "n": 8,
+          "acierto": 0.625
+        },
+        "firma_compatible": {
+          "n": 5,
+          "acierto": 0.6
+        },
+        "renombrado": {
+          "n": 8,
+          "acierto": 0.5
+        },
+        "renombrado_sin_dependencias": {
+          "n": 4,
+          "acierto": 0.75
+        },
+        "comportamiento": {
+          "n": 10,
+          "acierto": 0.5
+        },
+        "comportamiento_sin_efecto": {
+          "n": 3,
+          "acierto": 0.0
+        },
+        "lectura": {
+          "n": 12,
+          "acierto": 0.9166666666666666
+        },
+        "bash_que_escribe": {
+          "n": 4,
+          "acierto": 0.75
+        },
+        "distinto_fichero_sin_relacion": {
+          "n": 10,
+          "acierto": 0.7
+        },
+        "configuracion": {
+          "n": 6,
+          "acierto": 0.5
+        },
+        "configuracion_sin_efecto": {
+          "n": 4,
+          "acierto": 1.0
+        }
+      },
+      "por_dificultad": {
+        "dificil": {
+          "n": 55,
+          "acierto": 0.6545454545454545
+        },
+        "facil": {
+          "n": 45,
+          "acierto": 0.6888888888888889
+        }
+      },
+      "coste_total_usd": 0.075885,
+      "fallos": [
+        "C002",
+        "C004",
+        "C005",
+        "C006",
+        "C007",
+        "C013",
+        "C017",
+        "C027",
+        "C028",
+        "C030",
+        "C035",
+        "C037",
+        "C040",
+        "C041",
+        "C043",
+        "C044",
+        "C048",
+        "C052",
+        "C053",
+        "C054",
+        "C058",
+        "C060",
+        "C062",
+        "C063",
+        "C064",
+        "C070",
+        "C077",
+        "C081",
+        "C082",
+        "C083",
+        "C093",
+        "C094",
+        "C095"
+      ]
+    },
+    "sonnet": {
+      "modelo": "anthropic/claude-sonnet-5",
+      "llamadas": 100,
+      "errores": 0,
+      "no_validas": 0,
+      "acierto": 0.78,
+      "falsos_negativos": 13,
+      "tasa_falsos_negativos": 0.24528301886792453,
+      "falsos_positivos": 9,
+      "con_confianza": 100,
+      "conf90_n": 49,
+      "conf90_cobertura": 0.49,
+      "conf90_acierto": 0.7959183673469388,
+      "ece": 0.11410000000000003,
+      "tramos": [
+        {
+          "tramo": "0.00-0.50",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.50-0.60",
+          "n": 0,
+          "confianza_media": null,
+          "acierto": null
+        },
+        {
+          "tramo": "0.60-0.70",
+          "n": 1,
+          "confianza_media": 0.65,
+          "acierto": 1.0
+        },
+        {
+          "tramo": "0.70-0.80",
+          "n": 10,
+          "confianza_media": 0.742,
+          "acierto": 0.8
+        },
+        {
+          "tramo": "0.80-0.90",
+          "n": 40,
+          "confianza_media": 0.8535,
+          "acierto": 0.75
+        },
+        {
+          "tramo": "0.90-0.95",
+          "n": 33,
+          "confianza_media": 0.9066666666666667,
+          "acierto": 0.7272727272727273
+        },
+        {
+          "tramo": "0.95-1.00",
+          "n": 16,
+          "confianza_media": 0.96375,
+          "acierto": 0.9375
+        }
+      ],
+      "umbrales": [
+        {
+          "umbral": 0.5,
+          "cubiertas": 100,
+          "cobertura": 1.0,
+          "acierto": 0.78,
+          "falsos_negativos": 13
+        },
+        {
+          "umbral": 0.6,
+          "cubiertas": 100,
+          "cobertura": 1.0,
+          "acierto": 0.78,
+          "falsos_negativos": 13
+        },
+        {
+          "umbral": 0.7,
+          "cubiertas": 99,
+          "cobertura": 0.99,
+          "acierto": 0.7777777777777778,
+          "falsos_negativos": 13
+        },
+        {
+          "umbral": 0.8,
+          "cubiertas": 89,
+          "cobertura": 0.89,
+          "acierto": 0.7752808988764045,
+          "falsos_negativos": 13
+        },
+        {
+          "umbral": 0.85,
+          "cubiertas": 89,
+          "cobertura": 0.89,
+          "acierto": 0.7752808988764045,
+          "falsos_negativos": 13
+        },
+        {
+          "umbral": 0.9,
+          "cubiertas": 49,
+          "cobertura": 0.49,
+          "acierto": 0.7959183673469388,
+          "falsos_negativos": 6
+        },
+        {
+          "umbral": 0.95,
+          "cubiertas": 16,
+          "cobertura": 0.16,
+          "acierto": 0.9375,
+          "falsos_negativos": 1
+        },
+        {
+          "umbral": 0.99,
+          "cubiertas": 0,
+          "cobertura": 0.0,
+          "acierto": null,
+          "falsos_negativos": 0
+        }
+      ],
+      "por_categoria": {
+        "mismo_fichero_sin_relacion": {
+          "n": 12,
+          "acierto": 0.5833333333333334
+        },
+        "mismo_fichero_con_relacion": {
+          "n": 6,
+          "acierto": 0.6666666666666666
+        },
+        "distinto_fichero_con_relacion": {
+          "n": 8,
+          "acierto": 1.0
+        },
+        "firma": {
+          "n": 8,
+          "acierto": 1.0
+        },
+        "firma_compatible": {
+          "n": 5,
+          "acierto": 1.0
+        },
+        "renombrado": {
+          "n": 8,
+          "acierto": 0.75
+        },
+        "renombrado_sin_dependencias": {
+          "n": 4,
+          "acierto": 0.75
+        },
+        "comportamiento": {
+          "n": 10,
+          "acierto": 0.6
+        },
+        "comportamiento_sin_efecto": {
+          "n": 3,
+          "acierto": 0.0
+        },
+        "lectura": {
+          "n": 12,
+          "acierto": 1.0
+        },
+        "bash_que_escribe": {
+          "n": 4,
+          "acierto": 1.0
+        },
+        "distinto_fichero_sin_relacion": {
+          "n": 10,
+          "acierto": 0.7
+        },
+        "configuracion": {
+          "n": 6,
+          "acierto": 0.6666666666666666
+        },
+        "configuracion_sin_efecto": {
+          "n": 4,
+          "acierto": 1.0
+        }
+      },
+      "por_dificultad": {
+        "dificil": {
+          "n": 55,
+          "acierto": 0.7818181818181819
+        },
+        "facil": {
+          "n": 45,
+          "acierto": 0.7777777777777778
+        }
+      },
+      "coste_total_usd": 0.19048,
+      "fallos": [
+        "C002",
+        "C004",
+        "C005",
+        "C006",
+        "C007",
+        "C013",
+        "C017",
+        "C040",
+        "C041",
+        "C048",
+        "C052",
+        "C053",
+        "C054",
+        "C055",
+        "C062",
+        "C063",
+        "C064",
+        "C081",
+        "C082",
+        "C083",
+        "C091",
+        "C093"
+      ]
+    }
+  },
+  "jev_menos_haiku": {
+    "diferencia": 0.01,
+    "ic95": [
+      -0.06,
+      0.08
+    ],
+    "parejas": 100
+  },
+  "puerta": {
+    "veredicto": "PARAR",
+    "motivos": [
+      "La confianza de Jev no se corresponde con su acierto: ECE 0.154 > 0.1.",
+      "Cuando Jev declara ≥ 0,9 acierta 76.9% (< 85%, 52 decisiones)."
+    ],
+    "notas": [
+      "Jev − Haiku = +1.0% (IC 95 % -6.0% a +8.0%, 100 parejas)."
+    ]
+  },
+  "umbral_recomendado": null,
+  "datos_clave": {
+    "acierto de Jev": 0.68,
+    "acierto de Haiku": 0.67,
+    "acierto de Sonnet": 0.78,
+    "acierto de Jev con confianza ≥ 0,9": 0.7692307692307693,
+    "parejas que Jev cubre con confianza ≥ 0,9": 0.52,
+    "falsos negativos de Jev": 25,
+    "choques reales que Jev deja pasar (%)": 0.4716981132075472,
+    "número de parejas": 100
+  }
+}

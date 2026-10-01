@@ -1,0 +1,249 @@
+{
+  "mode": "C",
+  "decisor": "locks",
+  "demo": false,
+  "run_id": "c3",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "umbrales": {
+    "umbral_bajo": 0.2,
+    "umbral_alto": 0.8,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": "choca",
+    "regla_simbolos": false
+  },
+  "started_at": "2026-09-29T13:54:29Z",
+  "completed": true,
+  "wall_time_s": 98.0,
+  "base_sha": "dcf7b78df0812e904f652ed293cfc088cd81bfd5",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 49.6
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 41.6
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 1,
+      "duration_s": 12.3,
+      "cost_usd": 0.0496417,
+      "num_turns": 3,
+      "session_id": "144c6481-487b-49cd-a97d-d1ab9eaf8dc4",
+      "is_error": true,
+      "terminal_reason": "api_error",
+      "tokens": {
+        "input_tokens": 4,
+        "output_tokens": 267,
+        "cache_read_input_tokens": 59206,
+        "cache_creation_input_tokens": 14049
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 49.3,
+      "cost_usd": 0.15395190000000003,
+      "num_turns": 19,
+      "session_id": "59aa3371-43bd-440e-9a75-02caf5cbff06",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 18,
+        "output_tokens": 3054,
+        "cache_read_input_tokens": 350717,
+        "cache_creation_input_tokens": 21293
+      }
+    },
+    "T3": {
+      "exit_code": 1,
+      "duration_s": 1.8,
+      "cost_usd": 0,
+      "num_turns": 1,
+      "session_id": "30e58855-bbfd-4ccf-9449-8b6828f66c15",
+      "is_error": true,
+      "terminal_reason": "api_error",
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0
+      }
+    },
+    "T4": {
+      "exit_code": 1,
+      "duration_s": 41.6,
+      "cost_usd": 0.1137744,
+      "num_turns": 13,
+      "session_id": "0688b11b-ec67-49b0-8c85-2d48826a1024",
+      "is_error": true,
+      "terminal_reason": "api_error",
+      "tokens": {
+        "input_tokens": 10,
+        "output_tokens": 3453,
+        "cache_read_input_tokens": 174422,
+        "cache_creation_input_tokens": 17736
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 41.4,
+      "cost_usd": 0.11416500000000002,
+      "num_turns": 10,
+      "session_id": "ad9383e8-f302-429a-93ce-3394d7d64a5c",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "tokens": {
+        "input_tokens": 20,
+        "output_tokens": 2000,
+        "cache_read_input_tokens": 368225,
+        "cache_creation_input_tokens": 8192
+      }
+    },
+    "T6": {
+      "exit_code": 1,
+      "duration_s": 1.3,
+      "cost_usd": 0,
+      "num_turns": 1,
+      "session_id": "4e3946ca-1a28-4069-9983-78904864ac29",
+      "is_error": true,
+      "terminal_reason": "api_error",
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 20,
+    "decisiones_modelo": 6,
+    "por_decisor": {
+      "locks": 6,
+      "regla": 14
+    },
+    "latencia_p50_ms": 0.007083523087203503,
+    "latencia_p95_ms": 0.008916016668081284,
+    "coste_decisiones_usd": 0,
+    "escaladas_sonnet": 0,
+    "escaladas_opus": 0,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "errores_decisor": 0,
+    "esperas": [],
+    "avisos_posibles": 0,
+    "avisos_enviados": 0,
+    "pares_con_espera": [],
+    "pares_con_aviso": [],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [],
+    "bloqueos_innecesarios": [],
+    "avisos_innecesarios": []
+  },
+  "totals": {
+    "agents_cost_usd": 0.4315,
+    "decision_cost_usd": 0,
+    "cost_usd": 0.4315,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/c3/repo",
+    "timestamp": "2026-09-29T13:56:07+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 0,
+        "failed": 7,
+        "failed_tests": [
+          "_acceptance.test_t1::test_login_con_otp_valido",
+          "_acceptance.test_t1::test_login_con_otp_invalido_o_vacio",
+          "_acceptance.test_t1::test_login_sin_otp_falla",
+          "_acceptance.test_t1::test_otp_es_obligatorio_en_la_firma",
+          "_acceptance.test_t1::test_endpoint_login_exige_otp",
+          "_acceptance.test_t1::test_otp_header_reutilizable",
+          "_acceptance.test_t1::test_verificador_inyectable"
+        ]
+      },
+      "T2": {
+        "passed": 3,
+        "failed": 2,
+        "failed_tests": [
+          "_acceptance.test_t2::test_export_csv",
+          "_acceptance.test_t2::test_export_sin_reservas_solo_cabecera"
+        ]
+      },
+      "T3": {
+        "passed": 0,
+        "failed": 4,
+        "failed_tests": [
+          "_acceptance.test_t3::test_crear_con_inicio",
+          "_acceptance.test_t3::test_listado_con_inicio_ordenado",
+          "_acceptance.test_t3::test_fecha_ya_no_se_acepta",
+          "_acceptance.test_t3::test_columna_renombrada"
+        ]
+      },
+      "T4": {
+        "passed": 1,
+        "failed": 3,
+        "failed_tests": [
+          "_acceptance.test_t4::test_filtro_desde",
+          "_acceptance.test_t4::test_filtro_incluye_el_mismo_dia",
+          "_acceptance.test_t4::test_sin_filtro_devuelve_todas"
+        ]
+      },
+      "T5": {
+        "passed": 2,
+        "failed": 1,
+        "failed_tests": [
+          "_acceptance.test_t5::test_mensaje_llega_a_la_api"
+        ]
+      },
+      "T6": {
+        "passed": 4,
+        "failed": 5,
+        "failed_tests": [
+          "_acceptance.test_t6::test_fuera_de_franja[7-30-60]",
+          "_acceptance.test_t6::test_fuera_de_franja[19-30-60]",
+          "_acceptance.test_t6::test_fuera_de_franja[20-0-30]",
+          "_acceptance.test_t6::test_fuera_de_franja[6-0-30]",
+          "_acceptance.test_t6::test_franja_en_la_api"
+        ]
+      }
+    },
+    "integration": {
+      "passed": 0,
+      "failed": 5,
+      "failed_tests": [
+        "_acceptance.test_integration::test_login_http_exige_otp",
+        "_acceptance.test_integration::test_export_con_otp_y_campo_renombrado",
+        "_acceptance.test_integration::test_export_exige_segundo_factor",
+        "_acceptance.test_integration::test_filtro_sobre_campo_renombrado",
+        "_acceptance.test_integration::test_validaciones_conviven"
+      ]
+    },
+    "total": {
+      "passed": 10,
+      "failed": 27
+    },
+    "all_green": false
+  },
+  "red_tests": 27
+}

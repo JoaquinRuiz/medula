@@ -1,0 +1,87 @@
+{
+  "base": {
+    "decisiones": 200,
+    "errores": 0,
+    "acierto_0.5": 0.925,
+    "acierto_firma": 0.9375,
+    "acierto_firma_compatible": 0.9,
+    "acierto_resto": 0.9252873563218391,
+    "p_media_firma": 0.72625,
+    "p_media_firma_compatible": 0.296,
+    "falsos_negativos_0.5": 14,
+    "resueltas_por_regla": 0,
+    "umbrales": {
+      "bajo": 0.4,
+      "alto": 0.4,
+      "cobertura": 1.0,
+      "acierto": 0.95,
+      "falsos_negativos": 8,
+      "camino_lento": 0.0
+    },
+    "umbrales_actuales_0.2_0.8": {
+      "camino_lento": 0.39,
+      "acierto_rapido": 0.9836065573770492
+    },
+    "coste_usd": 0.005514012,
+    "latencia_p50_ms": 265.13154205167666
+  },
+  "regla": {
+    "decisiones": 200,
+    "errores": 0,
+    "acierto_0.5": 0.91,
+    "acierto_firma": 0.875,
+    "acierto_firma_compatible": 1.0,
+    "acierto_resto": 0.9080459770114943,
+    "p_media_firma": 0.61,
+    "p_media_firma_compatible": 0.267,
+    "falsos_negativos_0.5": 18,
+    "resueltas_por_regla": 64,
+    "umbrales": {
+      "bajo": 0.35,
+      "alto": 0.45,
+      "cobertura": 0.95,
+      "acierto": 0.9526315789473684,
+      "falsos_negativos": 9,
+      "camino_lento": 0.050000000000000044
+    },
+    "umbrales_actuales_0.2_0.8": {
+      "camino_lento": 0.485,
+      "acierto_rapido": 0.9805825242718447
+    },
+    "coste_usd": 0.005113668,
+    "latencia_p50_ms": 268.0335420300253
+  },
+  "direccional": {
+    "decisiones": 200,
+    "errores": 0,
+    "acierto_0.5": 0.865,
+    "acierto_firma": 0.9375,
+    "acierto_firma_compatible": 0.4,
+    "acierto_resto": 0.8850574712643678,
+    "p_media_firma": 0.81875,
+    "p_media_firma_compatible": 0.541,
+    "falsos_negativos_0.5": 11,
+    "resueltas_por_regla": 0,
+    "umbrales": {
+      "bajo": 0.25,
+      "alto": 0.75,
+      "cobertura": 0.715,
+      "acierto": 0.951048951048951,
+      "falsos_negativos": 2,
+      "camino_lento": 0.28500000000000003
+    },
+    "umbrales_actuales_0.2_0.8": {
+      "camino_lento": 0.425,
+      "acierto_rapido": 0.9652173913043478
+    },
+    "coste_usd": 0.005463612,
+    "latencia_p50_ms": 268.34175002295524
+  },
+  "_meta": {
+    "modelo": "typesafe/jev-1.13",
+    "parejas": 100,
+    "repeticiones": 2,
+    "objetivo": 0.95,
+    "fecha": "2026-09-29T10:39:04"
+  }
+}

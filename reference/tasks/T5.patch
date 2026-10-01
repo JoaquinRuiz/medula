@@ -1,0 +1,39 @@
+diff --git a/app/validators.py b/app/validators.py
+index ffca5ea..e849b28 100644
+--- a/app/validators.py
++++ b/app/validators.py
+@@ -13,9 +13,11 @@ class ValidationError(Exception):
+ 
+ def validar_sala(sala: str) -> None:
+     if not sala:
+-        raise ValidationError("sala requerida")
++        raise ValidationError("La sala es obligatoria.")
+     if sala not in SALAS:
+-        raise ValidationError("sala invalida")
++        raise ValidationError(
++            f"La sala «{sala}» no existe. Salas disponibles: {', '.join(SALAS)}."
++        )
+ 
+ 
+ # --- Parámetros de reserva -------------------------------------------------
+diff --git a/tests/test_validators.py b/tests/test_validators.py
+index e85d620..4675975 100644
+--- a/tests/test_validators.py
++++ b/tests/test_validators.py
+@@ -1,3 +1,4 @@
++import re
+ from datetime import datetime
+ 
+ import pytest
+@@ -9,9 +10,9 @@ def test_sala_valida():
+     validar_sala("Boreal")
+ 
+ 
+-@pytest.mark.parametrize("sala,mensaje", [("", "sala requerida"), ("Delta", "sala invalida")])
++@pytest.mark.parametrize("sala,mensaje", [("", "La sala es obligatoria."), ("Delta", "La sala «Delta» no existe. Salas disponibles: Atlas, Boreal, Cierzo.")])
+ def test_sala_errores(sala, mensaje):
+-    with pytest.raises(ValidationError, match=f"^{mensaje}$"):
++    with pytest.raises(ValidationError, match=f"^{re.escape(mensaje)}$"):
+         validar_sala(sala)
+ 
+ 

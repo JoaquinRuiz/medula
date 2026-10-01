@@ -1,0 +1,833 @@
+# Candidatas del set de calibración (E-04). Guía de etiquetado en README.md.
+# `propuesta` es la etiqueta que propuso Claude: no es verdad hasta que la
+# confirmes con bench/e04_etiquetar.py, que escribe calibration/etiquetas.yaml.
+version: 1
+pares:
+
+# --- Mismo fichero sin relación (no choca) ----------------------------------
+
+- id: C001
+  categoria: mismo_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Función nueva al final del fichero; los mensajes de validar_sala() no le afectan."
+  solicitante: {agente: A1, tarea: "Validar que la sala tiene capacidad para los asistentes.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "def validar_capacidad(sala: str, asistentes: int) -> None: ...  # función nueva al final del fichero"}}
+  otro: {agente: A2, tarea: "Reescribir los mensajes de error de validar_sala() para que sean más claros.", tiene: ["app/validators.py"], intencion: "Cambiar los textos de las dos ValidationError de validar_sala()."}
+
+- id: C002
+  categoria: mismo_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Añadir un campo opcional y renombrar otro campo del mismo modelo son cambios independientes."
+  solicitante: {agente: A1, tarea: "Permitir añadir notas libres a una reserva.", accion: {herramienta: Edit, objetivo: "app/models.py · ReservaIn", cambio: "notas: str | None = None"}}
+  otro: {agente: A2, tarea: "Renombrar el campo sala de Reserva a sala_id en el modelo, la base de datos y la API.", tiene: ["app/models.py", "app/db.py"], intencion: "Renombrar ReservaIn.sala a ReservaIn.sala_id."}
+
+- id: C003
+  categoria: mismo_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "logout() solo borra del diccionario de sesiones; cómo se comprueba la contraseña dentro de login() no le afecta."
+  solicitante: {agente: A1, tarea: "Añadir cierre de sesión.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "def logout(token: str) -> None:\n    _sessions.pop(token, None)"}}
+  otro: {agente: A2, tarea: "Guardar las contraseñas con bcrypt en lugar de en claro.", tiene: ["app/auth.py", "app/config.py"], intencion: "Cambiar la comparación de contraseña dentro de login() por bcrypt.checkpw, sin tocar su firma."}
+
+- id: C004
+  categoria: mismo_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Un índice nuevo no cambia resultados; la función nueva del otro solo lee la tabla."
+  solicitante: {agente: A1, tarea: "Acelerar las búsquedas por sala.", accion: {herramienta: Edit, objetivo: "app/db.py · init_db", cambio: "conn.execute('CREATE INDEX IF NOT EXISTS idx_reservas_sala ON reservas(sala)')"}}
+  otro: {agente: A2, tarea: "Mostrar cuántas reservas tiene cada usuario.", tiene: ["app/db.py"], intencion: "Añadir contar_reservas_por_usuario() con un SELECT usuario, COUNT(*) ... GROUP BY usuario."}
+
+- id: C005
+  categoria: mismo_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Endpoint nuevo en el mismo router; la cabecera Location del POST no le afecta."
+  solicitante: {agente: A1, tarea: "Permitir cancelar reservas.", accion: {herramienta: Edit, objetivo: "app/routes_reservas.py", cambio: "@router.delete('/reservas/{id}', status_code=204)\ndef cancelar_reserva(id: int, session: Session = Depends(sesion_actual)): ..."}}
+  otro: {agente: A2, tarea: "Que POST /reservas devuelva la cabecera Location de la reserva creada.", tiene: ["app/routes_reservas.py"], intencion: "Añadir response.headers['Location'] en crear_reserva()."}
+
+- id: C006
+  categoria: mismo_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Dos claves distintas de configuración."
+  solicitante: {agente: A1, tarea: "Dar de alta la sala nueva Estrato.", accion: {herramienta: Edit, objetivo: "app/config.py", cambio: "SALAS = ('Atlas', 'Boreal', 'Cierzo', 'Estrato')"}}
+  otro: {agente: A2, tarea: "Hacer configurable el nivel de log.", tiene: ["app/config.py"], intencion: "Añadir LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')."}
+
+- id: C007
+  categoria: mismo_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Secciones distintas de la documentación."
+  solicitante: {agente: A1, tarea: "Documentar el endpoint de exportación.", accion: {herramienta: Edit, objetivo: "README.md", cambio: "Nueva sección '## Exportar reservas' con un ejemplo de curl."}}
+  otro: {agente: A2, tarea: "Documentar cómo preparar el entorno con uv.", tiene: ["README.md"], intencion: "Reescribir la sección '## Instalación'."}
+
+- id: C008
+  categoria: mismo_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Dos fixtures nuevas e independientes."
+  solicitante: {agente: A1, tarea: "Tests para reservas con la sala llena.", accion: {herramienta: Edit, objetivo: "tests/conftest.py", cambio: "@pytest.fixture\ndef sala_llena(client, auth): ...  # fixture nueva"}}
+  otro: {agente: A2, tarea: "Tests con un segundo usuario.", tiene: ["tests/conftest.py"], intencion: "Añadir la fixture bob_auth, que inicia sesión como bob."}
+
+- id: C009
+  categoria: mismo_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "La duración máxima solo la usa validar_horario(); los mensajes de validar_sala() no dependen de ella."
+  solicitante: {agente: A1, tarea: "Permitir reservas de hasta 6 horas.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "DURACION_MAXIMA_MIN = 360"}}
+  otro: {agente: A2, tarea: "Reescribir los mensajes de error de validar_sala().", tiene: ["app/validators.py"], intencion: "Cambiar los textos de las dos ValidationError de validar_sala()."}
+
+- id: C010
+  categoria: mismo_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Middleware y router nuevo son registros independientes en main.py."
+  solicitante: {agente: A1, tarea: "Permitir llamadas desde el frontend en otro dominio.", accion: {herramienta: Edit, objetivo: "app/main.py", cambio: "app.add_middleware(CORSMiddleware, allow_origins=['https://reservas.example'])"}}
+  otro: {agente: A2, tarea: "Catálogo de salas.", tiene: ["app/main.py", "app/routes_salas.py"], intencion: "Registrar el router nuevo con app.include_router(routes_salas.router)."}
+
+- id: C011
+  categoria: mismo_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Docstrings frente a un modelo nuevo; nada compartido."
+  solicitante: {agente: A1, tarea: "Documentar los modelos.", accion: {herramienta: Edit, objetivo: "app/models.py · Reserva", cambio: "Añadir docstrings a ReservaIn y Reserva."}}
+  otro: {agente: A2, tarea: "Catálogo de salas.", tiene: ["app/models.py"], intencion: "Añadir el modelo Sala(nombre: str, capacidad: int)."}
+
+- id: C012
+  categoria: mismo_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Plantilla de email frente a un canal nuevo; funciones distintas."
+  solicitante: {agente: A1, tarea: "Mejorar el asunto del email de confirmación.", accion: {herramienta: Edit, objetivo: "app/notificaciones.py · ASUNTO_CONFIRMACION", cambio: "ASUNTO_CONFIRMACION = 'Tu reserva de {sala} está confirmada'"}}
+  otro: {agente: A2, tarea: "Avisar por SMS.", tiene: ["app/notificaciones.py"], intencion: "Añadir enviar_sms(telefono, texto) con el proveedor de SMS."}
+
+# --- Mismo fichero con relación (choca) --------------------------------------
+
+- id: C013
+  categoria: mismo_fichero_con_relacion
+  dificultad: facil
+  propuesta: choca
+  motivo: "El otro añade una regla que usa duracion_min dentro de la función cuyo parámetro se elimina."
+  solicitante: {agente: A1, tarea: "Validar horarios por inicio y fin en lugar de por duración.", accion: {herramienta: Edit, objetivo: "app/validators.py · validar_horario", cambio: "def validar_horario(inicio: datetime, fin: datetime) -> None:"}}
+  otro: {agente: A2, tarea: "Limitar las reservas de fin de semana a 2 horas.", tiene: ["app/validators.py"], intencion: "Añadir en validar_horario(): if fecha.weekday() >= 5 and duracion_min > 120: raise ValidationError(...)"}
+
+- id: C014
+  categoria: mismo_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "La caducidad del otro se apoya en el diccionario _sessions que el solicitante sustituye por una tabla."
+  solicitante: {agente: A1, tarea: "Que las sesiones sobrevivan a un reinicio.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "Sustituir el dict _sessions por una tabla sesiones en SQLite; get_session() consulta la tabla."}}
+  otro: {agente: A2, tarea: "Caducar las sesiones a las 8 horas.", tiene: ["app/auth.py"], intencion: "Añadir expira a Session y, en get_session(), borrar de _sessions las caducadas."}
+
+- id: C015
+  categoria: mismo_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Sin row_factory las filas son tuplas y el dict(f) del otro deja de funcionar."
+  solicitante: {agente: A1, tarea: "Simplificar la conexión a la base de datos.", accion: {herramienta: Edit, objetivo: "app/db.py · conectar", cambio: "Quitar conn.row_factory = sqlite3.Row"}}
+  otro: {agente: A2, tarea: "Listado de reservas por sala.", tiene: ["app/db.py"], intencion: "Añadir listar_por_sala() que devuelve [Reserva(**dict(f)) for f in filas]."}
+
+- id: C016
+  categoria: mismo_fichero_con_relacion
+  dificultad: facil
+  propuesta: choca
+  motivo: "El endpoint nuevo del otro usa session.username, y sesion_actual() pasa a devolver un str."
+  solicitante: {agente: A1, tarea: "Simplificar la dependencia de sesión.", accion: {herramienta: Edit, objetivo: "app/routes_reservas.py · sesion_actual", cambio: "def sesion_actual(...) -> str:  # devuelve el nombre de usuario en vez de la Session"}}
+  otro: {agente: A2, tarea: "Endpoint para ver mis reservas.", tiene: ["app/routes_reservas.py"], intencion: "Añadir GET /mis-reservas con session: Session = Depends(sesion_actual) y filtrar por session.username."}
+
+- id: C017
+  categoria: mismo_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El usuario nuevo del otro usa la clave password, que login() deja de leer."
+  solicitante: {agente: A1, tarea: "No guardar contraseñas en claro.", accion: {herramienta: Edit, objetivo: "app/config.py · USERS", cambio: "Sustituir 'password' por 'password_hash' (bcrypt) en cada usuario."}}
+  otro: {agente: A2, tarea: "Dar de alta a la usuaria carol.", tiene: ["app/config.py"], intencion: "Añadir 'carol': {'password': 'carol-pass'} a USERS."}
+
+- id: C018
+  categoria: mismo_fichero_con_relacion
+  dificultad: facil
+  propuesta: choca
+  motivo: "La propiedad fin del otro usa duracion_min, que desaparece."
+  solicitante: {agente: A1, tarea: "Guardar la duración como timedelta.", accion: {herramienta: Edit, objetivo: "app/models.py · ReservaIn", cambio: "duracion: timedelta  # sustituye a duracion_min: int"}}
+  otro: {agente: A2, tarea: "Exponer la hora de fin de cada reserva.", tiene: ["app/models.py"], intencion: "Añadir a Reserva la propiedad fin = fecha + timedelta(minutes=duracion_min)."}
+
+# --- Distinto fichero con relación: datos, formatos, fixtures (choca) --------
+
+- id: C019
+  categoria: distinto_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "La consulta del otro compara con cadenas ISO; con epoch en la columna, el WHERE deja de filtrar bien."
+  solicitante: {agente: A1, tarea: "Guardar las fechas como timestamp numérico.", accion: {herramienta: Edit, objetivo: "app/db.py · insertar_reserva", cambio: "Guardar fecha como int(r.fecha.timestamp()) en lugar de isoformat()."}}
+  otro: {agente: A2, tarea: "Informe de reservas del mes.", tiene: ["app/informes.py"], intencion: "SELECT * FROM reservas WHERE fecha >= '2026-10-01' AND fecha < '2026-11-01'."}
+
+- id: C020
+  categoria: distinto_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "SALAS pasa de tupla a dict y SALAS[0] da KeyError."
+  solicitante: {agente: A1, tarea: "Guardar la capacidad de cada sala.", accion: {herramienta: Edit, objetivo: "app/config.py", cambio: "SALAS = {'Atlas': 10, 'Boreal': 6, 'Cierzo': 4}"}}
+  otro: {agente: A2, tarea: "Sala por defecto en reservas rápidas.", tiene: ["app/routes_rapidas.py"], intencion: "Usar config.SALAS[0] como sala cuando el cliente no indique ninguna."}
+
+- id: C021
+  categoria: distinto_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El logout del otro borra del dict _sessions, que deja de ser donde viven las sesiones."
+  solicitante: {agente: A1, tarea: "Persistir sesiones en SQLite.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "Eliminar _sessions; las sesiones se guardan y consultan en la tabla sesiones."}}
+  otro: {agente: A2, tarea: "Endpoint de cierre de sesión.", tiene: ["app/routes_auth.py"], intencion: "POST /logout que hace auth._sessions.pop(token, None)."}
+
+- id: C022
+  categoria: distinto_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El cuerpo de error pasa a {'error': {...}} y el cliente del otro lee r.json()['detail']."
+  solicitante: {agente: A1, tarea: "Errores de la API con código y mensaje.", accion: {herramienta: Edit, objetivo: "app/main.py", cambio: "Manejador de HTTPException que responde {'error': {'code': ..., 'message': ...}}."}}
+  otro: {agente: A2, tarea: "Cliente de línea de comandos.", tiene: ["app/cli.py"], intencion: "Mostrar al usuario r.json()['detail'] cuando la API responde 4xx."}
+
+- id: C023
+  categoria: distinto_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El test del otro espera usuario == 'alice' con la fixture auth, que pasa a iniciar sesión como bob."
+  solicitante: {agente: A1, tarea: "Probar con un usuario sin privilegios por defecto.", accion: {herramienta: Edit, objetivo: "tests/conftest.py · auth", cambio: "La fixture auth inicia sesión como bob en lugar de alice."}}
+  otro: {agente: A2, tarea: "Test de creación de reservas.", tiene: ["tests/test_crear.py"], intencion: "assert r.json()['usuario'] == 'alice' usando la fixture auth."}
+
+- id: C024
+  categoria: distinto_fichero_con_relacion
+  dificultad: facil
+  propuesta: choca
+  motivo: "El script del otro parsea el CSV con coma; el export pasa a punto y coma."
+  solicitante: {agente: A1, tarea: "CSV compatible con Excel en español.", accion: {herramienta: Edit, objetivo: "app/routes_export.py", cambio: "csv.writer(buf, delimiter=';')"}}
+  otro: {agente: A2, tarea: "Importar el export en el sistema de facturación.", tiene: ["scripts/facturacion.py"], intencion: "Leer el CSV de /export con csv.DictReader(f) (delimitador por defecto)."}
+
+- id: C025
+  categoria: distinto_fichero_con_relacion
+  dificultad: facil
+  propuesta: choca
+  motivo: "El id pasa a UUID y la ruta del otro lo declara int."
+  solicitante: {agente: A1, tarea: "Identificadores de reserva no adivinables.", accion: {herramienta: Edit, objetivo: "app/models.py · Reserva", cambio: "id: str  # UUID4 en lugar de entero autoincremental"}}
+  otro: {agente: A2, tarea: "Ver una reserva concreta.", tiene: ["app/routes_consulta.py"], intencion: "Añadir GET /reservas/{id} con id: int y SELECT ... WHERE id = ?."}
+
+- id: C026
+  categoria: distinto_fichero_con_relacion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "La función pasa a ser async y el otro la llama sin await: la corrutina nunca se ejecuta."
+  solicitante: {agente: A1, tarea: "Enviar notificaciones sin bloquear.", accion: {herramienta: Edit, objetivo: "app/notificaciones.py", cambio: "async def enviar_confirmacion(reserva: Reserva) -> None:"}}
+  otro: {agente: A2, tarea: "Confirmar por email cada reserva creada.", tiene: ["app/routes_reservas.py"], intencion: "Llamar a enviar_confirmacion(reserva) al final de crear_reserva() (función síncrona)."}
+
+# --- Cambio de firma incompatible (choca) ------------------------------------
+
+- id: C027
+  categoria: firma
+  dificultad: facil
+  propuesta: choca
+  motivo: "validar_horario() pasa a pedir inicio y fin; el otro la llama con fecha y duración."
+  solicitante: {agente: A1, tarea: "Validar por inicio y fin.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "def validar_horario(inicio: datetime, fin: datetime) -> None:"}}
+  otro: {agente: A2, tarea: "Endpoint para comprobar si un hueco es válido antes de reservar.", tiene: ["app/routes_huecos.py"], intencion: "Llamar a validar_horario(fecha, duracion_min) y devolver {'valido': True}."}
+
+- id: C028
+  categoria: firma
+  dificultad: facil
+  propuesta: choca
+  motivo: "insertar_reserva() gana un parámetro obligatorio que el script del otro no pasa."
+  solicitante: {agente: A1, tarea: "Relacionar reservas con la tabla de salas.", accion: {herramienta: Edit, objetivo: "app/db.py", cambio: "def insertar_reserva(r: ReservaIn, usuario: str, sala_id: int) -> Reserva:"}}
+  otro: {agente: A2, tarea: "Importar reservas antiguas desde un CSV.", tiene: ["scripts/importar.py"], intencion: "Para cada fila, db.insertar_reserva(ReservaIn(...), fila['usuario'])."}
+
+- id: C029
+  categoria: firma
+  dificultad: facil
+  propuesta: choca
+  motivo: "get_session() pasa a exigir ahora; el middleware del otro la llama con un argumento."
+  solicitante: {agente: A1, tarea: "Sesiones con caducidad testeable.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "def get_session(token: str, ahora: datetime) -> Session | None:"}}
+  otro: {agente: A2, tarea: "Registrar el usuario de cada petición en los logs.", tiene: ["app/middleware.py"], intencion: "En el middleware, s = get_session(token) y log con s.username."}
+
+- id: C030
+  categoria: firma
+  dificultad: dificil
+  propuesta: choca
+  motivo: "login() pasa a devolver una tupla y el otro usa login(...).token."
+  solicitante: {agente: A1, tarea: "Tokens de refresco.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "def login(username, password) -> tuple[Session, str]:  # (sesión, refresh_token)"}}
+  otro: {agente: A2, tarea: "Login desde el cliente de línea de comandos.", tiene: ["app/cli.py"], intencion: "token = auth.login(usuario, clave).token"}
+
+- id: C031
+  categoria: firma
+  dificultad: facil
+  propuesta: choca
+  motivo: "validar_sala() gana un parámetro obligatorio que el validador masivo del otro no pasa."
+  solicitante: {agente: A1, tarea: "Salas restringidas por usuario.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "def validar_sala(sala: str, usuario: str) -> None:"}}
+  otro: {agente: A2, tarea: "Validar un fichero de reservas antes de importarlo.", tiene: ["scripts/validar_import.py"], intencion: "Llamar a validar_sala(fila['sala']) por cada fila."}
+
+- id: C032
+  categoria: firma
+  dificultad: facil
+  propuesta: choca
+  motivo: "listar_reservas() pasa a exigir usuario; el export del otro la llama sin argumentos."
+  solicitante: {agente: A1, tarea: "Que cada usuario vea solo sus reservas.", accion: {herramienta: Edit, objetivo: "app/db.py", cambio: "def listar_reservas(usuario: str) -> list[Reserva]:"}}
+  otro: {agente: A2, tarea: "Informe semanal para administración.", tiene: ["app/informes.py"], intencion: "reservas = db.listar_reservas() y agrupar por sala."}
+
+- id: C033
+  categoria: firma
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Campo obligatorio nuevo en ReservaIn: el seed del otro construye ReservaIn sin él y falla la validación."
+  solicitante: {agente: A1, tarea: "Registrar el número de asistentes.", accion: {herramienta: Edit, objetivo: "app/models.py · ReservaIn", cambio: "asistentes: int  # obligatorio"}}
+  otro: {agente: A2, tarea: "Datos de ejemplo para la demo.", tiene: ["scripts/seed.py"], intencion: "Crear 20 reservas con ReservaIn(sala=..., fecha=..., duracion_min=60)."}
+
+- id: C034
+  categoria: firma
+  dificultad: facil
+  propuesta: choca
+  motivo: "enviar() pasa a recibir un objeto Mensaje; el otro la llama con destino y texto."
+  solicitante: {agente: A1, tarea: "Unificar los canales de notificación.", accion: {herramienta: Edit, objetivo: "app/notificaciones.py", cambio: "def enviar(mensaje: Mensaje) -> None:  # antes enviar(destino, texto)"}}
+  otro: {agente: A2, tarea: "Avisar al cancelar una reserva.", tiene: ["app/routes_reservas.py"], intencion: "notificaciones.enviar(email_usuario, 'Tu reserva se ha cancelado')"}
+
+# --- Cambio de firma compatible (no choca) -----------------------------------
+
+- id: C035
+  categoria: firma_compatible
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Parámetro nuevo con valor por defecto; la llamada del otro sigue siendo válida."
+  solicitante: {agente: A1, tarea: "Soportar zonas horarias.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "def validar_horario(fecha, duracion_min, zona: str = 'Europe/Madrid') -> None:"}}
+  otro: {agente: A2, tarea: "Endpoint para comprobar huecos.", tiene: ["app/routes_huecos.py"], intencion: "Llamar a validar_horario(fecha, duracion_min)."}
+
+- id: C036
+  categoria: firma_compatible
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Parámetro opcional con valor por defecto; login(username, password) sigue funcionando igual."
+  solicitante: {agente: A1, tarea: "Opción de mantener la sesión iniciada.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "def login(username: str, password: str, recordar: bool = False) -> Session:"}}
+  otro: {agente: A2, tarea: "Autenticación del endpoint de informes.", tiene: ["app/routes_informes.py"], intencion: "Validar las credenciales con login(username, password)."}
+
+- id: C037
+  categoria: firma_compatible
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "limite es opcional y por defecto no limita."
+  solicitante: {agente: A1, tarea: "Paginar el listado.", accion: {herramienta: Edit, objetivo: "app/db.py", cambio: "def listar_reservas(limite: int | None = None) -> list[Reserva]:"}}
+  otro: {agente: A2, tarea: "Informe semanal.", tiene: ["app/informes.py"], intencion: "reservas = db.listar_reservas()"}
+
+- id: C038
+  categoria: firma_compatible
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Función nueva junto a login(); login() no cambia."
+  solicitante: {agente: A1, tarea: "Login con token de API para integraciones.", accion: {herramienta: Edit, objetivo: "app/auth.py", cambio: "def login_con_token(api_token: str) -> Session:  # función nueva"}}
+  otro: {agente: A2, tarea: "Autenticación del cliente de línea de comandos.", tiene: ["app/cli.py"], intencion: "Llamar a auth.login(usuario, clave)."}
+
+- id: C039
+  categoria: firma_compatible
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Campo opcional con valor por defecto: los ReservaIn del otro siguen siendo válidos."
+  solicitante: {agente: A1, tarea: "Notas en las reservas.", accion: {herramienta: Edit, objetivo: "app/models.py · ReservaIn", cambio: "notas: str | None = None"}}
+  otro: {agente: A2, tarea: "Datos de ejemplo para la demo.", tiene: ["scripts/seed.py"], intencion: "Crear reservas con ReservaIn(sala=..., fecha=..., duracion_min=60)."}
+
+# --- Renombrados (choca) -----------------------------------------------------
+
+- id: C040
+  categoria: renombrado
+  dificultad: facil
+  propuesta: choca
+  motivo: "La consulta del otro filtra por la columna usuario, que pasa a llamarse propietario."
+  solicitante: {agente: A1, tarea: "Renombrar usuario a propietario en las reservas.", accion: {herramienta: Edit, objetivo: "app/db.py", cambio: "Columna usuario -> propietario en CREATE TABLE, INSERT y SELECT."}}
+  otro: {agente: A2, tarea: "Endpoint para ver mis reservas.", tiene: ["app/routes_mis_reservas.py"], intencion: "SELECT * FROM reservas WHERE usuario = ?"}
+
+- id: C041
+  categoria: renombrado
+  dificultad: facil
+  propuesta: choca
+  motivo: "El módulo se renombra y el otro importa desde el nombre antiguo."
+  solicitante: {agente: A1, tarea: "Ordenar módulos.", accion: {herramienta: Bash, objetivo: "git mv app/validators.py app/validacion.py", cambio: "Renombrar el módulo y actualizar los imports existentes."}}
+  otro: {agente: A2, tarea: "Validar capacidad al crear reservas.", tiene: ["app/routes_reservas.py"], intencion: "Añadir from app.validators import validar_capacidad y llamarla en crear_reserva()."}
+
+- id: C042
+  categoria: renombrado
+  dificultad: facil
+  propuesta: choca
+  motivo: "validar_sala pasa a llamarse comprobar_sala y el otro añade una llamada con el nombre viejo."
+  solicitante: {agente: A1, tarea: "Nombres coherentes en validaciones.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "Renombrar validar_sala -> comprobar_sala y actualizar sus llamadas actuales."}}
+  otro: {agente: A2, tarea: "Validar la sala en la reserva rápida.", tiene: ["app/routes_rapidas.py"], intencion: "Llamar a validar_sala(sala) antes de crear la reserva."}
+
+- id: C043
+  categoria: renombrado
+  dificultad: dificil
+  propuesta: choca
+  motivo: "La tabla se renombra y el SQL del otro sigue usando FROM reservas."
+  solicitante: {agente: A1, tarea: "Nombres de tabla en singular.", accion: {herramienta: Edit, objetivo: "app/db.py", cambio: "Tabla reservas -> reserva en init_db, INSERT y SELECT."}}
+  otro: {agente: A2, tarea: "Informe de ocupación por sala.", tiene: ["app/informes.py"], intencion: "SELECT sala, SUM(duracion_min) FROM reservas GROUP BY sala"}
+
+- id: C044
+  categoria: renombrado
+  dificultad: facil
+  propuesta: choca
+  motivo: "El mensaje nuevo del otro usa config.SALAS, que pasa a llamarse SALAS_DISPONIBLES."
+  solicitante: {agente: A1, tarea: "Nombres más descriptivos en la configuración.", accion: {herramienta: Edit, objetivo: "app/config.py", cambio: "SALAS -> SALAS_DISPONIBLES y actualizar sus usos actuales."}}
+  otro: {agente: A2, tarea: "Listar las salas válidas en el mensaje de error.", tiene: ["app/validators.py"], intencion: "Mensaje f\"Salas disponibles: {', '.join(SALAS)}\"."}
+
+- id: C045
+  categoria: renombrado
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El JSON de la API cambia de clave y el cliente del otro sigue mandando duracion_min."
+  solicitante: {agente: A1, tarea: "Nombres de campo sin abreviar en la API.", accion: {herramienta: Edit, objetivo: "app/models.py · ReservaIn", cambio: "duracion_min -> duracion_minutos (entrada y salida de la API)."}}
+  otro: {agente: A2, tarea: "Reservar desde el cliente de línea de comandos.", tiene: ["app/cli.py"], intencion: "POST /reservas con json={'sala': s, 'fecha': f, 'duracion_min': d}."}
+
+- id: C046
+  categoria: renombrado
+  dificultad: facil
+  propuesta: choca
+  motivo: "El endpoint cambia de ruta y el cliente del otro llama a la antigua."
+  solicitante: {agente: A1, tarea: "Agrupar la autenticación bajo /auth.", accion: {herramienta: Edit, objetivo: "app/routes_auth.py", cambio: "@router.post('/auth/login')  # antes '/login'"}}
+  otro: {agente: A2, tarea: "Login desde el cliente de línea de comandos.", tiene: ["app/cli.py"], intencion: "httpx.post(f'{base}/login', json={...})"}
+
+- id: C047
+  categoria: renombrado
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Session.token pasa a llamarse id y el otro devuelve session.token."
+  solicitante: {agente: A1, tarea: "Nombres coherentes en la sesión.", accion: {herramienta: Edit, objetivo: "app/auth.py · Session", cambio: "Renombrar el atributo token -> id y actualizar auth.py."}}
+  otro: {agente: A2, tarea: "Endpoint de renovación de sesión.", tiene: ["app/routes_auth.py"], intencion: "Devolver {'token': nueva_sesion.token}."}
+
+# --- Renombrados (no choca) --------------------------------------------------
+
+- id: C048
+  categoria: renombrado_sin_dependencias
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Variable local de una función; nadie más la ve."
+  solicitante: {agente: A1, tarea: "Limpieza de código.", accion: {herramienta: Edit, objetivo: "app/db.py · listar_reservas", cambio: "Renombrar la variable local filas -> rows."}}
+  otro: {agente: A2, tarea: "Consultas de ocupación.", tiene: ["app/consultas.py"], intencion: "Nueva función que abre la conexión con db.conectar() y hace su propio SELECT."}
+
+- id: C049
+  categoria: renombrado_sin_dependencias
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Helper privado usado solo dentro de validar_horario(); el otro edita validar_sala()."
+  solicitante: {agente: A1, tarea: "Nombres más cortos en helpers.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "Renombrar _es_duracion_valida -> _duracion_ok y su única llamada."}}
+  otro: {agente: A2, tarea: "Mensajes más claros en validar_sala().", tiene: ["app/validators.py"], intencion: "Cambiar los textos de las dos ValidationError de validar_sala()."}
+
+- id: C050
+  categoria: renombrado_sin_dependencias
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Renombrar funciones de test no afecta a tests nuevos del mismo fichero."
+  solicitante: {agente: A1, tarea: "Nombres de test descriptivos.", accion: {herramienta: Edit, objetivo: "tests/test_reservas.py", cambio: "Renombrar test_crear_y_listar -> test_reserva_creada_aparece_en_listado."}}
+  otro: {agente: A2, tarea: "Tests de cancelación.", tiene: ["tests/test_reservas.py"], intencion: "Añadir test_cancelar_reserva al final del fichero."}
+
+- id: C051
+  categoria: renombrado_sin_dependencias
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Hay un renombrado en curso, pero los mensajes de validar_sala() no usan el campo fecha."
+  solicitante: {agente: A1, tarea: "Mensajes más claros en validar_sala().", accion: {herramienta: Edit, objetivo: "app/validators.py · validar_sala", cambio: "raise ValidationError('La sala es obligatoria.')"}}
+  otro: {agente: A2, tarea: "Renombrar fecha a inicio en las reservas.", tiene: ["app/models.py", "app/db.py", "app/routes_reservas.py"], intencion: "Renombrar Reserva.fecha a Reserva.inicio en modelo, base de datos y API."}
+
+# --- Cambio de comportamiento sin cambiar la firma (choca) -------------------
+
+- id: C052
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Tras tres fallos la cuenta se bloquea y el test del otro espera poder entrar después."
+  solicitante: {agente: A1, tarea: "Bloquear cuentas tras tres intentos fallidos.", accion: {herramienta: Edit, objetivo: "app/auth.py · login", cambio: "Contar fallos por usuario y lanzar AuthError('cuenta bloqueada') a partir del tercero."}}
+  otro: {agente: A2, tarea: "Tests del endpoint de exportación.", tiene: ["tests/test_export.py"], intencion: "Probar tres contraseñas erróneas seguidas y luego la buena, esperando 200."}
+
+- id: C053
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "listar_reservas() pasa a devolver solo futuras y el informe histórico del otro pierde datos."
+  solicitante: {agente: A1, tarea: "No mostrar reservas pasadas en el listado.", accion: {herramienta: Edit, objetivo: "app/db.py · listar_reservas", cambio: "Añadir WHERE fecha >= datetime('now') al SELECT."}}
+  otro: {agente: A2, tarea: "Informe anual de uso de salas.", tiene: ["app/informes.py"], intencion: "Agregar todas las reservas del año con db.listar_reservas()."}
+
+- id: C054
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Boreal pasa a estar en mantenimiento y los datos de ejemplo del otro reservan en Boreal."
+  solicitante: {agente: A1, tarea: "Bloquear salas en mantenimiento.", accion: {herramienta: Edit, objetivo: "app/validators.py · validar_sala", cambio: "if sala in MANTENIMIENTO: raise ValidationError(...)  # MANTENIMIENTO = ('Boreal',)"}}
+  otro: {agente: A2, tarea: "Datos de ejemplo para la demo.", tiene: ["scripts/seed.py"], intencion: "Crear reservas en Atlas, Boreal y Cierzo por POST /reservas."}
+
+- id: C055
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "La columna pasa a guardar segundos y el informe del otro sigue dividiendo entre 60 para obtener horas."
+  solicitante: {agente: A1, tarea: "Precisión de segundos en la duración.", accion: {herramienta: Edit, objetivo: "app/db.py", cambio: "Guardar duracion_min * 60 en la columna duracion_min (segundos); la API sigue en minutos."}}
+  otro: {agente: A2, tarea: "Horas reservadas por sala.", tiene: ["app/informes.py"], intencion: "SELECT sala, SUM(duracion_min) / 60.0 AS horas FROM reservas GROUP BY sala"}
+
+- id: C056
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Con deduplicación silenciosa no salta la IntegrityError en la que se basa el 409 del otro."
+  solicitante: {agente: A1, tarea: "Evitar reservas duplicadas por doble clic.", accion: {herramienta: Edit, objetivo: "app/db.py · insertar_reserva", cambio: "Si ya existe una reserva con la misma sala y fecha, devolverla sin insertar."}}
+  otro: {agente: A2, tarea: "Responder 409 si la sala ya está ocupada.", tiene: ["app/db.py", "app/routes_reservas.py"], intencion: "Índice UNIQUE(sala, fecha) y capturar sqlite3.IntegrityError en crear_reserva() para devolver 409."}
+
+- id: C057
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Las sesiones caducan a los 15 minutos y el export programado del otro reutiliza el token durante una hora."
+  solicitante: {agente: A1, tarea: "Sesiones cortas por seguridad.", accion: {herramienta: Edit, objetivo: "app/auth.py · get_session", cambio: "Devolver None si la sesión tiene más de 15 minutos."}}
+  otro: {agente: A2, tarea: "Export nocturno automático.", tiene: ["scripts/export_nocturno.py"], intencion: "Iniciar sesión una vez y reutilizar el token en llamadas durante una hora."}
+
+- id: C058
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El orden pasa a ser por id y listar_reservas()[0] deja de ser la próxima reserva."
+  solicitante: {agente: A1, tarea: "Orden estable del listado.", accion: {herramienta: Edit, objetivo: "app/db.py · listar_reservas", cambio: "ORDER BY id  # antes ORDER BY fecha"}}
+  otro: {agente: A2, tarea: "Endpoint de próxima reserva.", tiene: ["app/routes_consulta.py"], intencion: "GET /proxima devuelve db.listar_reservas()[0]."}
+
+- id: C059
+  categoria: comportamiento
+  dificultad: facil
+  propuesta: choca
+  motivo: "POST /reservas pasa a responder 200 y el cliente del otro comprueba 201."
+  solicitante: {agente: A1, tarea: "Respuestas uniformes.", accion: {herramienta: Edit, objetivo: "app/routes_reservas.py", cambio: "@router.post('/reservas')  # quitar status_code=201"}}
+  otro: {agente: A2, tarea: "Reservar desde el cliente de línea de comandos.", tiene: ["app/cli.py"], intencion: "if r.status_code != 201: mostrar error."}
+
+- id: C060
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Las fechas se guardan en UTC y el filtro por día del otro compara con fechas locales: se desplaza en el cambio de día."
+  solicitante: {agente: A1, tarea: "Guardar fechas en UTC.", accion: {herramienta: Edit, objetivo: "app/db.py · insertar_reserva", cambio: "Convertir fecha de Europe/Madrid a UTC antes de guardar."}}
+  otro: {agente: A2, tarea: "Reservas de un día concreto.", tiene: ["app/consultas.py"], intencion: "SELECT * FROM reservas WHERE fecha >= '2026-10-05T00:00' AND fecha < '2026-10-06T00:00'"}
+
+- id: C061
+  categoria: comportamiento
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Los mensajes salen en inglés por defecto y los tests del otro esperan el texto en español."
+  solicitante: {agente: A1, tarea: "Mensajes de validación traducidos.", accion: {herramienta: Edit, objetivo: "app/validators.py", cambio: "Traducir los mensajes según Accept-Language, con inglés por defecto."}}
+  otro: {agente: A2, tarea: "Tests de la API de reservas.", tiene: ["tests/test_api.py"], intencion: "assert r.json()['detail'] == 'sala invalida'"}
+
+# --- Cambio de comportamiento que no afecta al otro (no choca) --------------
+
+- id: C062
+  categoria: comportamiento_sin_efecto
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Cambiar el formato del log no cambia lo que devuelve login()."
+  solicitante: {agente: A1, tarea: "Logs estructurados.", accion: {herramienta: Edit, objetivo: "app/auth.py · login", cambio: "logger.info('login', extra={'usuario': username})  # antes un f-string"}}
+  otro: {agente: A2, tarea: "Autenticación del endpoint de informes.", tiene: ["app/routes_informes.py"], intencion: "Validar las credenciales con login(username, password)."}
+
+- id: C063
+  categoria: comportamiento_sin_efecto
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Optimizar la consulta sin cambiar filas ni orden no afecta a quien la usa."
+  solicitante: {agente: A1, tarea: "Acelerar el listado.", accion: {herramienta: Edit, objetivo: "app/db.py · listar_reservas", cambio: "Seleccionar columnas explícitas y usar el índice nuevo; mismas filas y mismo orden."}}
+  otro: {agente: A2, tarea: "Exportar reservas en CSV.", tiene: ["app/routes_export.py"], intencion: "Leer con db.listar_reservas() y escribir una fila por reserva."}
+
+- id: C064
+  categoria: comportamiento_sin_efecto
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "El otro captura ValidationError sin leer el texto, así que cambiar el mensaje no le afecta."
+  solicitante: {agente: A1, tarea: "Mensajes más claros en validar_sala().", accion: {herramienta: Edit, objetivo: "app/validators.py · validar_sala", cambio: "Nuevo texto para la sala desconocida."}}
+  otro: {agente: A2, tarea: "Descartar filas inválidas al importar.", tiene: ["scripts/importar.py"], intencion: "try: validar_sala(fila['sala']) except ValidationError: descartar la fila."}
+
+# --- Lecturas y tests mientras otros editan (no choca) -----------------------
+
+- id: C065
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Leer no modifica nada, aunque el otro esté cambiando ese mismo fichero."
+  solicitante: {agente: A1, tarea: "Endpoint de exportación autenticado.", accion: {herramienta: Read, objetivo: "app/auth.py", cambio: "Leer el fichero para ver cómo se autentica."}}
+  otro: {agente: A2, tarea: "Segundo factor en el login.", tiene: ["app/auth.py"], intencion: "Cambiar la firma de login() para exigir un código OTP."}
+
+- id: C066
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Ejecutar los tests solo lee; si salen en rojo por el cambio a medias del otro, no rompe nada."
+  solicitante: {agente: A1, tarea: "Filtro por fecha en el listado.", accion: {herramienta: Bash, objetivo: "uv run pytest -q", cambio: "Ejecutar los tests sin modificar ficheros."}}
+  otro: {agente: A2, tarea: "Horario permitido de 8:00 a 20:00.", tiene: ["app/validators.py"], intencion: "Añadir la regla de franja a validar_horario()."}
+
+- id: C067
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "grep solo lee; que el renombrado esté a medias no rompe nada."
+  solicitante: {agente: A1, tarea: "Informe de ocupación.", accion: {herramienta: Bash, objetivo: "grep -rn fecha app/", cambio: "Buscar dónde se usa el campo."}}
+  otro: {agente: A2, tarea: "Renombrar fecha a inicio.", tiene: ["app/models.py", "app/db.py"], intencion: "Renombrar la columna y el campo del modelo."}
+
+- id: C068
+  categoria: lectura
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "git diff y git log no modifican el árbol de trabajo."
+  solicitante: {agente: A1, tarea: "Revisar el propio trabajo antes de hacer commit.", accion: {herramienta: Bash, objetivo: "git diff && git log --oneline -5", cambio: "Consultar cambios sin modificar nada."}}
+  otro: {agente: A2, tarea: "Paginación del listado.", tiene: ["app/db.py", "app/routes_consulta.py"], intencion: "Añadir limite y offset a listar_reservas()."}
+
+- id: C069
+  categoria: lectura
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Leer un fichero que el otro amplía no tiene efecto."
+  solicitante: {agente: A1, tarea: "Notas en las reservas.", accion: {herramienta: Read, objetivo: "app/models.py", cambio: "Leer los modelos actuales."}}
+  otro: {agente: A2, tarea: "Catálogo de salas.", tiene: ["app/models.py"], intencion: "Añadir el modelo Sala."}
+
+- id: C070
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Ejecutar los tests de auth solo lee, aunque el otro esté cambiando justo eso."
+  solicitante: {agente: A1, tarea: "Cierre de sesión.", accion: {herramienta: Bash, objetivo: "uv run pytest tests/test_auth.py -q", cambio: "Ejecutar los tests de autenticación."}}
+  otro: {agente: A2, tarea: "Segundo factor en el login.", tiene: ["app/auth.py", "tests/test_auth.py"], intencion: "Exigir OTP en login() y actualizar sus tests."}
+
+- id: C071
+  categoria: lectura
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Listar un directorio no modifica nada."
+  solicitante: {agente: A1, tarea: "Catálogo de salas.", accion: {herramienta: Bash, objetivo: "ls app/", cambio: "Ver qué módulos hay."}}
+  otro: {agente: A2, tarea: "Exportación en CSV.", tiene: ["app/routes_export.py"], intencion: "Crear el fichero routes_export.py."}
+
+- id: C072
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Importar la app para comprobar que arranca no escribe nada."
+  solicitante: {agente: A1, tarea: "Middleware de CORS.", accion: {herramienta: Bash, objetivo: "uv run python -c 'import app.main'", cambio: "Comprobar que la app se importa sin errores."}}
+  otro: {agente: A2, tarea: "Registrar el router de salas.", tiene: ["app/main.py"], intencion: "Añadir app.include_router(routes_salas.router)."}
+
+- id: C073
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Un GET contra el servidor de desarrollo es una lectura."
+  solicitante: {agente: A1, tarea: "Filtro por fecha en el listado.", accion: {herramienta: Bash, objetivo: "curl -s localhost:8000/reservas", cambio: "Ver la respuesta actual del listado."}}
+  otro: {agente: A2, tarea: "Cabecera Location en POST /reservas.", tiene: ["app/routes_reservas.py"], intencion: "Añadir la cabecera en crear_reserva()."}
+
+- id: C074
+  categoria: lectura
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Leer la configuración de tests mientras otro añade una fixture no tiene efecto."
+  solicitante: {agente: A1, tarea: "Tests de cancelación.", accion: {herramienta: Read, objetivo: "tests/conftest.py", cambio: "Leer las fixtures disponibles."}}
+  otro: {agente: A2, tarea: "Tests con un segundo usuario.", tiene: ["tests/conftest.py"], intencion: "Añadir la fixture bob_auth."}
+
+- id: C075
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "El linter sin --fix solo lee."
+  solicitante: {agente: A1, tarea: "Limpieza de estilo.", accion: {herramienta: Bash, objetivo: "uv run ruff check app/", cambio: "Revisar avisos del linter sin corregir nada."}}
+  otro: {agente: A2, tarea: "Persistir sesiones en SQLite.", tiene: ["app/auth.py"], intencion: "Sustituir el dict de sesiones por una tabla."}
+
+- id: C076
+  categoria: lectura
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Un SELECT sobre la base de datos de desarrollo es una lectura, aunque el otro cambie el esquema en el código."
+  solicitante: {agente: A1, tarea: "Informe de ocupación.", accion: {herramienta: Bash, objetivo: "sqlite3 reservas.db 'SELECT COUNT(*) FROM reservas'", cambio: "Contar reservas existentes."}}
+  otro: {agente: A2, tarea: "Renombrar usuario a propietario.", tiene: ["app/db.py"], intencion: "Cambiar la columna en el CREATE TABLE y en las consultas."}
+
+# --- Bash que escribe (choca) ------------------------------------------------
+
+- id: C077
+  categoria: bash_que_escribe
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Formatear todo el repo reescribe el fichero que el otro está editando a medias."
+  solicitante: {agente: A1, tarea: "Aplicar el formato del proyecto.", accion: {herramienta: Bash, objetivo: "uv run ruff format .", cambio: "Reformatear todos los ficheros Python del repositorio."}}
+  otro: {agente: A2, tarea: "Horario permitido de 8:00 a 20:00.", tiene: ["app/validators.py"], intencion: "Editar validar_horario() en varios pasos."}
+
+- id: C078
+  categoria: bash_que_escribe
+  dificultad: facil
+  propuesta: choca
+  motivo: "git checkout -- . descarta los cambios sin guardar del otro."
+  solicitante: {agente: A1, tarea: "Deshacer un intento fallido.", accion: {herramienta: Bash, objetivo: "git checkout -- .", cambio: "Descartar todos los cambios del árbol de trabajo."}}
+  otro: {agente: A2, tarea: "Exportación en CSV.", tiene: ["app/routes_export.py", "app/main.py"], intencion: "Crear el endpoint y registrarlo."}
+
+- id: C079
+  categoria: bash_que_escribe
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Borrar y recrear la base de datos destruye los datos que el otro está sembrando."
+  solicitante: {agente: A1, tarea: "Empezar con una base de datos limpia.", accion: {herramienta: Bash, objetivo: "rm reservas.db && uv run python -c 'from app.db import init_db; init_db()'", cambio: "Recrear la base de datos de desarrollo."}}
+  otro: {agente: A2, tarea: "Datos de ejemplo para la demo.", tiene: ["reservas.db", "scripts/seed.py"], intencion: "Ejecutar el seed que inserta 20 reservas en reservas.db."}
+
+- id: C080
+  categoria: bash_que_escribe
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El sed renombra fecha en todos los ficheros, incluido el que el otro está escribiendo con el nombre antiguo."
+  solicitante: {agente: A1, tarea: "Renombrar fecha a inicio.", accion: {herramienta: Bash, objetivo: "sed -i 's/fecha/inicio/g' app/*.py", cambio: "Sustituir fecha por inicio en todos los módulos de app/."}}
+  otro: {agente: A2, tarea: "Filtro por fecha en el listado.", tiene: ["app/consultas.py"], intencion: "Escribir la consulta con WHERE fecha >= ?."}
+
+# --- Distinto fichero sin relación (no choca) --------------------------------
+
+- id: C081
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Plantilla de email frente a validaciones; nada compartido."
+  solicitante: {agente: A1, tarea: "Mejorar el email de confirmación.", accion: {herramienta: Edit, objetivo: "app/notificaciones.py", cambio: "Nuevo cuerpo HTML para el email de confirmación."}}
+  otro: {agente: A2, tarea: "Horario permitido de 8:00 a 20:00.", tiene: ["app/validators.py"], intencion: "Añadir la regla de franja a validar_horario()."}
+
+- id: C082
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Catálogo de salas frente a segundo factor; módulos independientes."
+  solicitante: {agente: A1, tarea: "Catálogo de salas.", accion: {herramienta: Write, objetivo: "app/routes_salas.py", cambio: "Nuevo router con GET /salas que devuelve config.SALAS."}}
+  otro: {agente: A2, tarea: "Segundo factor en el login.", tiene: ["app/auth.py", "app/routes_auth.py"], intencion: "Exigir OTP en login()."}
+
+- id: C083
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Un Dockerfile nuevo no depende del modelo."
+  solicitante: {agente: A1, tarea: "Imagen Docker de la API.", accion: {herramienta: Write, objetivo: "Dockerfile", cambio: "FROM python:3.12-slim ... CMD ['uvicorn', 'app.main:app']"}}
+  otro: {agente: A2, tarea: "Notas en las reservas.", tiene: ["app/models.py"], intencion: "Añadir notas opcional a ReservaIn."}
+
+- id: C084
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Documentación frente a una consulta nueva."
+  solicitante: {agente: A1, tarea: "Documentar la instalación.", accion: {herramienta: Edit, objetivo: "README.md", cambio: "Reescribir la sección de instalación."}}
+  otro: {agente: A2, tarea: "Contar reservas por usuario.", tiene: ["app/db.py"], intencion: "Añadir contar_reservas_por_usuario()."}
+
+- id: C085
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Workflow de CI frente a un endpoint; independientes."
+  solicitante: {agente: A1, tarea: "Tests en integración continua.", accion: {herramienta: Write, objetivo: ".github/workflows/tests.yml", cambio: "Workflow que ejecuta uv run pytest en cada push."}}
+  otro: {agente: A2, tarea: "Permitir cancelar reservas.", tiene: ["app/routes_reservas.py"], intencion: "Añadir DELETE /reservas/{id}."}
+
+- id: C086
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Tests de validar_sala() frente a un middleware; nada compartido."
+  solicitante: {agente: A1, tarea: "Más cobertura de validaciones.", accion: {herramienta: Edit, objetivo: "tests/test_validators.py", cambio: "Añadir casos para salas con espacios y mayúsculas."}}
+  otro: {agente: A2, tarea: "Limitar peticiones por IP.", tiene: ["app/main.py", "app/limites.py"], intencion: "Middleware de rate limiting."}
+
+- id: C087
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Un módulo de métricas que aún no usa nadie no afecta a auth."
+  solicitante: {agente: A1, tarea: "Métricas de la API.", accion: {herramienta: Write, objetivo: "app/metricas.py", cambio: "Contadores de Prometheus, todavía sin usar."}}
+  otro: {agente: A2, tarea: "Guardar contraseñas con bcrypt.", tiene: ["app/auth.py"], intencion: "Cambiar la comprobación de contraseña."}
+
+- id: C088
+  categoria: distinto_fichero_sin_relacion
+  dificultad: facil
+  propuesta: no_choca
+  motivo: ".gitignore frente a configuración de la app."
+  solicitante: {agente: A1, tarea: "Ignorar ficheros de editor.", accion: {herramienta: Edit, objetivo: ".gitignore", cambio: "Añadir .idea/ y .vscode/."}}
+  otro: {agente: A2, tarea: "Nivel de log configurable.", tiene: ["app/config.py"], intencion: "Añadir LOG_LEVEL."}
+
+- id: C089
+  categoria: distinto_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Documentar el flujo de login no depende del renombrado de un campo de reservas."
+  solicitante: {agente: A1, tarea: "Documentación de arquitectura.", accion: {herramienta: Write, objetivo: "docs/autenticacion.md", cambio: "Explicar el flujo de login y sesiones."}}
+  otro: {agente: A2, tarea: "Renombrar fecha a inicio.", tiene: ["app/models.py", "app/db.py"], intencion: "Renombrar el campo en modelo y base de datos."}
+
+- id: C090
+  categoria: distinto_fichero_sin_relacion
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Traducciones en un módulo nuevo que aún no usa nadie; los mensajes actuales siguen igual."
+  solicitante: {agente: A1, tarea: "Preparar la traducción de la interfaz.", accion: {herramienta: Write, objetivo: "app/i18n.py", cambio: "Diccionario de traducciones al inglés, todavía sin usar."}}
+  otro: {agente: A2, tarea: "Mensajes más claros en validar_sala().", tiene: ["app/validators.py"], intencion: "Cambiar los textos de validar_sala()."}
+
+# --- Configuración y dependencias (choca) ------------------------------------
+
+- id: C091
+  categoria: configuracion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Dos uv add a la vez reescriben pyproject.toml y uv.lock en el mismo árbol: uno pisa al otro."
+  solicitante: {agente: A1, tarea: "Contraseñas con bcrypt.", accion: {herramienta: Bash, objetivo: "uv add bcrypt", cambio: "Añadir la dependencia (modifica pyproject.toml y uv.lock)."}}
+  otro: {agente: A2, tarea: "Códigos OTP.", tiene: ["pyproject.toml", "uv.lock"], intencion: "Ejecutar uv add pyotp."}
+
+- id: C092
+  categoria: configuracion
+  dificultad: facil
+  propuesta: choca
+  motivo: "La variable de entorno cambia de nombre y la fixture del otro sigue fijando la antigua."
+  solicitante: {agente: A1, tarea: "Nombre de variable más claro.", accion: {herramienta: Edit, objetivo: "app/config.py · db_path", cambio: "Leer RESERVAS_DB_URL en lugar de MEDULA_DB_PATH."}}
+  otro: {agente: A2, tarea: "Base de datos temporal por test.", tiene: ["tests/conftest.py"], intencion: "monkeypatch.setenv('MEDULA_DB_PATH', str(tmp_path / 'test.db'))"}
+
+- id: C093
+  categoria: configuracion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "Quitar httpx2 deja sin TestClient a los tests que está escribiendo el otro."
+  solicitante: {agente: A1, tarea: "Reducir dependencias.", accion: {herramienta: Bash, objetivo: "uv remove --dev httpx2", cambio: "Quitar la dependencia de desarrollo."}}
+  otro: {agente: A2, tarea: "Tests de la API de exportación.", tiene: ["tests/test_export.py"], intencion: "Tests con fastapi.testclient.TestClient."}
+
+- id: C094
+  categoria: configuracion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "pytest pasa a buscar en tests/unit y el fichero nuevo del otro, en tests/, no se ejecuta."
+  solicitante: {agente: A1, tarea: "Separar tests unitarios y de integración.", accion: {herramienta: Edit, objetivo: "pyproject.toml · tool.pytest.ini_options", cambio: "testpaths = ['tests/unit']  # y mover los tests actuales ahí"}}
+  otro: {agente: A2, tarea: "Tests de cancelación.", tiene: ["tests/test_cancelar.py"], intencion: "Crear tests/test_cancelar.py."}
+
+- id: C095
+  categoria: configuracion
+  dificultad: facil
+  propuesta: choca
+  motivo: "Los nombres de sala cambian y los datos de ejemplo del otro usan los antiguos."
+  solicitante: {agente: A1, tarea: "Nombres de sala completos.", accion: {herramienta: Edit, objetivo: "app/config.py", cambio: "SALAS = ('Sala Atlas', 'Sala Boreal', 'Sala Cierzo')"}}
+  otro: {agente: A2, tarea: "Datos de ejemplo para la demo.", tiene: ["scripts/seed.py"], intencion: "Crear reservas en 'Atlas' y 'Boreal'."}
+
+- id: C096
+  categoria: configuracion
+  dificultad: dificil
+  propuesta: choca
+  motivo: "El paquete se mueve a src/app y el módulo nuevo del otro queda fuera, en app/."
+  solicitante: {agente: A1, tarea: "Estructura src/.", accion: {herramienta: Bash, objetivo: "git mv app src/app", cambio: "Mover el paquete y ajustar pythonpath."}}
+  otro: {agente: A2, tarea: "Informes de ocupación.", tiene: ["app/informes.py"], intencion: "Crear app/informes.py."}
+
+# --- Configuración y dependencias (no choca) ---------------------------------
+
+- id: C097
+  categoria: configuracion_sin_efecto
+  dificultad: dificil
+  propuesta: no_choca
+  motivo: "Secciones distintas de pyproject.toml editadas con Edit; ninguna afecta a la otra."
+  solicitante: {agente: A1, tarea: "Medir cobertura.", accion: {herramienta: Edit, objetivo: "pyproject.toml", cambio: "Añadir la sección [tool.coverage.run]."}}
+  otro: {agente: A2, tarea: "Marcar tests lentos.", tiene: ["pyproject.toml"], intencion: "Añadir markers = ['lento'] en [tool.pytest.ini_options]."}
+
+- id: C098
+  categoria: configuracion_sin_efecto
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Una variable nueva en el ejemplo de entorno no afecta al nivel de log."
+  solicitante: {agente: A1, tarea: "Configurar el servidor de correo.", accion: {herramienta: Edit, objetivo: ".env.example", cambio: "Añadir SMTP_HOST=."}}
+  otro: {agente: A2, tarea: "Nivel de log configurable.", tiene: ["app/config.py"], intencion: "Añadir LOG_LEVEL con INFO por defecto."}
+
+- id: C099
+  categoria: configuracion_sin_efecto
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Un Makefile nuevo no afecta a la autenticación."
+  solicitante: {agente: A1, tarea: "Atajos de desarrollo.", accion: {herramienta: Write, objetivo: "Makefile", cambio: "Objetivos run y test que llaman a uv."}}
+  otro: {agente: A2, tarea: "Segundo factor en el login.", tiene: ["app/auth.py"], intencion: "Exigir OTP en login()."}
+
+- id: C100
+  categoria: configuracion_sin_efecto
+  dificultad: facil
+  propuesta: no_choca
+  motivo: "Configuración de pre-commit frente a una consulta nueva."
+  solicitante: {agente: A1, tarea: "Hooks de pre-commit.", accion: {herramienta: Write, objetivo: ".pre-commit-config.yaml", cambio: "Hook de ruff check."}}
+  otro: {agente: A2, tarea: "Contar reservas por usuario.", tiene: ["app/db.py"], intencion: "Añadir contar_reservas_por_usuario()."}

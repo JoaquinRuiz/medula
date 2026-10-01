@@ -1,0 +1,37 @@
+# T1 — Segundo factor (OTP) en el login
+
+## Objetivo
+Añadir un segundo factor de autenticación basado en códigos TOTP. A partir de este cambio, `login()` exige, además del usuario y la contraseña, un código OTP válido.
+
+## Contexto
+Hoy `app/auth.py` expone `login(username, password) -> Session`, que solo comprueba la contraseña. Seguridad pide 2FA en todos los accesos con credenciales. `pyotp` ya está instalado en el entorno.
+
+## Alcance
+- `app/config.py`: cada usuario de `USERS` gana un `otp_secret` (base32). Usa exactamente estos, que son los que conocen los datos de prueba:
+  - `alice`: `JBSWY3DPEHPK3PXP`
+  - `bob`: `KRSXG5CTMVRXEZLU`
+- `app/auth.py`:
+  - `verificar_otp(username: str, code: str) -> bool`: comprueba el código con TOTP (RFC 6238, `pyotp.TOTP(secret)`, pasos de 30 s, con una tolerancia de ±1 paso). Tiene que poder sustituirse en tests (por ejemplo, con `monkeypatch` sobre `app.auth.verificar_otp`), así que `login()` la llama a través del módulo y no guarda una referencia propia.
+  - La firma pasa a ser `login(username: str, password: str, otp: str) -> Session`, con `otp` **obligatorio**. Si el OTP falta, está vacío o no es válido, lanza `AuthError`.
+  - `otp_header()`: una dependencia de FastAPI, reutilizable, que lee la cabecera `X-OTP` y devuelve su valor (o `""` si no viene). Su docstring tiene que enunciar la regla general de abajo, para que quien añada un endpoint autenticado la encuentre y la use.
+- `app/routes_auth.py`: `POST /login` acepta un campo `otp` en el body y lo pasa a `login()`. Sin OTP válido → `401`.
+- **Regla general**: todo punto de entrada HTTP que autentique con usuario y contraseña exige además el OTP, en `POST /login` como campo `otp` del body y en cualquier otro endpoint en la cabecera `X-OTP` (leída con `otp_header()`). Si hay en el código algún otro endpoint que autentique con usuario y contraseña, adáptalo.
+- Fuera de alcance: alta de secretos, códigos QR y recuperación de cuenta. Las sesiones ya abiertas (token Bearer) siguen funcionando igual.
+
+## Criterios de aceptación
+1. `login("alice", "alice-pass", pyotp.TOTP("JBSWY3DPEHPK3PXP").now())` devuelve una `Session`.
+2. `login` con la contraseña correcta y un OTP incorrecto o vacío lanza `AuthError`.
+3. Llamar a `login("alice", "alice-pass")` sin OTP falla (el parámetro es obligatorio).
+4. `POST /login` con `{"username", "password", "otp"}` válidos → `200 {"token": ...}`; sin `otp` o con uno inválido → `401`.
+5. `app.auth.otp_header` existe, es utilizable como dependencia de FastAPI y su docstring menciona `X-OTP`.
+6. Sustituir `app.auth.verificar_otp` por una función que devuelva siempre `True` hace que `login` acepte cualquier código.
+7. Los tests del repo (`uv run pytest`) quedan en verde, con los tuyos añadidos.
+
+---
+Instrucciones de trabajo:
+- Trabajas en un repositorio git en el directorio actual. No salgas de él.
+- Otros agentes trabajan a la vez en este mismo directorio, cada uno en su tarea.
+  Si una herramienta queda bloqueada con un motivo, síguelo.
+- Es un proyecto uv con las dependencias ya instaladas. No añadas paquetes.
+- Ejecuta los tests con `uv run pytest`.
+- No hagas commit ni cambies de rama: al terminar, el banco hace el commit.

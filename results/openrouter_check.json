@@ -1,0 +1,128 @@
+{
+  "model": "anthropic/claude-sonnet-5",
+  "checked_at": "2026-09-29T07:02:11+00:00",
+  "model_listed": false,
+  "runs": {
+    "low": {
+      "effort": "low",
+      "status": 200,
+      "latency_s": 11.3,
+      "id": "gen-1790665332-84peNFQxL6NUXbc1Dvk1",
+      "usage": {
+        "input_tokens": 84,
+        "output_tokens": 1185,
+        "output_tokens_details": {
+          "thinking_tokens": 1171
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "server_tool_use": null,
+        "service_tier": "standard",
+        "speed": "standard",
+        "cost": 0.012018,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.012018,
+          "upstream_inference_prompt_cost": 0.000168,
+          "upstream_inference_completions_cost": 0.01185
+        }
+      },
+      "stop_reason": "end_turn",
+      "block_types": [
+        "thinking",
+        "text"
+      ],
+      "generation": {
+        "model": "anthropic/claude-sonnet-5-20260630",
+        "provider_name": "Claude Platform on AWS",
+        "tokens_completion": 103,
+        "native_tokens_completion": 1185,
+        "native_tokens_reasoning": 1171,
+        "total_cost": 0.012018,
+        "usage": 0.012018
+      }
+    },
+    "high": {
+      "effort": "high",
+      "status": 200,
+      "latency_s": 48.56,
+      "id": "gen-1790665343-M56hgwqPZI52gfToaFpg",
+      "usage": {
+        "input_tokens": 84,
+        "output_tokens": 6825,
+        "output_tokens_details": {
+          "thinking_tokens": 5488
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "server_tool_use": null,
+        "service_tier": "standard",
+        "speed": "standard",
+        "cost": 0.068418,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.068418,
+          "upstream_inference_prompt_cost": 0.000168,
+          "upstream_inference_completions_cost": 0.06825
+        }
+      },
+      "stop_reason": "end_turn",
+      "block_types": [
+        "thinking",
+        "text"
+      ],
+      "generation": {
+        "model": "anthropic/claude-sonnet-5-20260630",
+        "provider_name": "Claude Platform on AWS",
+        "tokens_completion": 1316,
+        "native_tokens_completion": 6825,
+        "native_tokens_reasoning": 5488,
+        "total_cost": 0.068418,
+        "usage": 0.068418
+      }
+    }
+  },
+  "invalid_effort": {
+    "status": 400,
+    "error": {
+      "type": "error",
+      "error": {
+        "type": "invalid_request_error",
+        "message": "Invalid Anthropic Messages API request",
+        "error_type": "invalid_request"
+      },
+      "request_id": null,
+      "metadata": {
+        "raw": "[\n  {\n    \"code\": \"invalid_value\",\n    \"values\": [\n      \"low\",\n      \"medium\",\n      \"high\",\n      \"xhigh\",\n      \"max\"\n    ],\n    \"path\": [\n      \"output_config\",\n      \"effort\"\n    ],\n    \"message\": \"Invalid option: expected one of \\\"low\\\"|\\\"medium\\\"|\\\"high\\\"|\\\"xhigh\\\"|\\\"max\\\"\"\n  }\n]"
+      }
+    }
+  },
+  "invalid_effort_rejected": true,
+  "output_tokens": {
+    "low": 1185,
+    "high": 6825
+  },
+  "ratio_high_low": 5.76,
+  "effort_passthrough": true,
+  "criterion": "tokens de salida high/low >= 1.5 sobre la misma pregunta",
+  "agent_effort": "high",
+  "claude_version": "2.1.284",
+  "claude_smoke": {
+    "is_error": false,
+    "result": "ok",
+    "total_cost_usd": 0.09608900000000001,
+    "session_id": "7d5e4333-75bf-4e23-872d-a857f0932b20",
+    "terminal_reason": "completed"
+  },
+  "claude_smoke_ok": true
+}

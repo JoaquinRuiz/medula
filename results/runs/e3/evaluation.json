@@ -1,0 +1,46 @@
+{
+  "workspace": "<runs>/e3/repo",
+  "timestamp": "2026-09-29T15:10:45+00:00",
+  "tasks": {
+    "T1": {
+      "passed": 7,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "T2": {
+      "passed": 5,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "T3": {
+      "passed": 4,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "T4": {
+      "passed": 4,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "T5": {
+      "passed": 3,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "T6": {
+      "passed": 9,
+      "failed": 0,
+      "failed_tests": []
+    }
+  },
+  "integration": {
+    "passed": 5,
+    "failed": 0,
+    "failed_tests": []
+  },
+  "total": {
+    "passed": 37,
+    "failed": 0
+  },
+  "all_green": true
+}

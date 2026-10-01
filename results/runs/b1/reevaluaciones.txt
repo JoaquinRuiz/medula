@@ -1,0 +1,1 @@
+2026-09-29T08:10:59Z	test_integration: la fecha del CSV se compara como fecha (T2.md no fija formato)

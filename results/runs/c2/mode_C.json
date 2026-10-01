@@ -1,0 +1,255 @@
+{
+  "mode": "C",
+  "decisor": "locks",
+  "demo": false,
+  "run_id": "c2",
+  "model": "anthropic/claude-sonnet-5",
+  "effort": "high",
+  "d61": "anthropic/claude-sonnet-5 · effort high",
+  "claude_version": "2.1.284",
+  "effort_check": "passed",
+  "umbrales": {
+    "umbral_bajo": 0.2,
+    "umbral_alto": 0.8,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": "choca",
+    "regla_simbolos": false
+  },
+  "started_at": "2026-09-29T13:49:19Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 309.0,
+  "base_sha": "d8000d7aaf4d919acfbef28ab69d42acae8fe357",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 223.1
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 79.2
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 222.8,
+      "cost_usd": 0.32527,
+      "num_turns": 23,
+      "session_id": "32602827-54b0-491a-b664-f21971f13aae",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 40,
+        "output_tokens": 7825,
+        "cache_read_input_tokens": 856000,
+        "cache_creation_input_tokens": 30296
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 182.3,
+      "cost_usd": 0.30344710000000014,
+      "num_turns": 16,
+      "session_id": "a0c56cc9-a961-4403-870f-5fe41afcf06c",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 32,
+        "output_tokens": 8390,
+        "cache_read_input_tokens": 697528,
+        "cache_creation_input_tokens": 31991
+      }
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 133.1,
+      "cost_usd": 0.2398621,
+      "num_turns": 21,
+      "session_id": "aac89fc2-a40b-40c0-baf0-6ff3e301329f",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 30,
+        "output_tokens": 4363,
+        "cache_read_input_tokens": 611398,
+        "cache_creation_input_tokens": 29557
+      }
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 98.3,
+      "cost_usd": 0.28845049999999994,
+      "num_turns": 27,
+      "session_id": "44c6bfe6-a30e-4769-ae05-b26d994133a1",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 32,
+        "output_tokens": 7578,
+        "cache_read_input_tokens": 682145,
+        "cache_creation_input_tokens": 30471
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 79.0,
+      "cost_usd": 0.1251185,
+      "num_turns": 11,
+      "session_id": "e6c70145-7b73-4dba-9e97-c7f0a1ea1a25",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 22,
+        "output_tokens": 1883,
+        "cache_read_input_tokens": 413210,
+        "cache_creation_input_tokens": 9441
+      }
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 50.1,
+      "cost_usd": 0.144818,
+      "num_turns": 12,
+      "session_id": "91dcd434-c45f-48c1-a080-bb3b31943611",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 24,
+        "output_tokens": 2856,
+        "cache_read_input_tokens": 452675,
+        "cache_creation_input_tokens": 10270
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 74,
+    "decisiones_modelo": 36,
+    "por_decisor": {
+      "locks": 36,
+      "regla": 38
+    },
+    "latencia_p50_ms": 0.0073334958869963884,
+    "latencia_p95_ms": 0.011958007235080004,
+    "coste_decisiones_usd": 0,
+    "escaladas_sonnet": 0,
+    "escaladas_opus": 0,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "errores_decisor": 0,
+    "esperas": [
+      {
+        "agente": "A3",
+        "espera_a": "A4",
+        "recurso": "app/consultas.py",
+        "estado": "concedido",
+        "segundos": 60.6
+      },
+      {
+        "agente": "A1",
+        "espera_a": "A2",
+        "recurso": "app/routes_export.py",
+        "estado": "concedido",
+        "segundos": 86.3
+      },
+      {
+        "agente": "A5",
+        "espera_a": "A6",
+        "recurso": "app/validators.py",
+        "estado": "concedido",
+        "segundos": 38.0
+      }
+    ],
+    "avisos_posibles": 0,
+    "avisos_enviados": 0,
+    "avisos_descartados_lectura": 0,
+    "notificaciones_de_lectura": 0,
+    "pares_con_espera": [
+      "T1-T2",
+      "T3-T4",
+      "T5-T6"
+    ],
+    "pares_con_aviso": [],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": [
+      "T5-T6"
+    ],
+    "avisos_innecesarios": []
+  },
+  "totals": {
+    "agents_cost_usd": 1.427,
+    "decision_cost_usd": 0,
+    "cost_usd": 1.427,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/c2/repo",
+    "timestamp": "2026-09-29T13:54:28+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 5,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 5,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "total": {
+      "passed": 37,
+      "failed": 0
+    },
+    "all_green": true
+  },
+  "red_tests": 0
+}

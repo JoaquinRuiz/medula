@@ -1,0 +1,60 @@
+Estás en un repositorio git a mitad de un merge con conflictos textuales.
+Se está fusionando la rama task/T4 sobre main, donde ya se han integrado otras tareas.
+
+Ficheros en conflicto:
+- tests/test_reservas.py
+
+Objetivo: resolver los conflictos conservando la intención de todas las tareas implicadas,
+de modo que el resultado cumpla los criterios de aceptación de cada una.
+
+=============== Tarea T3 ===============
+# T3 — Renombrar `fecha` a `inicio` en las reservas
+
+## Objetivo
+El campo `fecha` de una reserva es en realidad su hora de inicio, y el nombre confunde. Hay que renombrarlo a `inicio` en todo el sistema.
+
+## Contexto
+`fecha` aparece en el modelo (`app/models.py`), en la tabla `reservas` de SQLite (`app/db.py`) y, por tanto, en el JSON de entrada y salida de la API.
+
+## Alcance
+- `app/models.py`: `ReservaIn.fecha` pasa a ser `ReservaIn.inicio` (mismo tipo).
+- `app/db.py`: la columna pasa a llamarse `inicio` en `CREATE TABLE`, en los `INSERT` y en los `SELECT`, y el orden del listado usa `inicio`. No hay datos que migrar: la base de datos se crea al arrancar.
+- `app/routes_reservas.py` y cualquier otro punto de la API que use el campo.
+- La API deja de aceptar y de devolver `fecha`; en su lugar, `inicio`.
+- Fuera de alcance: `app/validators.py`. Sus funciones reciben valores por parámetro y no cambian.
+
+## Criterios de aceptación
+1. `POST /reservas` con `{"sala", "inicio", "duracion_min"}` → `201`, y la respuesta contiene `inicio` y no `fecha`.
+2. `GET /reservas` devuelve objetos con `inicio` y sin `fecha`, ordenados por `inicio`.
+3. `POST /reservas` con `fecha` y sin `inicio` → `422`.
+4. La tabla `reservas` tiene una columna `inicio` y ninguna `fecha`.
+5. Los tests del repo (`uv run pytest`) quedan en verde, actualizados al nuevo nombre.
+
+=============== Tarea T4 ===============
+# T4 — Filtrar reservas por fecha
+
+## Objetivo
+Permitir que `GET /reservas` devuelva solo las reservas a partir de un día dado.
+
+## Contexto
+El listado crece y los clientes solo quieren las reservas futuras. El filtro se hace sobre el campo `fecha` de la reserva.
+
+## Alcance
+- `GET /reservas?desde=AAAA-MM-DD` (endpoint en `app/routes_consulta.py`): devuelve solo las reservas con `fecha` mayor o igual que el inicio de ese día (00:00), en el mismo orden que ahora.
+- El filtro se aplica en SQL, no en memoria: crea un módulo nuevo `app/consultas.py` con `listar_reservas_desde(desde)`, que abre la conexión con `db.conectar()` y hace el `SELECT` con `WHERE fecha >= ?`.
+- No modifiques `app/db.py`, que se queda como capa de esquema y escritura. Tampoco toques los modelos.
+- `desde` con un formato inválido → `422`.
+- Sin `desde`, el comportamiento no cambia (sigue usando `db.listar_reservas()`).
+- Fuera de alcance: filtro `hasta`, filtro por sala y paginación.
+
+## Criterios de aceptación
+1. Con reservas el 2026-10-05, el 2026-10-06 y el 2026-10-08, `GET /reservas?desde=2026-10-06` devuelve solo las dos últimas.
+2. `desde` coincide con el día de una reserva a las 08:00 → esa reserva se incluye.
+3. `GET /reservas?desde=06-10-2026` → `422`.
+4. `GET /reservas` sin parámetro devuelve todas.
+5. Los tests del repo (`uv run pytest`) quedan en verde, con los tuyos añadidos.
+
+Instrucciones:
+- Resuelve los conflictos, quita todos los marcadores y ajusta el código y los tests que haga falta.
+- Es un proyecto uv con las dependencias ya instaladas. Ejecuta los tests con `uv run pytest`.
+- Cierra el merge con `git add` y `git commit --no-edit`. No cambies de rama, no hagas rebase y no abortes el merge.

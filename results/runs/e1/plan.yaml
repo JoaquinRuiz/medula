@@ -1,0 +1,7 @@
+tareas:
+  T1: {agente: A1, depende_de: []}
+  T2: {agente: A2, depende_de: []}
+  T3: {agente: A3, depende_de: []}
+  T4: {agente: A4, depende_de: []}
+  T5: {agente: A5, depende_de: []}
+  T6: {agente: A6, depende_de: []}

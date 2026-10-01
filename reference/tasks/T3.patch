@@ -1,0 +1,84 @@
+diff --git a/app/db.py b/app/db.py
+index f99cb5c..eeca3fa 100644
+--- a/app/db.py
++++ b/app/db.py
+@@ -24,7 +24,7 @@ def init_db() -> None:
+             CREATE TABLE IF NOT EXISTS reservas (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 sala TEXT NOT NULL,
+-                fecha TEXT NOT NULL,
++                inicio TEXT NOT NULL,
+                 duracion_min INTEGER NOT NULL,
+                 usuario TEXT NOT NULL
+             )
+@@ -35,8 +35,8 @@ def init_db() -> None:
+ def insertar_reserva(r: ReservaIn, usuario: str) -> Reserva:
+     with conectar() as conn:
+         cur = conn.execute(
+-            "INSERT INTO reservas (sala, fecha, duracion_min, usuario) VALUES (?, ?, ?, ?)",
+-            (r.sala, r.fecha.isoformat(), r.duracion_min, usuario),
++            "INSERT INTO reservas (sala, inicio, duracion_min, usuario) VALUES (?, ?, ?, ?)",
++            (r.sala, r.inicio.isoformat(), r.duracion_min, usuario),
+         )
+         return Reserva(id=cur.lastrowid, usuario=usuario, **r.model_dump())
+ 
+@@ -44,6 +44,6 @@ def insertar_reserva(r: ReservaIn, usuario: str) -> Reserva:
+ def listar_reservas() -> list[Reserva]:
+     with conectar() as conn:
+         filas = conn.execute(
+-            "SELECT id, sala, fecha, duracion_min, usuario FROM reservas ORDER BY fecha"
++            "SELECT id, sala, inicio, duracion_min, usuario FROM reservas ORDER BY inicio"
+         ).fetchall()
+     return [Reserva(**dict(f)) for f in filas]
+diff --git a/app/models.py b/app/models.py
+index cd32894..fb6e0d3 100644
+--- a/app/models.py
++++ b/app/models.py
+@@ -6,7 +6,7 @@ from pydantic import BaseModel
+ 
+ class ReservaIn(BaseModel):
+     sala: str
+-    fecha: datetime  # inicio de la reserva
++    inicio: datetime  # inicio de la reserva
+     duracion_min: int
+ 
+ 
+diff --git a/app/routes_reservas.py b/app/routes_reservas.py
+index 5d00d94..07dcb77 100644
+--- a/app/routes_reservas.py
++++ b/app/routes_reservas.py
+@@ -21,7 +21,7 @@ def sesion_actual(authorization: str | None = Header(default=None)) -> Session:
+ def crear_reserva(r: ReservaIn, session: Session = Depends(sesion_actual)) -> Reserva:
+     try:
+         validar_sala(r.sala)
+-        validar_horario(r.fecha, r.duracion_min)
++        validar_horario(r.inicio, r.duracion_min)
+     except ValidationError as e:
+         raise HTTPException(status_code=422, detail=str(e))
+     return db.insertar_reserva(r, session.username)
+diff --git a/tests/test_reservas.py b/tests/test_reservas.py
+index b7101bd..c02a4ca 100644
+--- a/tests/test_reservas.py
++++ b/tests/test_reservas.py
+@@ -1,4 +1,4 @@
+-RESERVA = {"sala": "Atlas", "fecha": "2026-10-05T10:00", "duracion_min": 60}
++RESERVA = {"sala": "Atlas", "inicio": "2026-10-05T10:00", "duracion_min": 60}
+ 
+ 
+ def test_crear_y_listar(client, auth):
+@@ -9,11 +9,11 @@ def test_crear_y_listar(client, auth):
+     assert client.get("/reservas").json() == [creada]
+ 
+ 
+-def test_listado_ordenado_por_fecha(client, auth):
+-    client.post("/reservas", json={**RESERVA, "fecha": "2026-10-07T10:00"}, headers=auth)
++def test_listado_ordenado_por_inicio(client, auth):
++    client.post("/reservas", json={**RESERVA, "inicio": "2026-10-07T10:00"}, headers=auth)
+     client.post("/reservas", json=RESERVA, headers=auth)
+-    fechas = [r["fecha"] for r in client.get("/reservas").json()]
+-    assert fechas == sorted(fechas)
++    inicios = [r["inicio"] for r in client.get("/reservas").json()]
++    assert inicios == sorted(inicios)
+ 
+ 
+ def test_crear_sin_sesion(client):
