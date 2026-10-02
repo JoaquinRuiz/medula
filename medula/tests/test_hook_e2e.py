@@ -23,8 +23,9 @@ def puerto_libre() -> int:
         return s.getsockname()[1]
 
 
-def ejecutar_hook(modo: str, agente: str, url: str, cuerpo: dict, tarea: str = "") -> subprocess.CompletedProcess:
-    env = {**os.environ, "MEDULA_URL": url, "MEDULA_AGENTE": agente, "MEDULA_TAREA": tarea}
+def ejecutar_hook(modo: str, agente: str, url: str, cuerpo: dict, tarea: str = "",
+                  **extra: str) -> subprocess.CompletedProcess:
+    env = {**os.environ, "MEDULA_URL": url, "MEDULA_AGENTE": agente, "MEDULA_TAREA": tarea, **extra}
     return subprocess.run([str(HOOK), modo], input=json.dumps(cuerpo), capture_output=True, text=True, env=env,
                           timeout=30)
 
@@ -66,6 +67,19 @@ def test_sin_agente_bloquea():
     r = subprocess.run([str(HOOK), "pre"], input="{}", capture_output=True, text=True,
                        env={**os.environ, "MEDULA_URL": "http://x", "MEDULA_AGENTE": ""})
     assert r.returncode == 2
+
+
+def test_plazo_del_hook_agotado_bloquea_con_su_propio_mensaje(servidor, fake):
+    """Médula sigue esperando, pero el curl del hook se rinde antes: se bloquea sin decir que Médula ha caído."""
+    url, nucleo = servidor(espera_max=10)
+    assert ejecutar_hook("pre", "A1", url, pre("Bash", command="ls"), "T1").returncode == 0
+    fake.jev = jev_fijo({"A2": 0.05})
+    assert ejecutar_hook("pre", "A1", url, pre("Edit", **AUTH), "T1").returncode == 0
+    fake.jev = jev_fijo({"A1": 0.95})
+    r = ejecutar_hook("pre", "A2", url, pre("Write", **EXPORT), "T2", MEDULA_HOOK_TIMEOUT="1")
+    assert r.returncode == 2
+    assert "no ha decidido en 1 s" in r.stderr and "no responde" not in r.stderr
+    ejecutar_hook("fin", "A1", url, {"hook_event_name": "SessionEnd"})
 
 
 def test_t2_espera_a_t1_y_recibe_el_aviso(servidor, fake):

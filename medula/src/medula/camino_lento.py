@@ -12,9 +12,10 @@ from dataclasses import dataclass, field
 
 from .config import Config
 from .decisores.base import GUIA_CHOCA, ErrorDecisor, OpenRouter
-from .decisores.llm import llamar
+from .decisores.llm import RespuestaCortada, llamar
 
 SALIDAS = ("conceder", "esperar", "reordenar", "reescribir")
+MAX_TOKENS_REINTENTO = 4096  # el doble del valor por defecto de llamar()
 ESQUEMA = {
     "type": "object",
     "properties": {
@@ -103,9 +104,17 @@ def resolver(cliente: OpenRouter, config: Config, estado: dict, veredictos: dict
         modelo = config.modelos[nombre]
         paso = {"decisor": nombre, "modelo": modelo}
         try:
-            datos, latencia, coste, crudo = llamar(cliente, modelo, usuario, ESQUEMA, "salida",
-                                                   config.timeouts[nombre], esfuerzo)
-            paso.update(latencia_ms=latencia, coste_usd=coste, respuesta=datos)
+            try:
+                datos, latencia, coste, crudo = llamar(cliente, modelo, usuario, ESQUEMA, "salida",
+                                                       config.timeouts[nombre], esfuerzo)
+            except RespuestaCortada as e:
+                # El razonamiento cuenta para max_tokens: un reintento con el doble antes de escalar.
+                pasos.append({**paso, "error": str(e), "finish_reason": "length",
+                              "latencia_ms": e.latencia, "coste_usd": e.coste})
+                datos, latencia, coste, crudo = llamar(cliente, modelo, usuario, ESQUEMA, "salida",
+                                                       config.timeouts[nombre], esfuerzo, MAX_TOKENS_REINTENTO)
+            paso.update(latencia_ms=latencia, coste_usd=coste, respuesta=datos,
+                        finish_reason=(crudo.get("choices") or [{}])[0].get("finish_reason"))
         except ErrorDecisor as e:
             paso.update(error=str(e))
             pasos.append(paso)

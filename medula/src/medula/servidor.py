@@ -148,7 +148,7 @@ class Nucleo:
                 pregunta="verificacion" if paso.get("verificacion") else "salida", estado_enviado=est,
                 respuesta=paso.get("respuesta"), veredicto=ver, latencia_ms=paso.get("latencia_ms"),
                 coste_usd=paso.get("coste_usd"), decisor=paso["decisor"], modelo=paso["modelo"],
-                error=paso.get("error") or paso.get("rechazo"))
+                error=paso.get("error") or paso.get("rechazo"), finish_reason=paso.get("finish_reason"))
         if s.salida == "conceder":
             return "conceder", None, ""
         if s.salida == "reescribir":

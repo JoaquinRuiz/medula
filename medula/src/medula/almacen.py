@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS decisiones (
     decisor TEXT,
     modelo TEXT,
     reserva_de TEXT,
-    error TEXT
+    error TEXT,
+    finish_reason TEXT                           -- del proveedor en las llamadas a LLM (stop, length…)
 );
 """
 
@@ -83,6 +84,9 @@ class Almacen:
         self._c.row_factory = sqlite3.Row
         self._c.execute("PRAGMA journal_mode=WAL")
         self._c.executescript(ESQUEMA)
+        # Bases de ejecuciones anteriores, creadas sin la columna finish_reason.
+        if "finish_reason" not in {f[1] for f in self._c.execute("PRAGMA table_info(decisiones)")}:
+            self._c.execute("ALTER TABLE decisiones ADD COLUMN finish_reason TEXT")
 
     def _q(self, sql: str, args=()):
         with self._lock:
@@ -182,7 +186,7 @@ class Almacen:
     # --- decisiones ---
     def registrar_decision(self, **kw) -> int:
         cols = ["ts", "tipo", "agente", "accion", "pregunta", "estado_enviado", "respuesta", "veredicto", "p_choca",
-                "confianza", "latencia_ms", "coste_usd", "decisor", "modelo", "reserva_de", "error"]
+                "confianza", "latencia_ms", "coste_usd", "decisor", "modelo", "reserva_de", "error", "finish_reason"]
         kw.setdefault("ts", time.time())
         for k in ("accion", "estado_enviado", "respuesta"):
             if k in kw and not isinstance(kw[k], str):

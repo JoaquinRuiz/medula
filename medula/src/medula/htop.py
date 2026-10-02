@@ -26,7 +26,7 @@ def _leer(db: Path) -> dict:
         "locks": q("SELECT * FROM locks ORDER BY desde"),
         "cola": q("SELECT * FROM cola WHERE estado = 'esperando' ORDER BY prioridad, desde"),
         "decisiones": q("SELECT * FROM decisiones ORDER BY id DESC LIMIT 12"),
-        "todas": q("SELECT tipo, decisor, latencia_ms, coste_usd, reserva_de, pregunta, veredicto FROM decisiones"),
+        "todas": q("SELECT * FROM decisiones"),  # con o sin finish_reason (bases anteriores)
         "avisos": q("SELECT COUNT(*) AS n FROM buzon WHERE de IS NOT NULL AND de != 'medula'")[0]["n"],
     }
     c.close()
@@ -107,7 +107,8 @@ def pantalla(db: Path, coste_sonnet: float | None, log: Path | None = None) -> G
     coste = sum(x["coste_usd"] or 0 for x in d["todas"])
     n_rapidas = sum(1 for x in modelo if x["tipo"] in ("acquire", "notify"))
     escaladas = {n: sum(1 for x in d["todas"] if x["tipo"] == "lento" and x["decisor"] == n
-                        and x["pregunta"] != "verificacion") for n in ("sonnet", "opus")}
+                        and x["pregunta"] != "verificacion" and x.get("finish_reason") != "length")
+                 for n in ("sonnet", "opus")}
     rechazadas = sum(1 for x in d["todas"] if (x["veredicto"] or "").startswith("rechazada"))
     reservas = sum(1 for x in d["todas"] if x["reserva_de"])
     p50, p95 = _p(lat, 0.5), _p(lat, 0.95)

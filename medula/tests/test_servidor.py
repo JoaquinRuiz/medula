@@ -97,6 +97,37 @@ def test_camino_lento_sonnet_no_resuelve_y_opus_concede(nucleo, fake, config):
     assert sorted(d["decisor"] for d in lentos) == ["opus", "sonnet"]
 
 
+
+def test_camino_lento_registra_el_intento_cortado_y_su_finish_reason(nucleo, fake):
+    fake.jev = jev_fijo({"A1": 0.5})
+    propuesta = {"resuelto": True, "salida": "conceder", "esperar_a": None, "primero": None, "instrucciones": "",
+                 "motivo": "falso"}
+    fake.llm = lambda modelo, cuerpo: ('{"resuelto": true, "sal', "length") if cuerpo["max_tokens"] < 4096 \
+        else propuesta
+    n = nucleo()
+    assert permitido(n.acquire("A2", "T2", hook("Write", **EXPORT)))
+    lentos = sorted((d for d in n.db.decisiones() if d["tipo"] == "lento"), key=lambda d: d["id"])
+    assert [(d["decisor"], d["finish_reason"], bool(d["error"])) for d in lentos] == [("sonnet", "length", True),
+                                                                                     ("sonnet", "stop", False)]
+    assert all(d["coste_usd"] == 0.003 for d in lentos)
+
+
+def test_almacen_anade_finish_reason_a_bases_antiguas(tmp_path):
+    import sqlite3
+
+    from medula.almacen import Almacen
+
+    ruta = tmp_path / "vieja.db"
+    with sqlite3.connect(ruta) as c:
+        c.execute("CREATE TABLE decisiones (id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL NOT NULL, tipo TEXT NOT NULL, "
+                  "agente TEXT, accion TEXT, pregunta TEXT, estado_enviado TEXT, respuesta TEXT, veredicto TEXT, "
+                  "p_choca REAL, confianza REAL, latencia_ms REAL, coste_usd REAL, decisor TEXT, modelo TEXT, "
+                  "reserva_de TEXT, error TEXT)")
+    db = Almacen(ruta)
+    db.registrar_decision(tipo="lento", finish_reason="stop")
+    assert db.decisiones()[0]["finish_reason"] == "stop"
+
+
 def _es_verificacion(cuerpo):
     return (cuerpo.get("response_format") or {}).get("json_schema", {}).get("name") == "verificacion"
 
