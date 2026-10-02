@@ -202,6 +202,35 @@ def test_espera_cruzada_no_bloquea(nucleo, fake):
     assert permitido(resultados["A2"])
 
 
+
+def test_espera_cruzada_cuando_el_segundo_tiene_peor_prioridad(config, fake):
+    """e5 y e1: T3 (mejor prioridad) espera a T4; luego T4 espera a T3. Antes, los dos hasta espera_max."""
+    fake.jev = jev_fijo({"A1": 0.95, "A2": 0.95})
+    grafo = {"tareas": {"T1": {"depende_de": []}, "T2": {"depende_de": ["T1"]}}}  # T1 antes que T2
+    n = Nucleo(config(plan=grafo, espera_max=5))
+    n.asegurar("A1", "T1")
+    n.asegurar("A2", "T2")
+    resultados, tiempos = {}, {}
+
+    def pedir(a, t, entrada):
+        t0 = time.monotonic()
+        resultados[a] = n.acquire(a, t, entrada)
+        tiempos[a] = time.monotonic() - t0
+
+    primero = threading.Thread(target=pedir, args=("A1", "T1", hook("Edit", **AUTH)))
+    primero.start()
+    time.sleep(0.3)
+    assert n.db.agente("A1")["estado"] == "esperando"
+    segundo = threading.Thread(target=pedir, args=("A2", "T2", hook("Write", **EXPORT)))
+    segundo.start()
+    primero.join(timeout=3)
+    assert permitido(resultados["A1"]) and tiempos["A1"] < 2  # pasa el de mejor prioridad, sin agotar espera_max
+    assert n.db.agente("A2")["estado"] == "esperando"
+    n.release("A1")
+    segundo.join(timeout=3)
+    assert permitido(resultados["A2"])
+
+
 def test_prioridad_desde_el_grafo():
     p = {"tareas": {"T1": {"depende_de": []}, "T2": {"depende_de": ["T1"]}, "T3": {"depende_de": ["T2"]}}}
     assert plan.niveles(p) == {"T1": 0, "T2": 1, "T3": 2}

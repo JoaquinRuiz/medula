@@ -231,7 +231,7 @@ class Nucleo:
             else:
                 self.db.actualizar_espera(id_cola, esperar_a)
             self.db.set_estado(agente, "esperando", esperar_a)
-            if not self._esperar_fin(esperar_a, limite):
+            if not self._esperar_fin(agente, esperar_a, limite):
                 self.db.cerrar_cola(id_cola, "caducado")
                 self.db.set_estado(agente, "trabajando")
                 self._despertar()
@@ -251,11 +251,17 @@ class Nucleo:
                     self.cond.wait(timeout=0.2)
         return self._decidir(agente, accion)
 
-    def _esperar_fin(self, x: str, limite: float) -> bool:
+    def _esperar_fin(self, agente: str, x: str, limite: float) -> bool:
+        """Espera a que `x` termine. También vuelve si `x` se ha puesto a esperar a `agente` y `agente` tiene mejor
+        prioridad: la regla de espera cruzada solo la comprueba el que llega segundo, así que si ese tiene peor
+        prioridad, el primero tiene que volver a decidir para pasar (si no, los dos esperan hasta `espera_max`)."""
         with self.cond:
             while True:
                 otro = self.db.agente(x)
                 if not otro or otro["estado"] == "terminado":
+                    return True
+                if otro["estado"] == "esperando" and otro.get("espera_a") == agente \
+                        and self._prioridad(agente) < self._prioridad(x):
                     return True
                 restante = limite - time.monotonic()
                 if restante <= 0:
