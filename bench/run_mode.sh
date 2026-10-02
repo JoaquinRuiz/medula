@@ -150,6 +150,9 @@ cat > "$AGENT_CONFIG_DIR/settings.json" <<JSON
 }}
 JSON
 export MEDULA_URL
+# curl del hook: lo que Médula puede tener esperando a un agente (espera_max) más margen para las decisiones;
+# por debajo del timeout del hook en Claude Code (espera_max + 120).
+export MEDULA_HOOK_TIMEOUT=$(( ${ESPERA_MAX%.*} + 100 ))
 fi
 
 otros_agentes() {

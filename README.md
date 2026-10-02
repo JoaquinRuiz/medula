@@ -221,6 +221,7 @@ and at most one extra false alarm.
   tools to reach each other outside Médula: in f1, five messages (T3 told T4 about the
   `fecha` → `inicio` rename); in e1, a single listing with no message. Both runs are kept and flagged
   (`canal_entre_agentes` in `summary.csv`). Those tools are now disabled for every agent.
+- **Hook cut-offs in c1, e1, e2 and e3.** The hook's `curl` gave up after 290 s while Médula could keep an agent waiting up to 600 s, so 12 long waits (c1: 2, e1: 3, e2: 3, e3: 4) ended with the action blocked and the agent retrying it. In e3, one of them was a Haiku call that took 309 s against a 15 s limit, because the limit wasn't enforced on the whole request. Both are fixed for future runs; the published runs are kept as they are. They add time, especially to mode E.
 - **Thresholds fitted on the same pairs they are measured on.** There is no separate validation set.
   In real runs, 61 % of Jev's decisions on write requests fell in the uncertain band and went to the
   slow path, versus 13 % of the calibration pairs.

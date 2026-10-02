@@ -31,6 +31,10 @@ respuesta=$(curl -sS --fail-with-body --max-time "$max" \
   --data-binary @- "${MEDULA_URL%/}/$ruta" 2>&1)
 rc=$?
 
+if [[ $rc -eq 28 ]]; then  # plazo de curl agotado: Médula sigue viva, pero la decisión no llegó a tiempo
+  echo "Médula no ha decidido en ${max} s ($respuesta). La acción queda bloqueada; vuelve a intentarla." >&2
+  [[ "$modo" == pre ]] && exit 2 || exit 0
+fi
 if [[ $rc -ne 0 ]]; then
   echo "Médula no responde en ${MEDULA_URL} ($respuesta). La acción queda bloqueada hasta que vuelva." >&2
   [[ "$modo" == pre ]] && exit 2 || exit 0

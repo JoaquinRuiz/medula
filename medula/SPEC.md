@@ -95,7 +95,7 @@ Se recorta para caber en 32k tokens: si falta sitio, pierde primero el historial
 }}
 ```
 
-**`medula-hook.sh`.** Lee el JSON del hook por stdin y lo reenvía con `curl` a `$MEDULA_URL/acquire`, `/notify` o `/release`, añadiendo la cabecera `X-Medula-Agente: $MEDULA_AGENTE`. El servidor responde directamente en el formato de salida de los hooks, y el script lo imprime tal cual.
+**`medula-hook.sh`.** Lee el JSON del hook por stdin y lo reenvía con `curl` a `$MEDULA_URL/acquire`, `/notify` o `/release`, añadiendo la cabecera `X-Medula-Agente: $MEDULA_AGENTE`. El servidor responde directamente en el formato de salida de los hooks, y el script lo imprime tal cual. En `pre`, `curl` espera como mucho `MEDULA_HOOK_TIMEOUT` segundos (290 por defecto); ese plazo tiene que cubrir `espera_max` más una decisión del camino lento y quedar por debajo del `timeout` del hook (`bench/run_mode.sh` usa `espera_max + 100` y `espera_max + 120`). Si se agota, el hook bloquea la acción con un mensaje propio, distinto del de Médula caída.
 - **Si el servidor no responde, sale con código 2 y bloquea** («Médula no responde»). Uso un hook de comando en lugar de un hook `http` por esto: un hook `http` que falla deja pasar la herramienta, y el experimento quedaría contaminado sin que nadie lo notase.
 
 **Respuestas del servidor:**

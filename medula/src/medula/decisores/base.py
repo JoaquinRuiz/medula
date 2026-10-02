@@ -2,12 +2,17 @@
 from __future__ import annotations
 
 import json
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as PlazoAgotado
 from dataclasses import dataclass, field
 
 import httpx2 as httpx
 
 BASE = "https://openrouter.ai/api/v1"
+# Hilos para las peticiones a los modelos: el que espera puede abandonar al cumplirse el plazo.
+_HILOS = ThreadPoolExecutor(max_workers=32, thread_name_prefix="medula-decisor")
 
 # La definición de «choca» es la de calibration/README.md (E-04), igual para todos los decisores.
 GUIA_CHOCA = (
@@ -70,22 +75,37 @@ class OpenRouter:
         self.cliente = httpx.Client(base_url=BASE, headers=cabeceras, transport=transport, timeout=60)
 
     def post(self, ruta: str, cuerpo: dict, timeout: float) -> tuple[dict, float, float]:
+        """`timeout` es el plazo total de la petición, no el de cada operación de httpx: una respuesta que
+        llega a goteo no puede alargar la espera del agente más allá del plazo."""
         t0 = time.perf_counter()
+        abandonada = threading.Event()
+
+        def pedir() -> tuple[int, bytes] | None:
+            with self.cliente.stream("POST", ruta, json=cuerpo, timeout=timeout) as r:
+                trozos = []
+                for trozo in r.iter_bytes():
+                    if abandonada.is_set():  # nadie espera ya esta respuesta: se cierra la conexión
+                        return None
+                    trozos.append(trozo)
+                return r.status_code, b"".join(trozos)
+
         try:
-            r = self.cliente.post(ruta, json=cuerpo, timeout=timeout)
+            estado, contenido = _HILOS.submit(pedir).result(timeout=timeout)
+        except PlazoAgotado as e:
+            abandonada.set()
+            raise ErrorDecisor(f"timeout tras {timeout} s") from e
         except httpx.TimeoutException as e:
             raise ErrorDecisor(f"timeout tras {timeout} s") from e
         except httpx.HTTPError as e:
             raise ErrorDecisor(f"{type(e).__name__}: {e}") from e
         latencia = (time.perf_counter() - t0) * 1000
-        if latencia > timeout * 1000:  # el timeout de httpx es por operación; esto es el límite total
-            raise ErrorDecisor(f"timeout: respuesta tras {latencia:.0f} ms (máximo {timeout} s)")
-        if r.status_code != 200:
-            raise ErrorDecisor(f"HTTP {r.status_code}: {r.text[:300]}")
+        texto = contenido.decode("utf-8", errors="replace")
+        if estado != 200:
+            raise ErrorDecisor(f"HTTP {estado}: {texto[:300]}")
         try:
-            datos = r.json()
+            datos = json.loads(texto)
         except json.JSONDecodeError as e:
-            raise ErrorDecisor(f"respuesta no JSON: {r.text[:200]}") from e
+            raise ErrorDecisor(f"respuesta no JSON: {texto[:200]}") from e
         coste = float(((datos.get("usage") or {}).get("cost")) or 0.0)
         return datos, latencia, coste
 

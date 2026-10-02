@@ -70,6 +70,26 @@ def test_reserva_hasta_locks_y_por_timeout(config, fake):
     assert lote.decisor == "locks" and lote.reserva_de == ["jev", "haiku"]
 
 
+def test_el_plazo_es_total_aunque_la_respuesta_llegue_a_goteo():
+    # Cada trozo llega antes del timeout por operación de httpx, pero la respuesta entera tardaría 2,5 s.
+    import time
+
+    import httpx2 as httpx
+    from medula.decisores import OpenRouter
+
+    def goteo():
+        for _ in range(50):
+            time.sleep(0.05)
+            yield b" "
+        yield b"{}"
+
+    c = OpenRouter("clave", httpx.MockTransport(lambda req: httpx.Response(200, content=goteo())))
+    t0 = time.perf_counter()
+    with pytest.raises(ErrorDecisor, match="timeout tras 0.5 s"):
+        c.post("/chat/completions", {}, 0.5)
+    assert time.perf_counter() - t0 < 1.0
+
+
 def test_jev_respuesta_incompleta(config, fake):
     fake.jev = lambda clave, _: {"choice": "esperar"} if clave.startswith("remedio_") else "no-numero"
     c = config()

@@ -40,7 +40,7 @@ Agents get the hook through the `settings.json` of their own clean `CLAUDE_CONFI
 }}
 ```
 
-and the environment variables `MEDULA_URL`, `MEDULA_AGENTE` and `MEDULA_TAREA`.
+and the environment variables `MEDULA_URL`, `MEDULA_AGENTE` and `MEDULA_TAREA`. `MEDULA_HOOK_TIMEOUT` (default 290 s) is how long the hook's `curl` waits for a decision on `pre`: keep it above Médula's `espera_max` plus the time a slow-path decision can take, and below the hook's own `timeout` (`bench/run_mode.sh` uses `espera_max + 100` and `espera_max + 120`).
 
 The hook is a command hook, not an `http` hook, on purpose: if Médula is unreachable it exits with code 2 and blocks the tool, instead of silently letting the agent proceed uncoordinated.
 
