@@ -131,7 +131,8 @@ class Veredicto:
   - `p = 1` si otro agente tiene lock sobre el mismo fichero, o sobre `repo` si la acción es un Bash que escribe;
   - `p = 0` en otro caso;
   - el remedio siempre es `esperar`.
-- **Reserva automática** (`cadena.py`). Si el decisor da error, supera su tiempo máximo (jev 5 s, haiku 15 s, sonnet 30 s) o devuelve algo fuera de formato, se pasa al siguiente de la cadena y se anota `reserva_de`.
+- **Reserva automática** (`cadena.py`). Si el decisor da error, supera su tiempo máximo (jev 5 s, haiku 15 s, sonnet 30 s) o devuelve algo fuera de formato, se pasa al siguiente de la cadena y se anota `reserva_de`. El tiempo máximo es el de la petición entera.
+- **Petición duplicada para Haiku.** Si Haiku no ha respondido en 8 s (su p95 en la matriz; `--duplicar-haiku`, 0 lo desactiva), se lanza una segunda petición idéntica y vale la primera que llegue bien, dentro del mismo tiempo máximo. La perdedora se corta; su coste, que el proveedor no llega a dar, se estima igual al de la ganadora y se suma. La respuesta guardada lo anota en `medula.duplicada`.
 
 **Regla de decisión en `acquire`**, con `p = max` sobre los otros agentes:
 

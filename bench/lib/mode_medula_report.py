@@ -81,6 +81,7 @@ def medula(db_path: Path) -> dict:
         "propuestas_rechazadas_por_spec": sum(1 for d in dec if d["tipo"] == "lento"
                                               and (d["veredicto"] or "").startswith("rechazada")),
         "reservas": sum(1 for d in dec if d["reserva_de"]),
+        "peticiones_duplicadas": sum(1 for d in dec if '"duplicada": true' in (d["respuesta"] or "")),
         "errores_decisor": sum(1 for d in dec if d["error"]),
         "esperas": [{"agente": r["agente"], "espera_a": r["espera_a"], "recurso": r["recurso"], "estado": r["estado"],
                      "segundos": round((r["hasta"] or r["desde"]) - r["desde"], 1)} for r in cola],
