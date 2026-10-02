@@ -43,11 +43,13 @@ def llamar(cliente: OpenRouter, modelo: str, usuario: str, esquema: dict, nombre
         texto = _texto(datos["choices"][0]["message"].get("content"))
     except (KeyError, IndexError) as e:
         raise ErrorDecisor(f"respuesta sin contenido: {str(datos)[:200]}") from e
-    ini, fin = texto.find("{"), texto.rfind("}")
-    if ini < 0 or fin < 0:
+    ini = texto.find("{")
+    if ini < 0:
         raise ErrorDecisor(f"respuesta sin JSON: {texto[:200]!r}")
     try:
-        return json.loads(texto[ini:fin + 1]), latencia, coste, datos
+        # Lee solo el primer objeto completo; el texto posterior puede estar truncado.
+        respuesta, _ = json.JSONDecoder().raw_decode(texto[ini:])
+        return respuesta, latencia, coste, datos
     except json.JSONDecodeError as e:
         raise ErrorDecisor(f"JSON no válido: {texto[:200]!r}") from e
 

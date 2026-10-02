@@ -17,7 +17,7 @@ class FakeOpenRouter:
     """Responde como OpenRouter. Las políticas se pueden cambiar en cada test.
 
     - jev(clave, cuerpo) -> float | dict: valor noul, o {"choice": ...} para preguntas choice.
-    - llm(modelo, cuerpo) -> dict: el JSON que devuelve el modelo.
+    - llm(modelo, cuerpo) -> dict | str: el JSON o el texto crudo que devuelve el modelo.
     - falla: modelos que responden 500; lento: segundos de retraso por modelo.
     """
 
@@ -46,7 +46,8 @@ class FakeOpenRouter:
                     respuestas[clave] = {"type": "choice", "confidence": 0.9, **r}
             return httpx.Response(200, json={"id": "gen-jev", "model": modelo, "answers": respuestas,
                                              "usage": {"input_tokens": 300, "output_tokens": 10, "cost": 0.00002}})
-        contenido = json.dumps(self.llm(modelo, cuerpo))
+        respuesta = self.llm(modelo, cuerpo)
+        contenido = respuesta if isinstance(respuesta, str) else json.dumps(respuesta)
         return httpx.Response(200, json={"id": "gen-llm", "model": modelo,
                                          "choices": [{"message": {"content": contenido}}],
                                          "usage": {"cost": 0.003}})
