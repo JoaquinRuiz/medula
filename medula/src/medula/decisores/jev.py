@@ -1,10 +1,16 @@
 """Jev por la API System One de OpenRouter: noul para la probabilidad, choice para el remedio.
 
+Proveedor: OpenRouter, endpoint https://openrouter.ai/api/v1/systemone, modelo typesafe/jev-1.13.
 Todas las preguntas (dos por cada otro agente) van en una sola petición.
 """
 from __future__ import annotations
 
 from .base import GUIA_CHOCA, GUIA_INVALIDA, REMEDIOS, Decisor, ErrorDecisor, Lote, OpenRouter, Veredicto, acotar
+
+# Jev (TypeSafe AI) a través de OpenRouter: https://openrouter.ai/api/v1/systemone
+JEV_MODELO = "typesafe/jev-1.13"
+JEV_ENDPOINT = "https://openrouter.ai/api/v1/systemone"
+RUTA_SYSTEMONE = "/systemone"  # relativa a la base https://openrouter.ai/api/v1 del cliente
 
 
 def _noul(respuesta: dict) -> float:
@@ -30,7 +36,7 @@ class Jev(Decisor):
 
     def _preguntar(self, estado: dict, preguntas: dict, pregunta: str) -> tuple[dict, float, float, dict]:
         cuerpo = {"model": self.modelo, "state": estado, "questions": preguntas}
-        datos, latencia, coste = self.cliente.post("/systemone", cuerpo, self.timeout)
+        datos, latencia, coste = self.cliente.post(RUTA_SYSTEMONE, cuerpo, self.timeout)
         respuestas = datos.get("answers")
         if not isinstance(respuestas, dict):
             raise ErrorDecisor(f"respuesta sin answers: {str(datos)[:200]}")
