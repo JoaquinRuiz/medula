@@ -3,7 +3,8 @@
 Parejas de intenciones de dos agentes que trabajan a la vez sobre la API de reservas. Cada pareja es una acción concreta del **solicitante** (lo que va a hacer ahora, con la herramienta y el cambio) frente a la intención en curso del **otro agente**. La pregunta que se calibra es la misma que hará el kernel: **¿choca?**
 
 - `candidatas.yaml`: las 100 parejas, con una etiqueta **propuesta** (`propuesta`) y su motivo. La propuesta la escribió Claude y no cuenta como verdad.
-- `etiquetas.yaml`: tus etiquetas a mano, la verdad contra la que se mide. Se genera con `bench/e04_etiquetar.py`.
+- `etiquetas.yaml`: las etiquetas contra las que se mide, escritas también por Claude (`autor: claude-opus-5.5`). Se genera con `bench/e04_etiquetar.py`.
+- `etiquetas_humanas/`: etiquetas de personas, una por fichero, hechas a ciegas (sin ver las del modelo) con `bench/e04_etiquetar.py --salida … [--plantilla]`. `uv run bench/acuerdo_etiquetas.py` mide el acuerdo. Primera persona (`JoaquinRuiz.yaml`, sin IA): misma etiqueta que el modelo en las 98 parejas no marcadas como dudosas (kappa 1,00); dudosas C077 y C090.
 
 ## Qué significa «choca»
 

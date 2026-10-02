@@ -22,8 +22,14 @@ CLASES = ("choca", "no_choca")
 
 
 def cargar(f: Path) -> dict[str, str]:
-    et = (yaml.safe_load(f.read_text(encoding="utf-8")) or {}).get("etiquetas", {})
-    return {k: v["etiqueta"] for k, v in et.items() if v.get("etiqueta") in CLASES}
+    et = (yaml.safe_load(f.read_text(encoding="utf-8")) or {}).get("etiquetas", {}) or {}
+    cortas = {"c": "choca", "n": "no_choca"}  # forma corta de la plantilla de bench/e04_etiquetar.py
+    salida = {}
+    for k, v in et.items():
+        e = str((v.get("etiqueta") if isinstance(v, dict) else v) or "").strip().lower()
+        if cortas.get(e, e) in CLASES:
+            salida[k] = cortas.get(e, e)
+    return salida
 
 
 def kappa(a: dict, b: dict) -> tuple[int, float | None, float | None]:

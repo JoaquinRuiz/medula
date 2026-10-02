@@ -27,6 +27,9 @@ uv run bench/e04_etiquetar.py --salida calibration/etiquetas_humanas/<your-githu
 
 - Keys: `c` collides, `n` doesn't collide, `d` unsure, `s` skip, `q` quit. You can stop at any time
   and pick up where you left off.
+- Prefer to see every pair at once? Add `--plantilla`: it writes all 100 pairs to your file, as
+  comments, with an empty `etiqueta:` under each one. Fill in `c`, `n` or `d` in any editor; blanks
+  don't count.
 - It is **blind**: you don't see the model's label unless you ask for it (`--ver-propuesta`). Please
   don't, and don't look at `calibration/etiquetas.yaml` or other people's files first. Independent
   labels are the whole point.

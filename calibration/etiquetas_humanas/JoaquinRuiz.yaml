@@ -1,0 +1,1108 @@
+# Etiquetas humanas del set de calibración. Escribe en cada «etiqueta:» una de estas letras:
+#   c = choca · n = no choca · d = dudosa
+# Las que dejes en blanco no cuentan. «nota» es opcional: lo más útil en las dudosas.
+# Qué significa «choca»: calibration/README.md. Acuerdo: uv run bench/acuerdo_etiquetas.py
+etiquetas:
+
+# ── C001 ────────────────────────────────────────────────────────────
+# A1 · Validar que la sala tiene capacidad para los asistentes.
+#   quiere Edit en app/validators.py
+#    def validar_capacidad(sala: str, asistentes: int) -> None: ...  # función nueva al final del fichero
+# A2 · Reescribir los mensajes de error de validar_sala() para que sean más claros.
+#   tiene app/validators.py
+#    Cambiar los textos de las dos ValidationError de validar_sala().
+  C001:
+    etiqueta: n
+    nota: ''
+
+# ── C002 ────────────────────────────────────────────────────────────
+# A1 · Permitir añadir notas libres a una reserva.
+#   quiere Edit en app/models.py · ReservaIn
+#    notas: str | None = None
+# A2 · Renombrar el campo sala de Reserva a sala_id en el modelo, la base de datos y la API.
+#   tiene app/models.py, app/db.py
+#    Renombrar ReservaIn.sala a ReservaIn.sala_id.
+  C002:
+    etiqueta: n
+    nota: ''
+
+# ── C003 ────────────────────────────────────────────────────────────
+# A1 · Añadir cierre de sesión.
+#   quiere Edit en app/auth.py
+#    def logout(token: str) -> None:
+#        _sessions.pop(token, None)
+# A2 · Guardar las contraseñas con bcrypt en lugar de en claro.
+#   tiene app/auth.py, app/config.py
+#    Cambiar la comparación de contraseña dentro de login() por bcrypt.checkpw, sin tocar su firma.
+  C003:
+    etiqueta: n
+    nota: ''
+
+# ── C004 ────────────────────────────────────────────────────────────
+# A1 · Acelerar las búsquedas por sala.
+#   quiere Edit en app/db.py · init_db
+#    conn.execute('CREATE INDEX IF NOT EXISTS idx_reservas_sala ON reservas(sala)')
+# A2 · Mostrar cuántas reservas tiene cada usuario.
+#   tiene app/db.py
+#    Añadir contar_reservas_por_usuario() con un SELECT usuario, COUNT(*) ... GROUP BY usuario.
+  C004:
+    etiqueta: n
+    nota: ''
+
+# ── C005 ────────────────────────────────────────────────────────────
+# A1 · Permitir cancelar reservas.
+#   quiere Edit en app/routes_reservas.py
+#    @router.delete('/reservas/{id}', status_code=204)
+#    def cancelar_reserva(id: int, session: Session = Depends(sesion_actual)): ...
+# A2 · Que POST /reservas devuelva la cabecera Location de la reserva creada.
+#   tiene app/routes_reservas.py
+#    Añadir response.headers['Location'] en crear_reserva().
+  C005:
+    etiqueta: n
+    nota: ''
+
+# ── C006 ────────────────────────────────────────────────────────────
+# A1 · Dar de alta la sala nueva Estrato.
+#   quiere Edit en app/config.py
+#    SALAS = ('Atlas', 'Boreal', 'Cierzo', 'Estrato')
+# A2 · Hacer configurable el nivel de log.
+#   tiene app/config.py
+#    Añadir LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO').
+  C006:
+    etiqueta: n
+    nota: ''
+
+# ── C007 ────────────────────────────────────────────────────────────
+# A1 · Documentar el endpoint de exportación.
+#   quiere Edit en README.md
+#    Nueva sección '## Exportar reservas' con un ejemplo de curl.
+# A2 · Documentar cómo preparar el entorno con uv.
+#   tiene README.md
+#    Reescribir la sección '## Instalación'.
+  C007:
+    etiqueta: n
+    nota: ''
+
+# ── C008 ────────────────────────────────────────────────────────────
+# A1 · Tests para reservas con la sala llena.
+#   quiere Edit en tests/conftest.py
+#    @pytest.fixture
+#    def sala_llena(client, auth): ...  # fixture nueva
+# A2 · Tests con un segundo usuario.
+#   tiene tests/conftest.py
+#    Añadir la fixture bob_auth, que inicia sesión como bob.
+  C008:
+    etiqueta: n
+    nota: ''
+
+# ── C009 ────────────────────────────────────────────────────────────
+# A1 · Permitir reservas de hasta 6 horas.
+#   quiere Edit en app/validators.py
+#    DURACION_MAXIMA_MIN = 360
+# A2 · Reescribir los mensajes de error de validar_sala().
+#   tiene app/validators.py
+#    Cambiar los textos de las dos ValidationError de validar_sala().
+  C009:
+    etiqueta: n
+    nota: ''
+
+# ── C010 ────────────────────────────────────────────────────────────
+# A1 · Permitir llamadas desde el frontend en otro dominio.
+#   quiere Edit en app/main.py
+#    app.add_middleware(CORSMiddleware, allow_origins=['https://reservas.example'])
+# A2 · Catálogo de salas.
+#   tiene app/main.py, app/routes_salas.py
+#    Registrar el router nuevo con app.include_router(routes_salas.router).
+  C010:
+    etiqueta: n
+    nota: ''
+
+# ── C011 ────────────────────────────────────────────────────────────
+# A1 · Documentar los modelos.
+#   quiere Edit en app/models.py · Reserva
+#    Añadir docstrings a ReservaIn y Reserva.
+# A2 · Catálogo de salas.
+#   tiene app/models.py
+#    Añadir el modelo Sala(nombre: str, capacidad: int).
+  C011:
+    etiqueta: n
+    nota: ''
+
+# ── C012 ────────────────────────────────────────────────────────────
+# A1 · Mejorar el asunto del email de confirmación.
+#   quiere Edit en app/notificaciones.py · ASUNTO_CONFIRMACION
+#    ASUNTO_CONFIRMACION = 'Tu reserva de {sala} está confirmada'
+# A2 · Avisar por SMS.
+#   tiene app/notificaciones.py
+#    Añadir enviar_sms(telefono, texto) con el proveedor de SMS.
+  C012:
+    etiqueta: n
+    nota: ''
+
+# ── C013 ────────────────────────────────────────────────────────────
+# A1 · Validar horarios por inicio y fin en lugar de por duración.
+#   quiere Edit en app/validators.py · validar_horario
+#    def validar_horario(inicio: datetime, fin: datetime) -> None:
+# A2 · Limitar las reservas de fin de semana a 2 horas.
+#   tiene app/validators.py
+#    Añadir en validar_horario(): if fecha.weekday() >= 5 and duracion_min > 120: raise ValidationError(...)
+  C013:
+    etiqueta: c
+    nota: 'A1 cambia la firma eliminando duracion_min, argumento del que A2 pasa a depender.'
+
+# ── C014 ────────────────────────────────────────────────────────────
+# A1 · Que las sesiones sobrevivan a un reinicio.
+#   quiere Edit en app/auth.py
+#    Sustituir el dict _sessions por una tabla sesiones en SQLite; get_session() consulta la tabla.
+# A2 · Caducar las sesiones a las 8 horas.
+#   tiene app/auth.py
+#    Añadir expira a Session y, en get_session(), borrar de _sessions las caducadas.
+  C014:
+    etiqueta: c
+    nota: 'A1 elimina el diccionario _sessions en memoria que A2 pretende modificar.'
+
+# ── C015 ────────────────────────────────────────────────────────────
+# A1 · Simplificar la conexión a la base de datos.
+#   quiere Edit en app/db.py · conectar
+#    Quitar conn.row_factory = sqlite3.Row
+# A2 · Listado de reservas por sala.
+#   tiene app/db.py
+#    Añadir listar_por_sala() que devuelve [Reserva(**dict(f)) for f in filas].
+  C015:
+    etiqueta: c
+    nota: 'A2 asume que la fila es convertible a dict (sqlite3.Row), pero A1 acaba de quitar la fábrica.'
+
+# ── C016 ────────────────────────────────────────────────────────────
+# A1 · Simplificar la dependencia de sesión.
+#   quiere Edit en app/routes_reservas.py · sesion_actual
+#    def sesion_actual(...) -> str:  # devuelve el nombre de usuario en vez de la Session
+# A2 · Endpoint para ver mis reservas.
+#   tiene app/routes_reservas.py
+#    Añadir GET /mis-reservas con session: Session = Depends(sesion_actual) y filtrar por session.username.
+  C016:
+    etiqueta: c
+    nota: 'A1 hace que la sesión devuelva un string, rompiendo la llamada session.username de A2.'
+
+# ── C017 ────────────────────────────────────────────────────────────
+# A1 · No guardar contraseñas en claro.
+#   quiere Edit en app/config.py · USERS
+#    Sustituir 'password' por 'password_hash' (bcrypt) en cada usuario.
+# A2 · Dar de alta a la usuaria carol.
+#   tiene app/config.py
+#    Añadir 'carol': {'password': 'carol-pass'} a USERS.
+  C017:
+    etiqueta: c
+    nota: 'A2 añade un usuario con la clave antigua "password", que A1 ha reemplazado por "password_hash".'
+
+# ── C018 ────────────────────────────────────────────────────────────
+# A1 · Guardar la duración como timedelta.
+#   quiere Edit en app/models.py · ReservaIn
+#    duracion: timedelta  # sustituye a duracion_min: int
+# A2 · Exponer la hora de fin de cada reserva.
+#   tiene app/models.py
+#    Añadir a Reserva la propiedad fin = fecha + timedelta(minutes=duracion_min).
+  C018:
+    etiqueta: c
+    nota: 'A1 cambia el tipo y nombre de duracion_min, estropeando el timedelta que suma A2.'
+
+# ── C019 ────────────────────────────────────────────────────────────
+# A1 · Guardar las fechas como timestamp numérico.
+#   quiere Edit en app/db.py · insertar_reserva
+#    Guardar fecha como int(r.fecha.timestamp()) en lugar de isoformat().
+# A2 · Informe de reservas del mes.
+#   tiene app/informes.py
+#    SELECT * FROM reservas WHERE fecha >= '2026-10-01' AND fecha < '2026-11-01'.
+  C019:
+    etiqueta: c
+    nota: 'A1 cambia el formato de DB a enteros (timestamps), A2 intenta filtrar como si fueran strings.'
+
+# ── C020 ────────────────────────────────────────────────────────────
+# A1 · Guardar la capacidad de cada sala.
+#   quiere Edit en app/config.py
+#    SALAS = {'Atlas': 10, 'Boreal': 6, 'Cierzo': 4}
+# A2 · Sala por defecto en reservas rápidas.
+#   tiene app/routes_rapidas.py
+#    Usar config.SALAS[0] como sala cuando el cliente no indique ninguna.
+  C020:
+    etiqueta: c
+    nota: 'A1 cambia SALAS a dict, rompiendo el acceso posicional SALAS[0] de A2.'
+
+# ── C021 ────────────────────────────────────────────────────────────
+# A1 · Persistir sesiones en SQLite.
+#   quiere Edit en app/auth.py
+#    Eliminar _sessions; las sesiones se guardan y consultan en la tabla sesiones.
+# A2 · Endpoint de cierre de sesión.
+#   tiene app/routes_auth.py
+#    POST /logout que hace auth._sessions.pop(token, None).
+  C021:
+    etiqueta: c
+    nota: 'A1 elimina el atributo _sessions, A2 intenta hacer pop() de él.'
+
+# ── C022 ────────────────────────────────────────────────────────────
+# A1 · Errores de la API con código y mensaje.
+#   quiere Edit en app/main.py
+#    Manejador de HTTPException que responde {'error': {'code': ..., 'message': ...}}.
+# A2 · Cliente de línea de comandos.
+#   tiene app/cli.py
+#    Mostrar al usuario r.json()['detail'] cuando la API responde 4xx.
+  C022:
+    etiqueta: c
+    nota: 'A1 cambia la estructura del JSON de error, el r.json()["detail"] de A2 dará KeyError.'
+
+# ── C023 ────────────────────────────────────────────────────────────
+# A1 · Probar con un usuario sin privilegios por defecto.
+#   quiere Edit en tests/conftest.py · auth
+#    La fixture auth inicia sesión como bob en lugar de alice.
+# A2 · Test de creación de reservas.
+#   tiene tests/test_crear.py
+#    assert r.json()['usuario'] == 'alice' usando la fixture auth.
+  C023:
+    etiqueta: c
+    nota: 'A1 cambia el usuario del fixture, por lo que el test asertivo de A2 fallará sistemáticamente.'
+
+# ── C024 ────────────────────────────────────────────────────────────
+# A1 · CSV compatible con Excel en español.
+#   quiere Edit en app/routes_export.py
+#    csv.writer(buf, delimiter=';')
+# A2 · Importar el export en el sistema de facturación.
+#   tiene scripts/facturacion.py
+#    Leer el CSV de /export con csv.DictReader(f) (delimitador por defecto).
+  C024:
+    etiqueta: c
+    nota: 'A1 usa punto y coma como delimitador, A2 usa el lector por defecto que espera comas.'
+
+# ── C025 ────────────────────────────────────────────────────────────
+# A1 · Identificadores de reserva no adivinables.
+#   quiere Edit en app/models.py · Reserva
+#    id: str  # UUID4 en lugar de entero autoincremental
+# A2 · Ver una reserva concreta.
+#   tiene app/routes_consulta.py
+#    Añadir GET /reservas/{id} con id: int y SELECT ... WHERE id = ?.
+  C025:
+    etiqueta: c
+    nota: 'A1 cambia el ID a string, A2 lo tipa explícitamente como entero en el enrutamiento.'
+
+# ── C026 ────────────────────────────────────────────────────────────
+# A1 · Enviar notificaciones sin bloquear.
+#   quiere Edit en app/notificaciones.py
+#    async def enviar_confirmacion(reserva: Reserva) -> None:
+# A2 · Confirmar por email cada reserva creada.
+#   tiene app/routes_reservas.py
+#    Llamar a enviar_confirmacion(reserva) al final de crear_reserva() (función síncrona).
+  C026:
+    etiqueta: c
+    nota: 'A1 convierte la función a asíncrona, A2 la invoca sin await, no emitiendo la notificación.'
+
+# ── C027 ────────────────────────────────────────────────────────────
+# A1 · Validar por inicio y fin.
+#   quiere Edit en app/validators.py
+#    def validar_horario(inicio: datetime, fin: datetime) -> None:
+# A2 · Endpoint para comprobar si un hueco es válido antes de reservar.
+#   tiene app/routes_huecos.py
+#    Llamar a validar_horario(fecha, duracion_min) y devolver {'valido': True}.
+  C027:
+    etiqueta: c
+    nota: 'A1 modifica la firma de argumentos, A2 sigue inyectando duracion_min.'
+
+# ── C028 ────────────────────────────────────────────────────────────
+# A1 · Relacionar reservas con la tabla de salas.
+#   quiere Edit en app/db.py
+#    def insertar_reserva(r: ReservaIn, usuario: str, sala_id: int) -> Reserva:
+# A2 · Importar reservas antiguas desde un CSV.
+#   tiene scripts/importar.py
+#    Para cada fila, db.insertar_reserva(ReservaIn(...), fila['usuario']).
+  C028:
+    etiqueta: c
+    nota: 'A1 exige sala_id, A2 realiza las llamadas de importación sin este parámetro.'
+
+# ── C029 ────────────────────────────────────────────────────────────
+# A1 · Sesiones con caducidad testeable.
+#   quiere Edit en app/auth.py
+#    def get_session(token: str, ahora: datetime) -> Session | None:
+# A2 · Registrar el usuario de cada petición en los logs.
+#   tiene app/middleware.py
+#    En el middleware, s = get_session(token) y log con s.username.
+  C029:
+    etiqueta: c
+    nota: 'A1 hace el parámetro ahora obligatorio, el middleware de A2 no lo provee.'
+
+# ── C030 ────────────────────────────────────────────────────────────
+# A1 · Tokens de refresco.
+#   quiere Edit en app/auth.py
+#    def login(username, password) -> tuple[Session, str]:  # (sesión, refresh_token)
+# A2 · Login desde el cliente de línea de comandos.
+#   tiene app/cli.py
+#    token = auth.login(usuario, clave).token
+  C030:
+    etiqueta: c
+    nota: 'A1 retorna una tupla. El cliente de A2 intenta acceder directamente al atributo .token sobre una tupla.'
+
+# ── C031 ────────────────────────────────────────────────────────────
+# A1 · Salas restringidas por usuario.
+#   quiere Edit en app/validators.py
+#    def validar_sala(sala: str, usuario: str) -> None:
+# A2 · Validar un fichero de reservas antes de importarlo.
+#   tiene scripts/validar_import.py
+#    Llamar a validar_sala(fila['sala']) por cada fila.
+  C031:
+    etiqueta: c
+    nota: 'A1 impone usuario como parámetro, rompiendo la validación de A2.'
+
+# ── C032 ────────────────────────────────────────────────────────────
+# A1 · Que cada usuario vea solo sus reservas.
+#   quiere Edit en app/db.py
+#    def listar_reservas(usuario: str) -> list[Reserva]:
+# A2 · Informe semanal para administración.
+#   tiene app/informes.py
+#    reservas = db.listar_reservas() y agrupar por sala.
+  C032:
+    etiqueta: c
+    nota: 'A2 llamará a listar_reservas() sin el nuevo parámetro obligatorio introducido por A1.'
+
+# ── C033 ────────────────────────────────────────────────────────────
+# A1 · Registrar el número de asistentes.
+#   quiere Edit en app/models.py · ReservaIn
+#    asistentes: int  # obligatorio
+# A2 · Datos de ejemplo para la demo.
+#   tiene scripts/seed.py
+#    Crear 20 reservas con ReservaIn(sala=..., fecha=..., duracion_min=60).
+  C033:
+    etiqueta: c
+    nota: 'A2 genera los modelos sin asistentes, Pydantic fallará la validación requerida por A1.'
+
+# ── C034 ────────────────────────────────────────────────────────────
+# A1 · Unificar los canales de notificación.
+#   quiere Edit en app/notificaciones.py
+#    def enviar(mensaje: Mensaje) -> None:  # antes enviar(destino, texto)
+# A2 · Avisar al cancelar una reserva.
+#   tiene app/routes_reservas.py
+#    notificaciones.enviar(email_usuario, 'Tu reserva se ha cancelado')
+  C034:
+    etiqueta: c
+    nota: 'A1 cambia la firma obligando a un objeto Mensaje, A2 sigue pasando parámetros separados.'
+
+# ── C035 ────────────────────────────────────────────────────────────
+# A1 · Soportar zonas horarias.
+#   quiere Edit en app/validators.py
+#    def validar_horario(fecha, duracion_min, zona: str = 'Europe/Madrid') -> None:
+# A2 · Endpoint para comprobar huecos.
+#   tiene app/routes_huecos.py
+#    Llamar a validar_horario(fecha, duracion_min).
+  C035:
+    etiqueta: n
+    nota: 'El parámetro que añade A1 tiene un valor por defecto, A2 puede omitirlo sin conflicto.'
+
+# ── C036 ────────────────────────────────────────────────────────────
+# A1 · Opción de mantener la sesión iniciada.
+#   quiere Edit en app/auth.py
+#    def login(username: str, password: str, recordar: bool = False) -> Session:
+# A2 · Autenticación del endpoint de informes.
+#   tiene app/routes_informes.py
+#    Validar las credenciales con login(username, password).
+  C036:
+    etiqueta: n
+    nota: 'El parámetro adicional de A1 es opcional, las llamadas previas como la de A2 persisten sin rotura.'
+
+# ── C037 ────────────────────────────────────────────────────────────
+# A1 · Paginar el listado.
+#   quiere Edit en app/db.py
+#    def listar_reservas(limite: int | None = None) -> list[Reserva]:
+# A2 · Informe semanal.
+#   tiene app/informes.py
+#    reservas = db.listar_reservas()
+  C037:
+    etiqueta: n
+    nota: ''
+
+# ── C038 ────────────────────────────────────────────────────────────
+# A1 · Login con token de API para integraciones.
+#   quiere Edit en app/auth.py
+#    def login_con_token(api_token: str) -> Session:  # función nueva
+# A2 · Autenticación del cliente de línea de comandos.
+#   tiene app/cli.py
+#    Llamar a auth.login(usuario, clave).
+  C038:
+    etiqueta: n
+    nota: ''
+
+# ── C039 ────────────────────────────────────────────────────────────
+# A1 · Notas en las reservas.
+#   quiere Edit en app/models.py · ReservaIn
+#    notas: str | None = None
+# A2 · Datos de ejemplo para la demo.
+#   tiene scripts/seed.py
+#    Crear reservas con ReservaIn(sala=..., fecha=..., duracion_min=60).
+  C039:
+    etiqueta: n
+    nota: ''
+
+# ── C040 ────────────────────────────────────────────────────────────
+# A1 · Renombrar usuario a propietario en las reservas.
+#   quiere Edit en app/db.py
+#    Columna usuario -> propietario en CREATE TABLE, INSERT y SELECT.
+# A2 · Endpoint para ver mis reservas.
+#   tiene app/routes_mis_reservas.py
+#    SELECT * FROM reservas WHERE usuario = ?
+  C040:
+    etiqueta: c
+    nota: 'A1 renombra la columna base. El endpoint de A2 fallará por SQL syntax error (columna inexistente).'
+
+# ── C041 ────────────────────────────────────────────────────────────
+# A1 · Ordenar módulos.
+#   quiere Bash en git mv app/validators.py app/validacion.py
+#    Renombrar el módulo y actualizar los imports existentes.
+# A2 · Validar capacidad al crear reservas.
+#   tiene app/routes_reservas.py
+#    Añadir from app.validators import validar_capacidad y llamarla en crear_reserva().
+  C041:
+    etiqueta: c
+    nota: 'A1 mueve el fichero de validators, A2 está intentando importar desde la ubicación antigua.'
+
+# ── C042 ────────────────────────────────────────────────────────────
+# A1 · Nombres coherentes en validaciones.
+#   quiere Edit en app/validators.py
+#    Renombrar validar_sala -> comprobar_sala y actualizar sus llamadas actuales.
+# A2 · Validar la sala en la reserva rápida.
+#   tiene app/routes_rapidas.py
+#    Llamar a validar_sala(sala) antes de crear la reserva.
+  C042:
+    etiqueta: c
+    nota: 'A2 llama a una función que A1 ya ha renombrado a comprobar_sala.'
+
+# ── C043 ────────────────────────────────────────────────────────────
+# A1 · Nombres de tabla en singular.
+#   quiere Edit en app/db.py
+#    Tabla reservas -> reserva en init_db, INSERT y SELECT.
+# A2 · Informe de ocupación por sala.
+#   tiene app/informes.py
+#    SELECT sala, SUM(duracion_min) FROM reservas GROUP BY sala
+  C043:
+    etiqueta: c
+    nota: 'A1 cambia el nombre de la tabla SQL, la query cruda de A2 fallará.'
+
+# ── C044 ────────────────────────────────────────────────────────────
+# A1 · Nombres más descriptivos en la configuración.
+#   quiere Edit en app/config.py
+#    SALAS -> SALAS_DISPONIBLES y actualizar sus usos actuales.
+# A2 · Listar las salas válidas en el mensaje de error.
+#   tiene app/validators.py
+#    Mensaje f"Salas disponibles: {', '.join(SALAS)}".
+  C044:
+    etiqueta: c
+    nota: 'A2 referencia la constante SALAS que A1 renombra a SALAS_DISPONIBLES.'
+
+# ── C045 ────────────────────────────────────────────────────────────
+# A1 · Nombres de campo sin abreviar en la API.
+#   quiere Edit en app/models.py · ReservaIn
+#    duracion_min -> duracion_minutos (entrada y salida de la API).
+# A2 · Reservar desde el cliente de línea de comandos.
+#   tiene app/cli.py
+#    POST /reservas con json={'sala': s, 'fecha': f, 'duracion_min': d}.
+  C045:
+    etiqueta: c
+    nota: 'A1 cambia la definición del JSON esperado por la API, la petición del CLI de A2 será rechazada.'
+
+# ── C046 ────────────────────────────────────────────────────────────
+# A1 · Agrupar la autenticación bajo /auth.
+#   quiere Edit en app/routes_auth.py
+#    @router.post('/auth/login')  # antes '/login'
+# A2 · Login desde el cliente de línea de comandos.
+#   tiene app/cli.py
+#    httpx.post(f'{base}/login', json={...})
+  C046:
+    etiqueta: c
+    nota: 'A1 redirige las rutas base, por lo que el CLI de A2 recibirá un 404.'
+
+# ── C047 ────────────────────────────────────────────────────────────
+# A1 · Nombres coherentes en la sesión.
+#   quiere Edit en app/auth.py · Session
+#    Renombrar el atributo token -> id y actualizar auth.py.
+# A2 · Endpoint de renovación de sesión.
+#   tiene app/routes_auth.py
+#    Devolver {'token': nueva_sesion.token}.
+  C047:
+    etiqueta: c
+    nota: 'A2 intenta acceder al atributo ".token" que A1 ha cambiado a ".id".'
+
+# ── C048 ────────────────────────────────────────────────────────────
+# A1 · Limpieza de código.
+#   quiere Edit en app/db.py · listar_reservas
+#    Renombrar la variable local filas -> rows.
+# A2 · Consultas de ocupación.
+#   tiene app/consultas.py
+#    Nueva función que abre la conexión con db.conectar() y hace su propio SELECT.
+  C048:
+    etiqueta: n
+    nota: ''
+
+# ── C049 ────────────────────────────────────────────────────────────
+# A1 · Nombres más cortos en helpers.
+#   quiere Edit en app/validators.py
+#    Renombrar _es_duracion_valida -> _duracion_ok y su única llamada.
+# A2 · Mensajes más claros en validar_sala().
+#   tiene app/validators.py
+#    Cambiar los textos de las dos ValidationError de validar_sala().
+  C049:
+    etiqueta: n
+    nota: ''
+
+# ── C050 ────────────────────────────────────────────────────────────
+# A1 · Nombres de test descriptivos.
+#   quiere Edit en tests/test_reservas.py
+#    Renombrar test_crear_y_listar -> test_reserva_creada_aparece_en_listado.
+# A2 · Tests de cancelación.
+#   tiene tests/test_reservas.py
+#    Añadir test_cancelar_reserva al final del fichero.
+  C050:
+    etiqueta: n
+    nota: ''
+
+# ── C051 ────────────────────────────────────────────────────────────
+# A1 · Mensajes más claros en validar_sala().
+#   quiere Edit en app/validators.py · validar_sala
+#    raise ValidationError('La sala es obligatoria.')
+# A2 · Renombrar fecha a inicio en las reservas.
+#   tiene app/models.py, app/db.py, app/routes_reservas.py
+#    Renombrar Reserva.fecha a Reserva.inicio en modelo, base de datos y API.
+  C051:
+    etiqueta: n
+    nota: ''
+
+# ── C052 ────────────────────────────────────────────────────────────
+# A1 · Bloquear cuentas tras tres intentos fallidos.
+#   quiere Edit en app/auth.py · login
+#    Contar fallos por usuario y lanzar AuthError('cuenta bloqueada') a partir del tercero.
+# A2 · Tests del endpoint de exportación.
+#   tiene tests/test_export.py
+#    Probar tres contraseñas erróneas seguidas y luego la buena, esperando 200.
+  C052:
+    etiqueta: c
+    nota: 'La nueva regla de bloqueo de A1 hará que el test de tolerancia a fallos de A2 suspenda con error.'
+
+# ── C053 ────────────────────────────────────────────────────────────
+# A1 · No mostrar reservas pasadas en el listado.
+#   quiere Edit en app/db.py · listar_reservas
+#    Añadir WHERE fecha >= datetime('now') al SELECT.
+# A2 · Informe anual de uso de salas.
+#   tiene app/informes.py
+#    Agregar todas las reservas del año con db.listar_reservas().
+  C053:
+    etiqueta: c
+    nota: 'A1 filtra históricas por defecto; A2 generará un informe anual vacío (solo futuras).'
+
+# ── C054 ────────────────────────────────────────────────────────────
+# A1 · Bloquear salas en mantenimiento.
+#   quiere Edit en app/validators.py · validar_sala
+#    if sala in MANTENIMIENTO: raise ValidationError(...)  # MANTENIMIENTO = ('Boreal',)
+# A2 · Datos de ejemplo para la demo.
+#   tiene scripts/seed.py
+#    Crear reservas en Atlas, Boreal y Cierzo por POST /reservas.
+  C054:
+    etiqueta: c
+    nota: 'A1 deshabilita la sala Boreal, rompiendo los datos sintéticos o seeds de A2.'
+
+# ── C055 ────────────────────────────────────────────────────────────
+# A1 · Precisión de segundos en la duración.
+#   quiere Edit en app/db.py
+#    Guardar duracion_min * 60 en la columna duracion_min (segundos); la API sigue en minutos.
+# A2 · Horas reservadas por sala.
+#   tiene app/informes.py
+#    SELECT sala, SUM(duracion_min) / 60.0 AS horas FROM reservas GROUP BY sala
+  C055:
+    etiqueta: c
+    nota: 'A1 altera la unidad métrica guardada, A2 computará un resultado 60 veces superior a la realidad.'
+
+# ── C056 ────────────────────────────────────────────────────────────
+# A1 · Evitar reservas duplicadas por doble clic.
+#   quiere Edit en app/db.py · insertar_reserva
+#    Si ya existe una reserva con la misma sala y fecha, devolverla sin insertar.
+# A2 · Responder 409 si la sala ya está ocupada.
+#   tiene app/db.py, app/routes_reservas.py
+#    Índice UNIQUE(sala, fecha) y capturar sqlite3.IntegrityError en crear_reserva() para devolver 409.
+  C056:
+    etiqueta: c
+    nota: 'A1 suprime el error delegando en idempotencia silenciada; A2 nunca interceptará el IntegrityError.'
+
+# ── C057 ────────────────────────────────────────────────────────────
+# A1 · Sesiones cortas por seguridad.
+#   quiere Edit en app/auth.py · get_session
+#    Devolver None si la sesión tiene más de 15 minutos.
+# A2 · Export nocturno automático.
+#   tiene scripts/export_nocturno.py
+#    Iniciar sesión una vez y reutilizar el token en llamadas durante una hora.
+  C057:
+    etiqueta: c
+    nota: 'La restricción temporal de A1 matará las peticiones del cron/script extendido de A2.'
+
+# ── C058 ────────────────────────────────────────────────────────────
+# A1 · Orden estable del listado.
+#   quiere Edit en app/db.py · listar_reservas
+#    ORDER BY id  # antes ORDER BY fecha
+# A2 · Endpoint de próxima reserva.
+#   tiene app/routes_consulta.py
+#    GET /proxima devuelve db.listar_reservas()[0].
+  C058:
+    etiqueta: c
+    nota: 'A1 altera la ordenación de retorno; la heurística posicional [0] de A2 dejará de ser cronológica.'
+
+# ── C059 ────────────────────────────────────────────────────────────
+# A1 · Respuestas uniformes.
+#   quiere Edit en app/routes_reservas.py
+#    @router.post('/reservas')  # quitar status_code=201
+# A2 · Reservar desde el cliente de línea de comandos.
+#   tiene app/cli.py
+#    if r.status_code != 201: mostrar error.
+  C059:
+    etiqueta: c
+    nota: 'A1 normaliza el HTTP code a 200, provocando falsos positivos de error en el CLI de A2.'
+
+# ── C060 ────────────────────────────────────────────────────────────
+# A1 · Guardar fechas en UTC.
+#   quiere Edit en app/db.py · insertar_reserva
+#    Convertir fecha de Europe/Madrid a UTC antes de guardar.
+# A2 · Reservas de un día concreto.
+#   tiene app/consultas.py
+#    SELECT * FROM reservas WHERE fecha >= '2026-10-05T00:00' AND fecha < '2026-10-06T00:00'
+  C060:
+    etiqueta: c
+    nota: 'A1 desplaza el timezone de la DB; la asunción local-string de A2 dejará registros fuera del día deseado.'
+
+# ── C061 ────────────────────────────────────────────────────────────
+# A1 · Mensajes de validación traducidos.
+#   quiere Edit en app/validators.py
+#    Traducir los mensajes según Accept-Language, con inglés por defecto.
+# A2 · Tests de la API de reservas.
+#   tiene tests/test_api.py
+#    assert r.json()['detail'] == 'sala invalida'
+  C061:
+    etiqueta: c
+    nota: 'A1 cambia la respuesta por defecto al inglés u otra clave i18n, rompiendo la aserción estricta de A2.'
+
+# ── C062 ────────────────────────────────────────────────────────────
+# A1 · Logs estructurados.
+#   quiere Edit en app/auth.py · login
+#    logger.info('login', extra={'usuario': username})  # antes un f-string
+# A2 · Autenticación del endpoint de informes.
+#   tiene app/routes_informes.py
+#    Validar las credenciales con login(username, password).
+  C062:
+    etiqueta: n
+    nota: ''
+
+# ── C063 ────────────────────────────────────────────────────────────
+# A1 · Acelerar el listado.
+#   quiere Edit en app/db.py · listar_reservas
+#    Seleccionar columnas explícitas y usar el índice nuevo; mismas filas y mismo orden.
+# A2 · Exportar reservas en CSV.
+#   tiene app/routes_export.py
+#    Leer con db.listar_reservas() y escribir una fila por reserva.
+  C063:
+    etiqueta: n
+    nota: ''
+
+# ── C064 ────────────────────────────────────────────────────────────
+# A1 · Mensajes más claros en validar_sala().
+#   quiere Edit en app/validators.py · validar_sala
+#    Nuevo texto para la sala desconocida.
+# A2 · Descartar filas inválidas al importar.
+#   tiene scripts/importar.py
+#    try: validar_sala(fila['sala']) except ValidationError: descartar la fila.
+  C064:
+    etiqueta: n
+    nota: ''
+
+# ── C065 ────────────────────────────────────────────────────────────
+# A1 · Endpoint de exportación autenticado.
+#   quiere Read en app/auth.py
+#    Leer el fichero para ver cómo se autentica.
+# A2 · Segundo factor en el login.
+#   tiene app/auth.py
+#    Cambiar la firma de login() para exigir un código OTP.
+  C065:
+    etiqueta: n
+    nota: ''
+
+# ── C066 ────────────────────────────────────────────────────────────
+# A1 · Filtro por fecha en el listado.
+#   quiere Bash en uv run pytest -q
+#    Ejecutar los tests sin modificar ficheros.
+# A2 · Horario permitido de 8:00 a 20:00.
+#   tiene app/validators.py
+#    Añadir la regla de franja a validar_horario().
+  C066:
+    etiqueta: n
+    nota: ''
+
+# ── C067 ────────────────────────────────────────────────────────────
+# A1 · Informe de ocupación.
+#   quiere Bash en grep -rn fecha app/
+#    Buscar dónde se usa el campo.
+# A2 · Renombrar fecha a inicio.
+#   tiene app/models.py, app/db.py
+#    Renombrar la columna y el campo del modelo.
+  C067:
+    etiqueta: n
+    nota: ''
+
+# ── C068 ────────────────────────────────────────────────────────────
+# A1 · Revisar el propio trabajo antes de hacer commit.
+#   quiere Bash en git diff && git log --oneline -5
+#    Consultar cambios sin modificar nada.
+# A2 · Paginación del listado.
+#   tiene app/db.py, app/routes_consulta.py
+#    Añadir limite y offset a listar_reservas().
+  C068:
+    etiqueta: n
+    nota: ''
+
+# ── C069 ────────────────────────────────────────────────────────────
+# A1 · Notas en las reservas.
+#   quiere Read en app/models.py
+#    Leer los modelos actuales.
+# A2 · Catálogo de salas.
+#   tiene app/models.py
+#    Añadir el modelo Sala.
+  C069:
+    etiqueta: n
+    nota: ''
+
+# ── C070 ────────────────────────────────────────────────────────────
+# A1 · Cierre de sesión.
+#   quiere Bash en uv run pytest tests/test_auth.py -q
+#    Ejecutar los tests de autenticación.
+# A2 · Segundo factor en el login.
+#   tiene app/auth.py, tests/test_auth.py
+#    Exigir OTP en login() y actualizar sus tests.
+  C070:
+    etiqueta: n
+    nota: ''
+
+# ── C071 ────────────────────────────────────────────────────────────
+# A1 · Catálogo de salas.
+#   quiere Bash en ls app/
+#    Ver qué módulos hay.
+# A2 · Exportación en CSV.
+#   tiene app/routes_export.py
+#    Crear el fichero routes_export.py.
+  C071:
+    etiqueta: n
+    nota: ''
+
+# ── C072 ────────────────────────────────────────────────────────────
+# A1 · Middleware de CORS.
+#   quiere Bash en uv run python -c 'import app.main'
+#    Comprobar que la app se importa sin errores.
+# A2 · Registrar el router de salas.
+#   tiene app/main.py
+#    Añadir app.include_router(routes_salas.router).
+  C072:
+    etiqueta: n
+    nota: ''
+
+# ── C073 ────────────────────────────────────────────────────────────
+# A1 · Filtro por fecha en el listado.
+#   quiere Bash en curl -s localhost:8000/reservas
+#    Ver la respuesta actual del listado.
+# A2 · Cabecera Location en POST /reservas.
+#   tiene app/routes_reservas.py
+#    Añadir la cabecera en crear_reserva().
+  C073:
+    etiqueta: n
+    nota: ''
+
+# ── C074 ────────────────────────────────────────────────────────────
+# A1 · Tests de cancelación.
+#   quiere Read en tests/conftest.py
+#    Leer las fixtures disponibles.
+# A2 · Tests con un segundo usuario.
+#   tiene tests/conftest.py
+#    Añadir la fixture bob_auth.
+  C074:
+    etiqueta: n
+    nota: ''
+
+# ── C075 ────────────────────────────────────────────────────────────
+# A1 · Limpieza de estilo.
+#   quiere Bash en uv run ruff check app/
+#    Revisar avisos del linter sin corregir nada.
+# A2 · Persistir sesiones en SQLite.
+#   tiene app/auth.py
+#    Sustituir el dict de sesiones por una tabla.
+  C075:
+    etiqueta: n
+    nota: ''
+
+# ── C076 ────────────────────────────────────────────────────────────
+# A1 · Informe de ocupación.
+#   quiere Bash en sqlite3 reservas.db 'SELECT COUNT(*) FROM reservas'
+#    Contar reservas existentes.
+# A2 · Renombrar usuario a propietario.
+#   tiene app/db.py
+#    Cambiar la columna en el CREATE TABLE y en las consultas.
+  C076:
+    etiqueta: n
+    nota: ''
+
+# ── C077 ────────────────────────────────────────────────────────────
+# A1 · Aplicar el formato del proyecto.
+#   quiere Bash en uv run ruff format .
+#    Reformatear todos los ficheros Python del repositorio.
+# A2 · Horario permitido de 8:00 a 20:00.
+#   tiene app/validators.py
+#    Editar validar_horario() en varios pasos.
+  C077:
+    etiqueta: d
+    nota: 'El formateo global (A1) cambia el texto, lo que hará fallar la búsqueda de texto del Edit de A2, obligándole a releer el fichero (sobrescribe su estado/trabajo en curso).'
+
+# ── C078 ────────────────────────────────────────────────────────────
+# A1 · Deshacer un intento fallido.
+#   quiere Bash en git checkout -- .
+#    Descartar todos los cambios del árbol de trabajo.
+# A2 · Exportación en CSV.
+#   tiene app/routes_export.py, app/main.py
+#    Crear el endpoint y registrarlo.
+  C078:
+    etiqueta: c
+    nota: 'Acción destructiva vs constructiva: A1 aniquila por consola los cambios que A2 está intentando asentar.'
+
+# ── C079 ────────────────────────────────────────────────────────────
+# A1 · Empezar con una base de datos limpia.
+#   quiere Bash en rm reservas.db && uv run python -c 'from app.db import init_db; init_db()'
+#    Recrear la base de datos de desarrollo.
+# A2 · Datos de ejemplo para la demo.
+#   tiene reservas.db, scripts/seed.py
+#    Ejecutar el seed que inserta 20 reservas en reservas.db.
+  C079:
+    etiqueta: c
+    nota: 'Condición de carrera destructiva o pérdida de estado. El truncado de DB de A1 suprimirá los datos sintéticos de A2.'
+
+# ── C080 ────────────────────────────────────────────────────────────
+# A1 · Renombrar fecha a inicio.
+#   quiere Bash en sed -i 's/fecha/inicio/g' app/*.py
+#    Sustituir fecha por inicio en todos los módulos de app/.
+# A2 · Filtro por fecha en el listado.
+#   tiene app/consultas.py
+#    Escribir la consulta con WHERE fecha >= ?.
+  C080:
+    etiqueta: c
+    nota: 'El sed de A1 modificará ciegamente el trabajo paralelo de A2, o si se hace por ramas, el código nuevo de A2 usará un identificador ya obsoleto.'
+
+# ── C081 ────────────────────────────────────────────────────────────
+# A1 · Mejorar el email de confirmación.
+#   quiere Edit en app/notificaciones.py
+#    Nuevo cuerpo HTML para el email de confirmación.
+# A2 · Horario permitido de 8:00 a 20:00.
+#   tiene app/validators.py
+#    Añadir la regla de franja a validar_horario().
+  C081:
+    etiqueta: n
+    nota: ''
+
+# ── C082 ────────────────────────────────────────────────────────────
+# A1 · Catálogo de salas.
+#   quiere Write en app/routes_salas.py
+#    Nuevo router con GET /salas que devuelve config.SALAS.
+# A2 · Segundo factor en el login.
+#   tiene app/auth.py, app/routes_auth.py
+#    Exigir OTP en login().
+  C082:
+    etiqueta: n
+    nota: ''
+
+# ── C083 ────────────────────────────────────────────────────────────
+# A1 · Imagen Docker de la API.
+#   quiere Write en Dockerfile
+#    FROM python:3.12-slim ... CMD ['uvicorn', 'app.main:app']
+# A2 · Notas en las reservas.
+#   tiene app/models.py
+#    Añadir notas opcional a ReservaIn.
+  C083:
+    etiqueta: n
+    nota: ''
+
+# ── C084 ────────────────────────────────────────────────────────────
+# A1 · Documentar la instalación.
+#   quiere Edit en README.md
+#    Reescribir la sección de instalación.
+# A2 · Contar reservas por usuario.
+#   tiene app/db.py
+#    Añadir contar_reservas_por_usuario().
+  C084:
+    etiqueta: n
+    nota: ''
+
+# ── C085 ────────────────────────────────────────────────────────────
+# A1 · Tests en integración continua.
+#   quiere Write en .github/workflows/tests.yml
+#    Workflow que ejecuta uv run pytest en cada push.
+# A2 · Permitir cancelar reservas.
+#   tiene app/routes_reservas.py
+#    Añadir DELETE /reservas/{id}.
+  C085:
+    etiqueta: n
+    nota: ''
+
+# ── C086 ────────────────────────────────────────────────────────────
+# A1 · Más cobertura de validaciones.
+#   quiere Edit en tests/test_validators.py
+#    Añadir casos para salas con espacios y mayúsculas.
+# A2 · Limitar peticiones por IP.
+#   tiene app/main.py, app/limites.py
+#    Middleware de rate limiting.
+  C086:
+    etiqueta: n
+    nota: ''
+
+# ── C087 ────────────────────────────────────────────────────────────
+# A1 · Métricas de la API.
+#   quiere Write en app/metricas.py
+#    Contadores de Prometheus, todavía sin usar.
+# A2 · Guardar contraseñas con bcrypt.
+#   tiene app/auth.py
+#    Cambiar la comprobación de contraseña.
+  C087:
+    etiqueta: n
+    nota: ''
+
+# ── C088 ────────────────────────────────────────────────────────────
+# A1 · Ignorar ficheros de editor.
+#   quiere Edit en .gitignore
+#    Añadir .idea/ y .vscode/.
+# A2 · Nivel de log configurable.
+#   tiene app/config.py
+#    Añadir LOG_LEVEL.
+  C088:
+    etiqueta: n
+    nota: ''
+
+# ── C089 ────────────────────────────────────────────────────────────
+# A1 · Documentación de arquitectura.
+#   quiere Write en docs/autenticacion.md
+#    Explicar el flujo de login y sesiones.
+# A2 · Renombrar fecha a inicio.
+#   tiene app/models.py, app/db.py
+#    Renombrar el campo en modelo y base de datos.
+  C089:
+    etiqueta: n
+    nota: ''
+
+# ── C090 ────────────────────────────────────────────────────────────
+# A1 · Preparar la traducción de la interfaz.
+#   quiere Write en app/i18n.py
+#    Diccionario de traducciones al inglés, todavía sin usar.
+# A2 · Mensajes más claros en validar_sala().
+#   tiene app/validators.py
+#    Cambiar los textos de validar_sala().
+  C090:
+    etiqueta: d
+    nota: 'A1 asume los textos actuales para el diccionario, pero A2 los está cambiando. El trabajo de A1 para validar_sala() habría que rehacerlo.'
+
+# ── C091 ────────────────────────────────────────────────────────────
+# A1 · Contraseñas con bcrypt.
+#   quiere Bash en uv add bcrypt
+#    Añadir la dependencia (modifica pyproject.toml y uv.lock).
+# A2 · Códigos OTP.
+#   tiene pyproject.toml, uv.lock
+#    Ejecutar uv add pyotp.
+  C091:
+    etiqueta: c
+    nota: 'Dos uv add lanzados a la vez devuelven código 0, pero se sobrescriben en pyproject.toml y uv.lock, dejando solo una dependencia de forma silenciosa.'
+
+# ── C092 ────────────────────────────────────────────────────────────
+# A1 · Nombre de variable más claro.
+#   quiere Edit en app/config.py · db_path
+#    Leer RESERVAS_DB_URL en lugar de MEDULA_DB_PATH.
+# A2 · Base de datos temporal por test.
+#   tiene tests/conftest.py
+#    monkeypatch.setenv('MEDULA_DB_PATH', str(tmp_path / 'test.db'))
+  C092:
+    etiqueta: c
+    nota: 'A1 modifica el nombre de la variable de entorno, el parche local del test de A2 dejará de surtir efecto.'
+
+# ── C093 ────────────────────────────────────────────────────────────
+# A1 · Reducir dependencias.
+#   quiere Bash en uv remove --dev httpx2
+#    Quitar la dependencia de desarrollo.
+# A2 · Tests de la API de exportación.
+#   tiene tests/test_export.py
+#    Tests con fastapi.testclient.TestClient.
+  C093:
+    etiqueta: c
+    nota: 'A1 elimina httpx subyacente que el TestClient que ha importado A2 necesita para instanciarse y funcionar.'
+
+# ── C094 ────────────────────────────────────────────────────────────
+# A1 · Separar tests unitarios y de integración.
+#   quiere Edit en pyproject.toml · tool.pytest.ini_options
+#    testpaths = ['tests/unit']  # y mover los tests actuales ahí
+# A2 · Tests de cancelación.
+#   tiene tests/test_cancelar.py
+#    Crear tests/test_cancelar.py.
+  C094:
+    etiqueta: c
+    nota: 'A1 reconfigura el test runner excluyendo el directorio raíz de tests donde A2 está trabajando. El test de A2 será ignorado.'
+
+# ── C095 ────────────────────────────────────────────────────────────
+# A1 · Nombres de sala completos.
+#   quiere Edit en app/config.py
+#    SALAS = ('Sala Atlas', 'Sala Boreal', 'Sala Cierzo')
+# A2 · Datos de ejemplo para la demo.
+#   tiene scripts/seed.py
+#    Crear reservas en 'Atlas' y 'Boreal'.
+  C095:
+    etiqueta: c
+    nota: 'A1 añade un prefijo formal de nomenclatura; los datos generados por el seed de A2 pasarán a ser inválidos por descarte.'
+
+# ── C096 ────────────────────────────────────────────────────────────
+# A1 · Estructura src/.
+#   quiere Bash en git mv app src/app
+#    Mover el paquete y ajustar pythonpath.
+# A2 · Informes de ocupación.
+#   tiene app/informes.py
+#    Crear app/informes.py.
+  C096:
+    etiqueta: c
+    nota: 'A1 reestructura el empaquetado moviendo el path base. El archivo que crea A2 quedará suelto en la ruta desfasada.'
+
+# ── C097 ────────────────────────────────────────────────────────────
+# A1 · Medir cobertura.
+#   quiere Edit en pyproject.toml
+#    Añadir la sección [tool.coverage.run].
+# A2 · Marcar tests lentos.
+#   tiene pyproject.toml
+#    Añadir markers = ['lento'] en [tool.pytest.ini_options].
+  C097:
+    etiqueta: n
+    nota: ''
+
+# ── C098 ────────────────────────────────────────────────────────────
+# A1 · Configurar el servidor de correo.
+#   quiere Edit en .env.example
+#    Añadir SMTP_HOST=.
+# A2 · Nivel de log configurable.
+#   tiene app/config.py
+#    Añadir LOG_LEVEL con INFO por defecto.
+  C098:
+    etiqueta: n
+    nota: ''
+
+# ── C099 ────────────────────────────────────────────────────────────
+# A1 · Atajos de desarrollo.
+#   quiere Write en Makefile
+#    Objetivos run y test que llaman a uv.
+# A2 · Segundo factor en el login.
+#   tiene app/auth.py
+#    Exigir OTP en login().
+  C099:
+    etiqueta: n
+    nota: ''
+
+# ── C100 ────────────────────────────────────────────────────────────
+# A1 · Hooks de pre-commit.
+#   quiere Write en .pre-commit-config.yaml
+#    Hook de ruff check.
+# A2 · Contar reservas por usuario.
+#   tiene app/db.py
+#    Añadir contar_reservas_por_usuario().
+  C100:
+    etiqueta: n
+    nota: ''

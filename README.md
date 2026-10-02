@@ -67,11 +67,13 @@ place in the code to start from. Comment on its issue to claim it or to discuss 
 ([all open issues](https://github.com/JoaquinRuiz/medula/issues/?q=is%3Aopen+label%3A%22help+wanted%22), [good first issues](https://github.com/JoaquinRuiz/medula/issues/?q=is%3Aopen+label%3A%22good+first+issue%22)).
 
 1. **Human labels for the calibration set** ([#1](https://github.com/JoaquinRuiz/medula/issues/1)) · *no code, highest value.* The 100 calibration pairs
-   and their labels were written by a model of the same family as two of the deciders, which likely
-   flatters them. Label them yourself, blind, in your own file:
+   and their labels were written by a model of the same family as two of the deciders. A first person
+   labelled them blind and agreed on all 98 pairs they didn't mark as unsure; more independent
+   labellers would tell us whether that holds. Label them yourself, blind, in your own file:
    `uv run bench/e04_etiquetar.py --salida calibration/etiquetas_humanas/<your-github-user>.yaml`
    (about 20–30 minutes; `c` collides, `n` doesn't, `d` unsure). `uv run bench/acuerdo_etiquetas.py`
-   shows how you agree with the model and with other people.
+   shows how you agree with the model and with other people. Add `--plantilla` to get all 100 pairs in
+   one file and fill it in with any editor.
 2. **Calibration pairs that look like real runs** ([#2](https://github.com/JoaquinRuiz/medula/issues/2)) · *no code or light code.* In calibration, 13 % of
    Jev's decisions were unsure; in real runs, 61 %. Real states have several agents and long
    intentions; the calibration pairs have one of each. New pairs in `calibration/candidatas.yaml`,
@@ -225,10 +227,13 @@ and at most one extra false alarm.
 - **Thresholds fitted on the same pairs they are measured on.** There is no separate validation set.
   In real runs, 61 % of Jev's decisions on write requests fell in the uncertain band and went to the
   slow path, versus 13 % of the calibration pairs.
-- **Origin of the calibration labels.** The 100 pairs and their labels were written by Claude, a
-  model of the same family as Haiku and Sonnet, with no human review (`calibration/README.md`,
-  `calibration/etiquetas.yaml`). This likely favours Haiku and Sonnet in the accuracy comparison
-  (Sonnet 98.5 %). Human labels are the first open problem above.
+- **Origin of the calibration pairs and labels.** The 100 pairs and their labels were written by
+  Claude, a model of the same family as Haiku and Sonnet (`calibration/README.md`,
+  `calibration/etiquetas.yaml`). One person then labelled all 100 blind, without AI and without seeing
+  the model's labels (`calibration/etiquetas_humanas/`): same label on all 98 pairs they didn't mark as
+  unsure (Cohen's kappa 1.00); the 2 unsure ones are C077 and C090. So the labels hold up, but the
+  pairs themselves may still be easier for models of the same family, and one labeller is not many.
+  More labellers are the first open problem above.
 - d1 and d2-sin-calibrar are mode D runs with the initial, uncalibrated thresholds; e08-demo is a demo
   run with a short wait. None of them is in the averages above. `results/runs/_invalidas/` holds runs
   lost to an exhausted API credit.
