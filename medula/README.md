@@ -18,7 +18,7 @@ The full design is in [SPEC.md](SPEC.md) (in Spanish).
 Decision rule, with `p` the highest collision probability over the other agents:
 - `p < 0.2`: grant.
 - `p > 0.8` with remedy "wait": wait for that agent to finish.
-- Otherwise: slow path. Sonnet proposes a way out (grant, wait, reorder or rewrite); if it can't resolve it, Opus does; if neither can, wait.
+- Otherwise: slow path. Sonnet proposes a way out (grant, wait, reorder or rewrite); if it can't resolve it, Opus does; if neither can, wait. An answer cut off by `max_tokens` (`finish_reason = length`) is retried once with twice the tokens before escalating.
 
 Both thresholds are configurable and are meant to be set from the E-04 calibration.
 
@@ -51,7 +51,7 @@ Everything lives in one SQLite file:
 - `locks`: resources held, each with its intent;
 - `cola`: the wait queue;
 - `buzon`: per-agent mailbox;
-- `decisiones`: every decision with its time, agent, question, raw answer, probability, latency, cost, decider and fallback.
+- `decisiones`: every decision with its time, agent, question, raw answer, probability, latency, cost, decider, fallback and the provider's `finish_reason`.
 
 ## Tests
 

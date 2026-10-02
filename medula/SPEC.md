@@ -60,7 +60,7 @@ Arranque: `uv run medula servir --decisor jev --plan plan.yaml --db <run>/medula
 | `locks` | `id`, `agente`, `recurso` (ruta relativa, o `repo` para Bash que escribe), `intencion` (JSON), `desde` |
 | `cola` | `id`, `agente`, `recurso`, `intencion`, `espera_a` (agente), `prioridad`, `desde`, `estado` (esperando / concedido / caducado) |
 | `buzon` | `id`, `para`, `de`, `texto`, `p_invalida`, `creado`, `entregado` |
-| `decisiones` | `id`, `ts`, `tipo` (acquire / notify / lento), `agente`, `accion` (JSON), `pregunta`, `estado_enviado` (JSON), `respuesta` (JSON en crudo), `veredicto`, `p_choca`, `confianza`, `latencia_ms`, `coste_usd`, `decisor`, `modelo`, `reserva_de` (decisor que falló, si lo hubo), `error` |
+| `decisiones` | `id`, `ts`, `tipo` (acquire / notify / lento), `agente`, `accion` (JSON), `pregunta`, `estado_enviado` (JSON), `respuesta` (JSON en crudo), `veredicto`, `p_choca`, `confianza`, `latencia_ms`, `coste_usd`, `decisor`, `modelo`, `reserva_de` (decisor que falló, si lo hubo), `error`, `finish_reason` (el que da el proveedor en las llamadas a LLM: `stop`, `length`…) |
 
 - **Latencia y coste** de cada decisión: latencia medida de extremo a extremo desde Médula; coste el que devuelve OpenRouter (`usage.cost`), o 0 en `locks`.
 - **Métricas de E-07 a E-11:** latencias, avisos, detecciones, bloqueos innecesarios, escaladas y costes salen de aquí, todas por consultas sobre el SQLite.
@@ -148,8 +148,9 @@ Los umbrales empiezan en **0,2 y 0,8** y se fijan con E-04 repetido con `noul` (
 ## 6. Camino lento
 
 1. **Sonnet** recibe el estado, las intenciones en juego y los veredictos, y propone una salida con salida estructurada: `conceder` (falso choque), `esperar` (a quién), `reordenar` (quién va primero; se cambia la prioridad en la cola) o `reescribir` (instrucciones concretas para el solicitante, que se le devuelven como motivo del `deny`).
-2. Si Sonnet da error, contesta fuera de formato o declara que no puede resolverlo (`resuelto: false`), **Opus** hace lo mismo.
-3. Si Opus tampoco lo resuelve, se espera por defecto, que es lo seguro.
+2. Si la respuesta de Sonnet llega cortada por `max_tokens` (`finish_reason = length`), se repite una vez con el doble de tokens; cada intento queda en `decisiones` con su coste.
+3. Si Sonnet da error, contesta fuera de formato o declara que no puede resolverlo (`resuelto: false`), **Opus** hace lo mismo.
+4. Si Opus tampoco lo resuelve, se espera por defecto, que es lo seguro.
 
 Cada paso queda en `decisiones` con `tipo = lento`. De aquí salen las escaladas a Sonnet y a Opus de E-07.
 

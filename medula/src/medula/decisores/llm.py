@@ -11,6 +11,14 @@ SISTEMA = (
 )
 
 
+class RespuestaCortada(ErrorDecisor):
+    """El modelo agotó max_tokens (finish_reason «length») antes de cerrar el JSON."""
+
+    def __init__(self, mensaje: str, latencia: float, coste: float):
+        super().__init__(mensaje)
+        self.latencia, self.coste = latencia, coste
+
+
 def _texto(contenido) -> str:
     if isinstance(contenido, str):
         return contenido
@@ -43,6 +51,11 @@ def llamar(cliente: OpenRouter, modelo: str, usuario: str, esquema: dict, nombre
         texto = _texto(datos["choices"][0]["message"].get("content"))
     except (KeyError, IndexError) as e:
         raise ErrorDecisor(f"respuesta sin contenido: {str(datos)[:200]}") from e
+    fin = datos["choices"][0].get("finish_reason")
+    if fin == "length":
+        uso = datos.get("usage") or {}
+        raise RespuestaCortada(f"respuesta cortada por max_tokens={max_tokens} (finish_reason=length, "
+                               f"{uso.get('completion_tokens', '?')} tokens de salida): {texto[:200]!r}", latencia, coste)
     ini = texto.find("{")
     if ini < 0:
         raise ErrorDecisor(f"respuesta sin JSON: {texto[:200]!r}")

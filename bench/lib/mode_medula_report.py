@@ -74,7 +74,8 @@ def medula(db_path: Path) -> dict:
         "latencia_p95_ms": lat[min(len(lat) - 1, int(0.95 * len(lat)))] if lat else None,
         "coste_decisiones_usd": round(sum(d["coste_usd"] or 0 for d in dec), 6),
         "escaladas_sonnet": sum(1 for d in dec if d["tipo"] == "lento" and d["decisor"] == "sonnet"
-                                and d["pregunta"] != "verificacion"),
+                                and d["pregunta"] != "verificacion"
+                                and d.get("finish_reason") != "length"),  # un intento cortado y su reintento son una escalada
         "escaladas_opus": sum(1 for d in dec if d["tipo"] == "lento" and d["decisor"] == "opus"),
         "verificaciones_spec": sum(1 for d in dec if d["pregunta"] == "verificacion"),
         "propuestas_rechazadas_por_spec": sum(1 for d in dec if d["tipo"] == "lento"
