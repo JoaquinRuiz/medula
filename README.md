@@ -80,13 +80,12 @@ place in the code to start from. Comment on its issue to claim it or to discuss 
 4. **More scenarios** ([#6](https://github.com/JoaquinRuiz/medula/issues/6)) · *no code, mostly tests.* The six tasks cover a changed signature and a
    renamed field. A changed behaviour with the same signature, a schema migration, a dependency
    bump: each one needs a task, acceptance tests and a line in `ground_truth.yaml`.
-5. **More runs** ([#7](https://github.com/JoaquinRuiz/medula/issues/7)) · *costs money, no code.* Modes E and F have few runs, and F's only run had agents
-   messaging each other (see the caveats). If you have credit, `bench/run_matrix.sh` resumes the
-   matrix and records everything; send the evidence in a PR.
 
 Already solved: human labels for the calibration set ([#1](https://github.com/JoaquinRuiz/medula/issues/1);
 more blind labellers are still welcome, see [`CONTRIBUTING.md`](./CONTRIBUTING.md#labelling-the-calibration-set-no-code))
-and a robust slow path ([#5](https://github.com/JoaquinRuiz/medula/issues/5)).
+a robust slow path ([#5](https://github.com/JoaquinRuiz/medula/issues/5)) and more runs of modes E and F
+([#7](https://github.com/JoaquinRuiz/medula/issues/7); more runs are always welcome, see
+[`CONTRIBUTING.md`](./CONTRIBUTING.md#contributing-runs)).
 
 ### Good first contributions
 
@@ -176,7 +175,8 @@ The kernel's design, decisions and trade-offs are in [`medula/SPEC.md`](./medula
 
 Per-run data is in `results/summary.csv`; everything behind it (agent sessions, final diff,
 evaluation, Médula's SQLite with every decision) is in `results/runs/<run-id>/`. Charts in
-`results/graficos/`. Averages over the valid runs of the matrix:
+`results/graficos/`. Averages over the valid runs of the matrix, all made with
+[`v0.1.0`](https://github.com/JoaquinRuiz/medula/releases/tag/v0.1.0):
 
 | Mode | Runs | Tests green / red | Real conflicts detected (of 2) | Unnecessary blocks | Total time | Agents cost | Decision cost | Decisions | Slow-path escalations |
 |---|---|---|---|---|---|---|---|---|---|
@@ -188,6 +188,26 @@ evaluation, Médula's SQLite with every decision) is in `results/runs/<run-id>/`
 | F | f1 | 37 / 0 | 2.0 | 0 | 376 s | $1.40 | $0.59 | 114 | 9 |
 
 Times use only runs that did not overlap with another run (`tiempo_fiable` in `summary.csv`).
+
+### Runs with v0.2.0 and v0.3.0
+
+Later runs, made after the slow-path and deadline fixes. Same tasks, model (`claude-sonnet-5`, effort high)
+and isolation; the agents ran on a Claude subscription, straight to Anthropic instead of through OpenRouter
+(`proveedor_agentes` in `summary.csv`). They're kept apart from the table above because the kernel changed.
+
+| Run | Version | Tests green / red | Real conflicts detected (of 2) | Unnecessary blocks | Total time | Agents cost | Decision cost | Decisions | Slow-path escalations |
+|---|---|---|---|---|---|---|---|---|---|
+| e4 | v0.2.0 | 37 / 0 | 2 | 0 | 311 s | $1.40 | $0.38 | 120 | 13 |
+| e5 | v0.2.0 | 37 / 0 | 2 | 1 | 1261 s | $1.73 | $0.49 | 129 | 18 |
+| f2 | v0.3.0 | 37 / 0 | 2 | 0 | 286 s | $1.23 | $0.53 | 104 | 8 |
+| f3 | v0.3.0 | 37 / 0 | 2 | 0 | 277 s | $1.33 | $0.57 | 111 | 7 |
+
+- **Mode F, now without caveats.** f1 had agents messaging each other outside Médula; f2 and f3 had no
+  such channel and show the same pattern: all green, both conflicts caught, no unnecessary blocks, under
+  5 minutes.
+- **e5's time is a kernel bug, since fixed.** Two agents waited for each other until `espera_max` ran
+  out ([#14](https://github.com/JoaquinRuiz/medula/issues/14), fixed in v0.3.0). e5 also has the first
+  answer cut off by `max_tokens`, which the v0.2.0 retry recovered without escalating to Opus.
 
 - **A shared directory changes the game.** In modes C–F agents see each other's code and adapt, so
   all of them end green. What Médula changes is how they get there: fewer unnecessary blocks than
@@ -249,7 +269,10 @@ cp .env.example .env                    # add OPENROUTER_API_KEY; MEDULA_AGENT_M
 export MEDULA_RUNS_DIR=/tmp/runs        # where workspaces go (outside the repo)
 ```
 
-Costs are approximate, at September 2026 prices.
+Costs are approximate, at September 2026 prices, with the agents going through OpenRouter. Agents are most
+of the cost; with `MEDULA_AGENT_PROVEEDOR=suscripcion` and a token from `claude setup-token` in `.env`, they run on a
+Claude subscription instead (about 5 % of a Pro plan's usage window per run) and only Médula's decisions use
+OpenRouter credit.
 
 | Experiment | What it produces | Command | Cost |
 |---|---|---|---|
