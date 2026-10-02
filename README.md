@@ -239,6 +239,11 @@ Python is managed with [uv](https://docs.astral.sh/uv/); there are three uv proj
 bench tooling, `demo-app/`, `medula/`). Agents and deciders go through OpenRouter, so paid experiments
 need an OpenRouter key in `.env`.
 
+**Versions.** [`v0.1.0`](https://github.com/JoaquinRuiz/medula/releases/tag/v0.1.0) is the code published
+together with the results in `results/`. Later versions change Médula's behaviour (see the
+[release notes](https://github.com/JoaquinRuiz/medula/releases)), so to reproduce the published numbers as
+closely as possible, run `git checkout v0.1.0` first.
+
 ```sh
 cp .env.example .env                    # add OPENROUTER_API_KEY; MEDULA_AGENT_MODEL and MEDULA_AGENT_EFFORT are preset
 export MEDULA_RUNS_DIR=/tmp/runs        # where workspaces go (outside the repo)
