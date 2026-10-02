@@ -1,0 +1,250 @@
+{
+  "mode": "F",
+  "decisor": "sonnet",
+  "demo": false,
+  "run_id": "f2",
+  "model": "claude-sonnet-5",
+  "effort": "high",
+  "modelo_agentes": "claude-sonnet-5 · effort high",
+  "proveedor_agentes": "suscripcion",
+  "claude_version": "2.1.287",
+  "effort_check": "no_aplica",
+  "umbrales": {
+    "umbral_bajo": 0.55,
+    "umbral_alto": 0.55,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": "choca",
+    "regla_simbolos": false
+  },
+  "started_at": "2026-10-02T12:27:52Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 286.1,
+  "base_sha": "43596a6785dc5b6baf65d9aff73388e4faa6228f",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 215.6
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 61.2
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 123.2,
+      "cost_usd": 0.26426099999999997,
+      "num_turns": 19,
+      "session_id": "71596a94-b5a4-40d8-bed5-8a7e48be73ce",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 32,
+        "output_tokens": 6838,
+        "cache_read_input_tokens": 555205,
+        "cache_creation_input_tokens": 21194
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 215.3,
+      "cost_usd": 0.29301460000000007,
+      "num_turns": 26,
+      "session_id": "659adc74-ee8c-4e18-83ed-b0616437129b",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 36,
+        "output_tokens": 7233,
+        "cache_read_input_tokens": 648783,
+        "cache_creation_input_tokens": 22714
+      }
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 113.5,
+      "cost_usd": 0.107626,
+      "num_turns": 14,
+      "session_id": "edb19e80-9057-4a78-b87c-3c3dd25bd1ce",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 12,
+        "output_tokens": 2877,
+        "cache_read_input_tokens": 170580,
+        "cache_creation_input_tokens": 11179
+      }
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 168.1,
+      "cost_usd": 0.23367100000000002,
+      "num_turns": 22,
+      "session_id": "e79c4b33-f76a-4b4a-8581-96d9fe0f36c5",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 26,
+        "output_tokens": 6378,
+        "cache_read_input_tokens": 451035,
+        "cache_creation_input_tokens": 19908
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 58.9,
+      "cost_usd": 0.1335476,
+      "num_turns": 11,
+      "session_id": "96fa2ce0-06a9-4e96-8a54-e76a61fee471",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 22,
+        "output_tokens": 2630,
+        "cache_read_input_tokens": 317338,
+        "cache_creation_input_tokens": 10934
+      }
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 61.0,
+      "cost_usd": 0.1941506,
+      "num_turns": 16,
+      "session_id": "e996f445-0a22-42a6-9d75-724ecc268c3f",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 32,
+        "output_tokens": 3881,
+        "cache_read_input_tokens": 489383,
+        "cache_creation_input_tokens": 14350
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 104,
+    "decisiones_modelo": 62,
+    "por_decisor": {
+      "regla": 34,
+      "sonnet": 70
+    },
+    "latencia_p50_ms": 3275.9353125002235,
+    "latencia_p95_ms": 4444.924540934153,
+    "coste_decisiones_usd": 0.5337,
+    "escaladas_sonnet": 8,
+    "escaladas_opus": 0,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "peticiones_duplicadas": 0,
+    "errores_decisor": 0,
+    "esperas": [
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "app/consultas.py",
+        "estado": "concedido",
+        "segundos": 86.7
+      },
+      {
+        "agente": "A2",
+        "espera_a": "A1",
+        "recurso": "app/routes_export.py",
+        "estado": "concedido",
+        "segundos": 95.7
+      }
+    ],
+    "avisos_posibles": 61,
+    "avisos_enviados": 13,
+    "avisos_descartados_lectura": 0,
+    "notificaciones_de_lectura": 0,
+    "pares_con_espera": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "pares_con_aviso": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": [],
+    "avisos_innecesarios": []
+  },
+  "totals": {
+    "agents_cost_usd": 1.2263,
+    "decision_cost_usd": 0.5337,
+    "cost_usd": 1.76,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/f2/repo",
+    "timestamp": "2026-10-02T12:32:38+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 5,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 5,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "total": {
+      "passed": 37,
+      "failed": 0
+    },
+    "all_green": true
+  },
+  "red_tests": 0
+}

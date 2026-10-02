@@ -20,3 +20,5 @@ b5,B,git,2026-09-29T17:09:04Z,True,31,6,2,2,,,,338.3,1.2303,0.3726,1.6029,,,,,,,
 f1,F,sonnet,2026-09-29T15:10:46Z,True,37,0,,2,2,0,0,376.5,1.3986,0.590786,1.9894,0.55,0.55,114,9,0,0,61,12,1,anthropic/claude-sonnet-5 · effort high,True,mensajes (5 SendMessage),openrouter
 e4,E,haiku,2026-10-02T11:46:35Z,True,37,0,,2,2,0,3,311.4,1.395,0.378169,1.7731,0.4,0.85,120,13,0,0,58,19,0,claude-sonnet-5 · effort high,True,,suscripcion
 e5,E,haiku,2026-10-02T11:57:04Z,True,37,0,,2,2,1,5,1260.7,1.7268,0.493069,2.2199,0.4,0.85,129,18,0,0,62,32,0,claude-sonnet-5 · effort high,True,,suscripcion
+f2,F,sonnet,2026-10-02T12:27:52Z,True,37,0,,2,2,0,0,286.1,1.2263,0.5337,1.76,0.55,0.55,104,8,0,0,61,13,0,claude-sonnet-5 · effort high,True,,suscripcion
+f3,F,sonnet,2026-10-02T12:32:39Z,True,37,0,,2,2,0,0,276.5,1.3302,0.567944,1.8981,0.55,0.55,111,7,0,4,73,15,0,claude-sonnet-5 · effort high,True,,suscripcion
