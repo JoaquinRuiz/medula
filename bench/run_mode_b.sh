@@ -30,7 +30,17 @@ done
 # --- Comprobaciones previas -------------------------------------------------
 [[ -n "$MODEL" ]] || die "falta el modelo: --model o MEDULA_AGENT_MODEL en .env"
 [[ -n "$EFFORT" ]] || die "falta el esfuerzo: --effort o MEDULA_AGENT_EFFORT en .env"
-[[ -n "${OPENROUTER_API_KEY:-}" ]] || die "falta OPENROUTER_API_KEY en .env"
+PROVEEDOR="${MEDULA_AGENT_PROVEEDOR:-openrouter}"
+case "$PROVEEDOR" in
+  openrouter) [[ -n "${OPENROUTER_API_KEY:-}" ]] || die "falta OPENROUTER_API_KEY en .env" ;;
+  suscripcion)
+    [[ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]] || die "falta CLAUDE_CODE_OAUTH_TOKEN en .env (claude setup-token)"
+    EFFORT_CHECK="no_aplica"  # la comprobación del esfuerzo es la del paso por OpenRouter
+    MODEL="${MODEL#anthropic/}"  # id de Anthropic: anthropic/claude-sonnet-5 -> claude-sonnet-5
+    ;;
+  *) die "MEDULA_AGENT_PROVEEDOR desconocido: $PROVEEDOR (openrouter | suscripcion)" ;;
+esac
+export MEDULA_AGENT_PROVEEDOR="$PROVEEDOR"
 command -v claude >/dev/null || die "no encuentro claude en el PATH"
 
 if [[ "$EFFORT_CHECK" == "passed" ]]; then
@@ -80,7 +90,7 @@ trap finalize EXIT
 T0="$(now_s)"
 cat > "$LOGS/run.json" <<JSON
 {"mode": "B", "run_id": "$RUN_ID", "model": "$MODEL", "effort": "$EFFORT",
- "claude_version": "$CLAUDE_VERSION", "effort_check": "$EFFORT_CHECK",
+ "proveedor_agentes": "$PROVEEDOR", "claude_version": "$CLAUDE_VERSION", "effort_check": "$EFFORT_CHECK",
  "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "t0": $T0, "run_dir": "$RUN"}
 JSON
 log "run $RUN_ID en $RUN (modelo $MODEL, esfuerzo $EFFORT)"

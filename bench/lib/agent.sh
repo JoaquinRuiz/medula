@@ -1,6 +1,9 @@
-# Lanzamiento de agentes de Claude Code por OpenRouter. Se carga con `source`
-# después de common.sh. Necesita: MODEL, EFFORT, OPENROUTER_API_KEY,
-# AGENT_CONFIG_DIR. Cada workspace es un proyecto uv propio (el de demo-app).
+# Lanzamiento de agentes de Claude Code. Se carga con `source` después de common.sh.
+# Necesita: MODEL, EFFORT, AGENT_CONFIG_DIR y, según MEDULA_AGENT_PROVEEDOR:
+#   openrouter (por defecto): OPENROUTER_API_KEY; los agentes van por OpenRouter.
+#   suscripcion: CLAUDE_CODE_OAUTH_TOKEN (de `claude setup-token`); los agentes van directos a
+#                Anthropic con la suscripción de Claude. MODEL es entonces el id de Anthropic (claude-sonnet-5).
+# Cada workspace es un proyecto uv propio (el de demo-app).
 
 # Herramientas prohibidas a los agentes, en todos los modos:
 # - ScheduleWakeup y similares: en modo no interactivo terminan la sesión esperando un despertar que
@@ -19,14 +22,19 @@ AGENT_DISALLOWED="${AGENT_DISALLOWED:-ScheduleWakeup,CronCreate,CronDelete,CronL
 run_agent() {
   local name="$1" cwd="$2" prompt_file="$3" logdir="$4"
   local start end rc
+  local acceso
+  if [[ "${MEDULA_AGENT_PROVEEDOR:-openrouter}" == suscripcion ]]; then
+    acceso=(-u ANTHROPIC_BASE_URL -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_API_KEY
+            CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN")
+  else
+    acceso=(-u CLAUDE_CODE_OAUTH_TOKEN ANTHROPIC_BASE_URL="https://openrouter.ai/api"
+            ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY" ANTHROPIC_API_KEY="")
+  fi
   start="$(now_s)"
   set +e
   (
-    cd "$cwd" && env -u CLAUDE_EFFORT -u ANTHROPIC_MODEL -u VIRTUAL_ENV \
+    cd "$cwd" && env -u CLAUDE_EFFORT -u ANTHROPIC_MODEL -u VIRTUAL_ENV "${acceso[@]}" \
       CLAUDE_CONFIG_DIR="$AGENT_CONFIG_DIR" \
-      ANTHROPIC_BASE_URL="https://openrouter.ai/api" \
-      ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY" \
-      ANTHROPIC_API_KEY="" \
       claude -p "$(cat "$prompt_file")" \
         --model "$MODEL" --effort "$EFFORT" \
         --permission-mode bypassPermissions \

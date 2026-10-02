@@ -14,7 +14,9 @@ COLUMNAS = [
     "conflictos_reales", "conflictos_detectados", "bloqueos_innecesarios", "avisos_innecesarios", "tiempo_total_s", "coste_agentes_usd",
     "coste_decisiones_usd", "coste_total_usd", "umbral_bajo", "umbral_alto", "decisiones", "escaladas_sonnet", "escaladas_opus", "reservas",
     "avisos_posibles", "avisos_enviados", "avisos_descartados_lectura", "modelo_agentes", "tiempo_fiable", "canal_entre_agentes",
+    "proveedor_agentes",
 ]
+# proveedor_agentes: openrouter (todas las ejecuciones publicadas en v0.1.0) o suscripcion (claude setup-token).
 # canal_entre_agentes: los agentes usaron ListAgents/SendMessage (hablar entre sesiones) por fuera de Médula.
 # tiempo_fiable=False: la ejecución se solapó con otra y su tiempo total no entra en la tabla (sí tests y costes).
 
@@ -52,9 +54,10 @@ def fila(d: dict) -> dict:
         "avisos_posibles": "" if sin_medula else m.get("avisos_posibles"),
         "avisos_enviados": "" if sin_medula else m.get("avisos_enviados"),
         "avisos_descartados_lectura": "" if sin_medula else m.get("avisos_descartados_lectura"),
-        "modelo_agentes": d.get("d61"),
+        "modelo_agentes": d.get("modelo_agentes") or d.get("d61"),  # d61: clave de los informes de v0.1.0
         "tiempo_fiable": True,
         "canal_entre_agentes": "",
+        "proveedor_agentes": d.get("proveedor_agentes", "openrouter"),
     }
 
 
@@ -71,6 +74,7 @@ def main(ruta: str) -> None:
         for r in filas:
             r["tiempo_fiable"] = r.get("tiempo_fiable") or "True"
             r.setdefault("canal_entre_agentes", "")
+            r["proveedor_agentes"] = r.get("proveedor_agentes") or "openrouter"
     filas.append(nueva)
     CSV.parent.mkdir(parents=True, exist_ok=True)
     with CSV.open("w", encoding="utf-8", newline="") as f:

@@ -49,7 +49,19 @@ RUN_ID="${RUN_ID:-$(tr '[:upper:]' '[:lower:]' <<< "$MODO")-$(date +%Y%m%d-%H%M%
 
 # --- Comprobaciones previas -------------------------------------------------
 [[ -n "$MODEL" && -n "$EFFORT" ]] || die "faltan modelo y esfuerzo de los agentes (.env o --model/--effort)"
-[[ -n "${OPENROUTER_API_KEY:-}" ]] || die "falta OPENROUTER_API_KEY en .env"
+PROVEEDOR="${MEDULA_AGENT_PROVEEDOR:-openrouter}"
+case "$PROVEEDOR" in
+  openrouter) [[ -n "${OPENROUTER_API_KEY:-}" ]] || die "falta OPENROUTER_API_KEY en .env" ;;
+  suscripcion)
+    [[ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]] || die "falta CLAUDE_CODE_OAUTH_TOKEN en .env (claude setup-token)"
+    EFFORT_CHECK="no_aplica"  # la comprobación del esfuerzo es la del paso por OpenRouter
+    MODEL="${MODEL#anthropic/}"  # id de Anthropic: anthropic/claude-sonnet-5 -> claude-sonnet-5
+    ;;
+  *) die "MEDULA_AGENT_PROVEEDOR desconocido: $PROVEEDOR (openrouter | suscripcion)" ;;
+esac
+export MEDULA_AGENT_PROVEEDOR="$PROVEEDOR"
+# Médula (modos D-F) llama a los decisores por OpenRouter, sea cual sea el proveedor de los agentes.
+[[ "$DECISOR" =~ ^(jev|haiku|sonnet)$ && -z "${OPENROUTER_API_KEY:-}" ]] && die "falta OPENROUTER_API_KEY en .env (decisores de Médula)"
 command -v claude >/dev/null || die "no encuentro claude en el PATH"
 if [[ "$EFFORT_CHECK" == "passed" ]]; then
   check="$MEDULA_ROOT/results/openrouter_check.json"
@@ -99,7 +111,7 @@ trap finalize EXIT
 T0="$(now_s)"
 cat > "$LOGS/run.json" <<JSON
 {"mode": "$MODO", "decisor": "$DECISOR", "run_id": "$RUN_ID", "model": "$MODEL", "effort": "$EFFORT",
- "claude_version": "$CLAUDE_VERSION", "effort_check": "$EFFORT_CHECK",
+ "proveedor_agentes": "$PROVEEDOR", "claude_version": "$CLAUDE_VERSION", "effort_check": "$EFFORT_CHECK",
  "umbral_bajo": $UMBRAL_BAJO, "umbral_alto": $UMBRAL_ALTO, "umbral_aviso": $UMBRAL_AVISO, "espera_max": $ESPERA_MAX,
  "demo": $DEMO, "pregunta": "$PREGUNTA", "regla_simbolos": $([[ -n "$REGLA" ]] && echo true || echo false),
  "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "t0": $T0, "run_dir": "$RUN"}
