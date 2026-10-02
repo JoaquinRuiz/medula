@@ -27,6 +27,8 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--umbral-aviso", type=float, default=0.5)
     s.add_argument("--espera-max", type=float, default=60.0)
     s.add_argument("--coste-sonnet", type=float, help="coste medio por decisión de Sonnet, para el htop")
+    s.add_argument("--duplicar-haiku", type=float, default=8.0,
+                   help="segundos sin respuesta de Haiku tras los que se lanza una petición duplicada (0: nunca)")
 
     h = sub.add_parser("htop", help="interfaz de terminal sobre el SQLite")
     h.add_argument("--db", type=Path, required=True)
@@ -45,7 +47,8 @@ def main(argv: list[str] | None = None) -> int:
         config = Config(db=a.db, decisor=a.decisor, raiz=a.raiz, tareas_dir=a.tareas, plan=plan.cargar(a.plan),
                         pregunta=a.pregunta, regla_simbolos=a.regla_simbolos,
                         umbral_bajo=a.umbral_bajo, umbral_alto=a.umbral_alto, umbral_aviso=a.umbral_aviso,
-                        espera_max=a.espera_max, coste_sonnet_por_decision=a.coste_sonnet)
+                        espera_max=a.espera_max, coste_sonnet_por_decision=a.coste_sonnet,
+                        duplicar_tras={"haiku": a.duplicar_haiku or None})
         if config.decisor != "locks" and not config.openrouter_key:
             print("Falta OPENROUTER_API_KEY (usa uv run --env-file .env ...)", file=sys.stderr)
             return 2

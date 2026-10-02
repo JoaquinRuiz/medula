@@ -4,8 +4,7 @@ from __future__ import annotations
 import json
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import TimeoutError as PlazoAgotado
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from dataclasses import dataclass, field
 
 import httpx2 as httpx
@@ -74,30 +73,60 @@ class OpenRouter:
         cabeceras = {"Authorization": f"Bearer {clave or ''}", "X-Title": "Medula"}
         self.cliente = httpx.Client(base_url=BASE, headers=cabeceras, transport=transport, timeout=60)
 
-    def post(self, ruta: str, cuerpo: dict, timeout: float) -> tuple[dict, float, float]:
+    def _pedir(self, ruta: str, cuerpo: dict, timeout: float, abandonada: threading.Event) -> tuple[int, bytes] | None:
+        with self.cliente.stream("POST", ruta, json=cuerpo, timeout=timeout) as r:
+            trozos = []
+            for trozo in r.iter_bytes():
+                if abandonada.is_set():  # nadie espera ya esta respuesta: se cierra la conexión
+                    return None
+                trozos.append(trozo)
+            return r.status_code, b"".join(trozos)
+
+    def post(self, ruta: str, cuerpo: dict, timeout: float,
+             duplicar_tras: float | None = None) -> tuple[dict, float, float]:
         """`timeout` es el plazo total de la petición, no el de cada operación de httpx: una respuesta que
-        llega a goteo no puede alargar la espera del agente más allá del plazo."""
+        llega a goteo no puede alargar la espera del agente más allá del plazo.
+
+        Con `duplicar_tras`, si no hay respuesta en esos segundos se lanza una segunda petición idéntica y vale la
+        primera que llegue bien (contra la cola larga de latencia). La perdedora se corta y su coste, que
+        OpenRouter no llega a decir, se estima igual al de la ganadora; `datos["medula"]` lo deja anotado."""
         t0 = time.perf_counter()
-        abandonada = threading.Event()
+        limite = t0 + timeout
+        abandonadas: list[threading.Event] = []
 
-        def pedir() -> tuple[int, bytes] | None:
-            with self.cliente.stream("POST", ruta, json=cuerpo, timeout=timeout) as r:
-                trozos = []
-                for trozo in r.iter_bytes():
-                    if abandonada.is_set():  # nadie espera ya esta respuesta: se cierra la conexión
-                        return None
-                    trozos.append(trozo)
-                return r.status_code, b"".join(trozos)
+        def lanzar():
+            abandonadas.append(threading.Event())
+            return _HILOS.submit(self._pedir, ruta, cuerpo, timeout, abandonadas[-1])
 
-        try:
-            estado, contenido = _HILOS.submit(pedir).result(timeout=timeout)
-        except PlazoAgotado as e:
-            abandonada.set()
-            raise ErrorDecisor(f"timeout tras {timeout} s") from e
-        except httpx.TimeoutException as e:
-            raise ErrorDecisor(f"timeout tras {timeout} s") from e
-        except httpx.HTTPError as e:
-            raise ErrorDecisor(f"{type(e).__name__}: {e}") from e
+        pendientes = {lanzar()}
+        if duplicar_tras and duplicar_tras < timeout and not wait(pendientes, timeout=duplicar_tras).done:
+            pendientes.add(lanzar())
+        duplicada = len(abandonadas) > 1
+        resultado, fallo = None, None
+        while pendientes and resultado is None:
+            hechas, pendientes = wait(pendientes, timeout=max(0.0, limite - time.perf_counter()),
+                                      return_when=FIRST_COMPLETED)
+            if not hechas:
+                break
+            for f in hechas:
+                try:
+                    r = f.result()
+                except httpx.HTTPError as e:
+                    fallo = fallo or e
+                    continue
+                if r is not None and r[0] == 200:
+                    resultado = r
+                    break
+                fallo = fallo or r  # un error HTTP: si queda la otra petición, se la espera
+        for ev in abandonadas:
+            ev.set()
+        if resultado is None and isinstance(fallo, tuple):
+            resultado = fallo
+        if resultado is None:
+            if fallo is None or isinstance(fallo, httpx.TimeoutException):
+                raise ErrorDecisor(f"timeout tras {timeout} s" + (" (petición duplicada)" if duplicada else ""))
+            raise ErrorDecisor(f"{type(fallo).__name__}: {fallo}") from fallo
+        estado, contenido = resultado
         latencia = (time.perf_counter() - t0) * 1000
         texto = contenido.decode("utf-8", errors="replace")
         if estado != 200:
@@ -107,6 +136,9 @@ class OpenRouter:
         except json.JSONDecodeError as e:
             raise ErrorDecisor(f"respuesta no JSON: {texto[:200]}") from e
         coste = float(((datos.get("usage") or {}).get("cost")) or 0.0)
+        if duplicada:
+            datos["medula"] = {"duplicada": True, "coste_estimado_perdedora": coste}
+            coste *= 2
         return datos, latencia, coste
 
 

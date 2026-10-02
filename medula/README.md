@@ -11,7 +11,7 @@ The full design is in [SPEC.md](SPEC.md) (in Spanish).
 | Decider | How | Fallback |
 |---|---|---|
 | `jev` | TypeSafe Jev via OpenRouter System One: a `noul` question (collision probability) and a `choice` question (remedy) per other agent, all in one request | haiku → locks |
-| `haiku` | Claude Haiku via OpenRouter, structured output | locks |
+| `haiku` | Claude Haiku via OpenRouter, structured output; a duplicate request after 8 s without an answer (`--duplicar-haiku`) | locks |
 | `sonnet` | Claude Sonnet via OpenRouter, structured output, low effort | locks |
 | `locks` | classic per-file lock, no model | — |
 

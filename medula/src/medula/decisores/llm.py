@@ -28,7 +28,8 @@ def _texto(contenido) -> str:
 
 
 def llamar(cliente: OpenRouter, modelo: str, usuario: str, esquema: dict, nombre: str, timeout: float,
-           esfuerzo: str | None = None, max_tokens: int = 2048) -> tuple[dict, float, float, dict]:
+           esfuerzo: str | None = None, max_tokens: int = 2048,
+           duplicar_tras: float | None = None) -> tuple[dict, float, float, dict]:
     """Una llamada con salida estructurada; si el modelo no la acepta, se pide el JSON en el prompt."""
     def cuerpo(estructurada: bool) -> dict:
         c = {"model": modelo, "max_tokens": max_tokens, "usage": {"include": True},
@@ -42,11 +43,11 @@ def llamar(cliente: OpenRouter, modelo: str, usuario: str, esquema: dict, nombre
         return c
 
     try:
-        datos, latencia, coste = cliente.post("/chat/completions", cuerpo(True), timeout)
+        datos, latencia, coste = cliente.post("/chat/completions", cuerpo(True), timeout, duplicar_tras)
     except ErrorDecisor as e:
         if "HTTP 400" not in str(e):
             raise
-        datos, latencia, coste = cliente.post("/chat/completions", cuerpo(False), timeout)
+        datos, latencia, coste = cliente.post("/chat/completions", cuerpo(False), timeout, duplicar_tras)
     try:
         texto = _texto(datos["choices"][0]["message"].get("content"))
     except (KeyError, IndexError) as e:
@@ -79,8 +80,10 @@ def _esquema_por_agente(otros: list[str], campos: dict, requeridos: list[str]) -
 
 
 class LLM(Decisor):
-    def __init__(self, nombre: str, cliente: OpenRouter, modelo: str, timeout: float, esfuerzo: str | None = None):
+    def __init__(self, nombre: str, cliente: OpenRouter, modelo: str, timeout: float, esfuerzo: str | None = None,
+                 duplicar_tras: float | None = None):
         self.nombre, self.cliente, self.modelo, self.timeout, self.esfuerzo = nombre, cliente, modelo, timeout, esfuerzo
+        self.duplicar_tras = duplicar_tras
 
     def _lote(self, estado, otros, pregunta, guia, campos, requeridos, clave_p, con_remedio) -> Lote:
         usuario = (
@@ -89,7 +92,7 @@ class LLM(Decisor):
         )
         esquema = _esquema_por_agente(otros, campos, requeridos)
         datos, latencia, coste, crudo = llamar(self.cliente, self.modelo, usuario, esquema, clave_p, self.timeout,
-                                               self.esfuerzo)
+                                               self.esfuerzo, duplicar_tras=self.duplicar_tras)
         por_agente = datos.get("por_agente") or {}
         veredictos = {}
         for x in otros:

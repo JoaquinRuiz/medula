@@ -15,6 +15,8 @@ MODELOS = {
 }
 # Tiempo máximo por llamada antes de pasar al siguiente decisor de la cadena.
 TIMEOUTS = {"jev": 5.0, "haiku": 15.0, "sonnet": 30.0, "opus": 60.0}
+# Segundos sin respuesta tras los que se lanza una segunda petición idéntica (p95 de Haiku en la matriz: 8 s).
+DUPLICAR_TRAS = {"haiku": 8.0}
 # Reserva automática por decisor principal.
 CADENAS = {
     "jev": ["jev", "haiku", "locks"],
@@ -39,6 +41,7 @@ class Config:
     espera_max: float = 60.0
     modelos: dict = field(default_factory=lambda: dict(MODELOS))
     timeouts: dict = field(default_factory=lambda: dict(TIMEOUTS))
+    duplicar_tras: dict = field(default_factory=lambda: dict(DUPLICAR_TRAS))
     esfuerzo_sonnet: str | None = "low"
     coste_sonnet_por_decision: float | None = None  # medido en E-03, para el htop
     openrouter_key: str | None = field(default_factory=lambda: os.environ.get("OPENROUTER_API_KEY"))
