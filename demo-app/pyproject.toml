@@ -1,6 +1,6 @@
 [project]
 name = "reservas"
-version = "0.2.0"
+version = "0.3.0"
 description = "API pequeña de reservas de salas"
 requires-python = ">=3.12"
 dependencies = [
