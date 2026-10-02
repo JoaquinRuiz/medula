@@ -66,43 +66,36 @@ These come straight out of the published runs. Each one is concrete, has data be
 place in the code to start from. Comment on its issue to claim it or to discuss an approach
 ([all open issues](https://github.com/JoaquinRuiz/medula/issues/?q=is%3Aopen+label%3A%22help+wanted%22), [good first issues](https://github.com/JoaquinRuiz/medula/issues/?q=is%3Aopen+label%3A%22good+first+issue%22)).
 
-1. **Human labels for the calibration set** ([#1](https://github.com/JoaquinRuiz/medula/issues/1)) · *no code, highest value.* The 100 calibration pairs
-   and their labels were written by a model of the same family as two of the deciders. A first person
-   labelled them blind and agreed on all 98 pairs they didn't mark as unsure; more independent
-   labellers would tell us whether that holds. Label them yourself, blind, in your own file:
-   `uv run bench/e04_etiquetar.py --salida calibration/etiquetas_humanas/<your-github-user>.yaml`
-   (about 20–30 minutes; `c` collides, `n` doesn't, `d` unsure). `uv run bench/acuerdo_etiquetas.py`
-   shows how you agree with the model and with other people. Add `--plantilla` to get all 100 pairs in
-   one file and fill it in with any editor.
-2. **Calibration pairs that look like real runs** ([#2](https://github.com/JoaquinRuiz/medula/issues/2)) · *no code or light code.* In calibration, 13 % of
+1. **Calibration pairs that look like real runs** ([#2](https://github.com/JoaquinRuiz/medula/issues/2)) · *no code or light code, highest value.* In calibration, 13 % of
    Jev's decisions were unsure; in real runs, 61 %. Real states have several agents and long
    intentions; the calibration pairs have one of each. New pairs in `calibration/candidatas.yaml`,
    or a script that extracts them from the `medula.db` of past runs, would close that gap.
-3. **Signature changes on the fast path** ([#3](https://github.com/JoaquinRuiz/medula/issues/3)) · *code.* Jev ranks the real T1–T2 conflict (`login()` gaining a
+2. **Signature changes on the fast path** ([#3](https://github.com/JoaquinRuiz/medula/issues/3)) · *code.* Jev ranks the real T1–T2 conflict (`login()` gaining a
    required parameter) below a false one, and it's the slow path that catches it. Two ideas were measured and rejected
    (`bench/e04b_firma.py`: a shared-symbol rule and a directional question); better ones are welcome.
    Start at `medula/src/medula/intencion.py` (how the intent is built) and `decisores/jev.py`.
-4. **A new decider** ([#4](https://github.com/JoaquinRuiz/medula/issues/4)) · *code.* Any model or rule that answers "does this collide?" with a
+3. **A new decider** ([#4](https://github.com/JoaquinRuiz/medula/issues/4)) · *code.* Any model or rule that answers "does this collide?" with a
    probability fits the same interface (`medula/src/medula/decisores/`): a local model, another
    provider, a static analyser. Measure it on the calibration set and it can run the whole matrix.
-5. **A robust slow path** ([#5](https://github.com/JoaquinRuiz/medula/issues/5)) · *light code.* In the published runs, Sonnet sometimes answered with JSON
-   the kernel couldn't parse, or hit the 30 s timeout, and the decision escalated for nothing. See `medula/src/medula/camino_lento.py`.
-6. **More scenarios** ([#6](https://github.com/JoaquinRuiz/medula/issues/6)) · *no code, mostly tests.* The six tasks cover a changed signature and a
+4. **More scenarios** ([#6](https://github.com/JoaquinRuiz/medula/issues/6)) · *no code, mostly tests.* The six tasks cover a changed signature and a
    renamed field. A changed behaviour with the same signature, a schema migration, a dependency
    bump: each one needs a task, acceptance tests and a line in `ground_truth.yaml`.
-7. **More runs** ([#7](https://github.com/JoaquinRuiz/medula/issues/7)) · *costs money, no code.* Modes E and F have few runs, and F's only run had agents
+5. **More runs** ([#7](https://github.com/JoaquinRuiz/medula/issues/7)) · *costs money, no code.* Modes E and F have few runs, and F's only run had agents
    messaging each other (see the caveats). If you have credit, `bench/run_matrix.sh` resumes the
    matrix and records everything; send the evidence in a PR.
+
+Already solved: human labels for the calibration set ([#1](https://github.com/JoaquinRuiz/medula/issues/1);
+more blind labellers are still welcome, see [`CONTRIBUTING.md`](./CONTRIBUTING.md#labelling-the-calibration-set-no-code))
+and a robust slow path ([#5](https://github.com/JoaquinRuiz/medula/issues/5)).
 
 ### Good first contributions
 
 | Difficulty | What | Where |
 |---|---|---|
-| 🟢 No code | Label the calibration pairs (blind, in your own file) | `calibration/etiquetas_humanas/` |
+| 🟢 No code | Add your own blind labels (more labellers welcome) | `calibration/etiquetas_humanas/` |
 | 🟢 No code | Argue a label you disagree with, in an issue | `calibration/etiquetas.yaml`, `ground_truth.yaml` |
 | 🟢 No code | Propose new calibration pairs | `calibration/candidatas.yaml` |
 | 🟡 No code | Add a scenario: task, acceptance tests, ground truth | `tasks/`, `acceptance/`, `ground_truth.yaml` |
-| 🟡 Light | Make the slow path robust to unparseable answers and timeouts | `medula/src/medula/camino_lento.py` |
 | 🔴 Code | Extract calibration pairs from real runs | `results/runs/*/medula.db` → `calibration/` |
 | 🔴 Code | A new decider, or a better intent for signature changes | `medula/src/medula/decisores/`, `intencion.py` |
 
@@ -233,7 +226,7 @@ and at most one extra false alarm.
   the model's labels (`calibration/etiquetas_humanas/`): same label on all 98 pairs they didn't mark as
   unsure (Cohen's kappa 1.00); the 2 unsure ones are C077 and C090. So the labels hold up, but the
   pairs themselves may still be easier for models of the same family, and one labeller is not many.
-  More labellers are the first open problem above.
+  More blind labellers are welcome (`CONTRIBUTING.md`).
 - d1 and d2-sin-calibrar are mode D runs with the initial, uncalibrated thresholds; e08-demo is a demo
   run with a short wait. None of them is in the averages above. `results/runs/_invalidas/` holds runs
   lost to an exhausted API credit.
