@@ -103,8 +103,8 @@ If you have credit and want to add runs to the matrix:
 - run `bench/check_openrouter.sh` first, then `bench/run_matrix.sh`, which resumes and stops on API
   errors;
 - send the whole `results/runs/<run-id>/` directory and the new rows of `results/summary.csv`,
-  exactly as the scripts wrote them. Paths are anonymised when the logs are written, but check for
-  anything personal before you push;
+  exactly as the scripts wrote them, after anonymising local paths with
+  `uv run python bench/lib/anonimizar.py results/runs/<run-id>`; check for anything personal before you push;
 - if something went wrong (overlapping runs, an outage, a flaky test), add a `NOTA.md` to the run
   explaining it. Flag it; don't delete it.
 

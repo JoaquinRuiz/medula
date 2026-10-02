@@ -1,20 +1,22 @@
-run_id,modo,decisor,fecha,completado,tests_verdes,tests_rojos,conflictos_git,conflictos_reales,conflictos_detectados,bloqueos_innecesarios,avisos_innecesarios,tiempo_total_s,coste_agentes_usd,coste_decisiones_usd,coste_total_usd,umbral_bajo,umbral_alto,decisiones,escaladas_sonnet,escaladas_opus,reservas,avisos_posibles,avisos_enviados,avisos_descartados_lectura,modelo_agentes,tiempo_fiable,canal_entre_agentes
-b1,B,git,2026-09-29T07:06:23Z,True,31,6,2,2,,,,288.4,1.1351,0.3772,1.5123,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,
-d2-sin-calibrar,D,jev,2026-09-29T09:13:08Z,True,37,0,,2,1,1,0,324.1,1.2659,0.199582,1.4655,0.2,0.8,126,17,1,0,46,5,,anthropic/claude-sonnet-5 · effort high,True,
-a1,A,ninguno,2026-09-29T13:27:14Z,True,30,7,,2,,,,355.9,0.8841,,0.8841,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,False,
-b2,B,git,2026-09-29T13:28:49Z,True,31,6,2,2,,,,390.5,1.2782,0.4699,1.7481,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,False,
-b3,B,git,2026-09-29T13:33:11Z,True,31,6,2,2,,,,293.8,1.1239,0.3222,1.4461,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,False,
-d1,D,jev,2026-09-29T08:14:16Z,True,37,0,,2,2,0,1,312.2,1.1212,0.244497,1.3657,0.2,0.8,115,21,1,0,60,12,1,anthropic/claude-sonnet-5 · effort high,True,
-c1,C,locks,2026-09-29T13:38:05Z,True,37,0,,2,1,2,0,672.9,2.1518,0,2.1518,0.2,0.8,116,0,0,0,0,0,0,anthropic/claude-sonnet-5 · effort high,True,
-c2,C,locks,2026-09-29T13:49:19Z,True,37,0,,2,2,1,0,309.0,1.427,0,1.427,0.2,0.8,74,0,0,0,0,0,0,anthropic/claude-sonnet-5 · effort high,True,
-c3,C,locks,2026-09-29T14:02:32Z,True,37,0,,2,2,2,0,372.9,1.3578,0,1.3578,0.2,0.8,73,0,0,0,0,0,0,anthropic/claude-sonnet-5 · effort high,True,
-d2,D,jev,2026-09-29T14:08:46Z,True,37,0,,2,2,0,1,415.9,1.3767,0.255212,1.6319,0.25,0.5,117,18,0,0,70,14,0,anthropic/claude-sonnet-5 · effort high,True,
-d3,D,jev,2026-09-29T14:15:43Z,True,37,0,,2,2,0,0,392.8,1.2492,0.302137,1.5514,0.25,0.5,119,20,0,1,65,14,0,anthropic/claude-sonnet-5 · effort high,True,
-d4,D,jev,2026-09-29T14:22:17Z,True,37,0,,2,2,0,1,434.9,1.4606,0.303551,1.7642,0.25,0.5,117,22,0,0,63,13,0,anthropic/claude-sonnet-5 · effort high,True,
-e1,E,haiku,2026-09-29T14:29:32Z,True,37,0,,2,2,1,3,686.7,1.6264,0.545092,2.1714,0.4,0.85,143,21,1,1,84,25,0,anthropic/claude-sonnet-5 · effort high,True,solo ListAgents
-e2,E,haiku,2026-09-29T14:41:00Z,True,37,0,,2,2,1,4,859.2,1.6301,0.557908,2.188,0.4,0.85,147,23,0,1,68,22,0,anthropic/claude-sonnet-5 · effort high,True,
-e3,E,haiku,2026-09-29T14:55:20Z,True,37,0,,2,2,1,3,924.9,1.9621,0.561525,2.5236,0.4,0.85,156,21,1,4,68,20,0,anthropic/claude-sonnet-5 · effort high,True,
-a2,A,ninguno,2026-09-29T16:42:50Z,True,30,7,,2,,,,341.2,0.838,,0.838,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,
-b4,B,git,2026-09-29T17:01:48Z,True,31,6,2,2,,,,361.7,1.2154,0.4442,1.6596,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,
-b5,B,git,2026-09-29T17:09:04Z,True,31,6,2,2,,,,338.3,1.2303,0.3726,1.6029,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,
-f1,F,sonnet,2026-09-29T15:10:46Z,True,37,0,,2,2,0,0,376.5,1.3986,0.590786,1.9894,0.55,0.55,114,9,0,0,61,12,1,anthropic/claude-sonnet-5 · effort high,True,mensajes (5 SendMessage)
+run_id,modo,decisor,fecha,completado,tests_verdes,tests_rojos,conflictos_git,conflictos_reales,conflictos_detectados,bloqueos_innecesarios,avisos_innecesarios,tiempo_total_s,coste_agentes_usd,coste_decisiones_usd,coste_total_usd,umbral_bajo,umbral_alto,decisiones,escaladas_sonnet,escaladas_opus,reservas,avisos_posibles,avisos_enviados,avisos_descartados_lectura,modelo_agentes,tiempo_fiable,canal_entre_agentes,proveedor_agentes
+b1,B,git,2026-09-29T07:06:23Z,True,31,6,2,2,,,,288.4,1.1351,0.3772,1.5123,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+d2-sin-calibrar,D,jev,2026-09-29T09:13:08Z,True,37,0,,2,1,1,0,324.1,1.2659,0.199582,1.4655,0.2,0.8,126,17,1,0,46,5,,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+a1,A,ninguno,2026-09-29T13:27:14Z,True,30,7,,2,,,,355.9,0.8841,,0.8841,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,False,,openrouter
+b2,B,git,2026-09-29T13:28:49Z,True,31,6,2,2,,,,390.5,1.2782,0.4699,1.7481,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,False,,openrouter
+b3,B,git,2026-09-29T13:33:11Z,True,31,6,2,2,,,,293.8,1.1239,0.3222,1.4461,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,False,,openrouter
+d1,D,jev,2026-09-29T08:14:16Z,True,37,0,,2,2,0,1,312.2,1.1212,0.244497,1.3657,0.2,0.8,115,21,1,0,60,12,1,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+c1,C,locks,2026-09-29T13:38:05Z,True,37,0,,2,1,2,0,672.9,2.1518,0,2.1518,0.2,0.8,116,0,0,0,0,0,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+c2,C,locks,2026-09-29T13:49:19Z,True,37,0,,2,2,1,0,309.0,1.427,0,1.427,0.2,0.8,74,0,0,0,0,0,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+c3,C,locks,2026-09-29T14:02:32Z,True,37,0,,2,2,2,0,372.9,1.3578,0,1.3578,0.2,0.8,73,0,0,0,0,0,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+d2,D,jev,2026-09-29T14:08:46Z,True,37,0,,2,2,0,1,415.9,1.3767,0.255212,1.6319,0.25,0.5,117,18,0,0,70,14,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+d3,D,jev,2026-09-29T14:15:43Z,True,37,0,,2,2,0,0,392.8,1.2492,0.302137,1.5514,0.25,0.5,119,20,0,1,65,14,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+d4,D,jev,2026-09-29T14:22:17Z,True,37,0,,2,2,0,1,434.9,1.4606,0.303551,1.7642,0.25,0.5,117,22,0,0,63,13,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+e1,E,haiku,2026-09-29T14:29:32Z,True,37,0,,2,2,1,3,686.7,1.6264,0.545092,2.1714,0.4,0.85,143,21,1,1,84,25,0,anthropic/claude-sonnet-5 · effort high,True,solo ListAgents,openrouter
+e2,E,haiku,2026-09-29T14:41:00Z,True,37,0,,2,2,1,4,859.2,1.6301,0.557908,2.188,0.4,0.85,147,23,0,1,68,22,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+e3,E,haiku,2026-09-29T14:55:20Z,True,37,0,,2,2,1,3,924.9,1.9621,0.561525,2.5236,0.4,0.85,156,21,1,4,68,20,0,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+a2,A,ninguno,2026-09-29T16:42:50Z,True,30,7,,2,,,,341.2,0.838,,0.838,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+b4,B,git,2026-09-29T17:01:48Z,True,31,6,2,2,,,,361.7,1.2154,0.4442,1.6596,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+b5,B,git,2026-09-29T17:09:04Z,True,31,6,2,2,,,,338.3,1.2303,0.3726,1.6029,,,,,,,,,,anthropic/claude-sonnet-5 · effort high,True,,openrouter
+f1,F,sonnet,2026-09-29T15:10:46Z,True,37,0,,2,2,0,0,376.5,1.3986,0.590786,1.9894,0.55,0.55,114,9,0,0,61,12,1,anthropic/claude-sonnet-5 · effort high,True,mensajes (5 SendMessage),openrouter
+e4,E,haiku,2026-10-02T11:46:35Z,True,37,0,,2,2,0,3,311.4,1.395,0.378169,1.7731,0.4,0.85,120,13,0,0,58,19,0,claude-sonnet-5 · effort high,True,,suscripcion
+e5,E,haiku,2026-10-02T11:57:04Z,True,37,0,,2,2,1,5,1260.7,1.7268,0.493069,2.2199,0.4,0.85,129,18,0,0,62,32,0,claude-sonnet-5 · effort high,True,,suscripcion

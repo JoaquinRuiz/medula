@@ -1,0 +1,33 @@
+# T4 — Filtrar reservas por fecha
+
+## Objetivo
+Permitir que `GET /reservas` devuelva solo las reservas a partir de un día dado.
+
+## Contexto
+El listado crece y los clientes solo quieren las reservas futuras. El filtro se hace sobre el campo `fecha` de la reserva.
+
+## Alcance
+- `GET /reservas?desde=AAAA-MM-DD` (endpoint en `app/routes_consulta.py`): devuelve solo las reservas con `fecha` mayor o igual que el inicio de ese día (00:00), en el mismo orden que ahora.
+- El filtro se aplica en SQL, no en memoria: crea un módulo nuevo `app/consultas.py` con `listar_reservas_desde(desde)`, que abre la conexión con `db.conectar()` y hace el `SELECT` con `WHERE fecha >= ?`.
+- No modifiques `app/db.py`, que se queda como capa de esquema y escritura. Tampoco toques los modelos.
+- `desde` con un formato inválido → `422`.
+- Sin `desde`, el comportamiento no cambia (sigue usando `db.listar_reservas()`).
+- Fuera de alcance: filtro `hasta`, filtro por sala y paginación.
+
+## Criterios de aceptación
+1. Con reservas el 2026-10-05, el 2026-10-06 y el 2026-10-08, `GET /reservas?desde=2026-10-06` devuelve solo las dos últimas.
+2. `desde` coincide con el día de una reserva a las 08:00 → esa reserva se incluye.
+3. `GET /reservas?desde=06-10-2026` → `422`.
+4. `GET /reservas` sin parámetro devuelve todas.
+5. Los tests del repo (`uv run pytest`) quedan en verde, con los tuyos añadidos.
+
+---
+Instrucciones de trabajo:
+- Trabajas en un repositorio git en el directorio actual. No salgas de él.
+- Otros agentes trabajan a la vez en este mismo directorio, cada uno en su tarea.
+  Si una herramienta queda bloqueada con un motivo, síguelo. Si te toca esperar,
+  avanza en otra parte o reinténtalo más tarde (puedes usar `sleep 60`), pero no
+  termines la sesión hasta haber completado tu tarea.
+- Es un proyecto uv con las dependencias ya instaladas. No añadas paquetes.
+- Ejecuta los tests con `uv run pytest`.
+- No hagas commit ni cambies de rama: al terminar, el banco hace el commit.

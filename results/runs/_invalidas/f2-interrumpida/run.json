@@ -1,0 +1,5 @@
+{"mode": "F", "decisor": "sonnet", "run_id": "f2", "model": "claude-sonnet-5", "effort": "high",
+ "proveedor_agentes": "suscripcion", "claude_version": "2.1.287", "effort_check": "no_aplica",
+ "umbral_bajo": 0.55, "umbral_alto": 0.55, "umbral_aviso": 0.5, "espera_max": 600,
+ "demo": false, "pregunta": "choca", "regla_simbolos": false,
+ "started_at": "2026-10-02T12:18:06Z", "t0": 1790943486.100, "run_dir": "<runs>/f2"}

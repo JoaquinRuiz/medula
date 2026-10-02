@@ -1,0 +1,271 @@
+{
+  "mode": "E",
+  "decisor": "haiku",
+  "demo": false,
+  "run_id": "e5",
+  "model": "claude-sonnet-5",
+  "effort": "high",
+  "modelo_agentes": "claude-sonnet-5 · effort high",
+  "proveedor_agentes": "suscripcion",
+  "claude_version": "2.1.287",
+  "effort_check": "no_aplica",
+  "umbrales": {
+    "umbral_bajo": 0.4,
+    "umbral_alto": 0.85,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": "choca",
+    "regla_simbolos": false
+  },
+  "started_at": "2026-10-02T11:57:04Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 1260.7,
+  "base_sha": "4311ea2e72652c567d581cb732764016d88e64c2",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 1198.3
+    },
+    {
+      "tasks": [
+        "T5",
+        "T6"
+      ],
+      "wall_time_s": 54.9
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 0,
+      "duration_s": 269.8,
+      "cost_usd": 0.3956426,
+      "num_turns": 23,
+      "session_id": "09dea626-6042-4c7f-be1d-7be1a8bc2bd2",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 40,
+        "output_tokens": 11317,
+        "cache_read_input_tokens": 767463,
+        "cache_creation_input_tokens": 32225
+      }
+    },
+    "T2": {
+      "exit_code": 0,
+      "duration_s": 766.3,
+      "cost_usd": 0.40646540000000003,
+      "num_turns": 29,
+      "session_id": "94248f4f-6202-49bd-90ec-8c122c181c64",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 34,
+        "output_tokens": 12941,
+        "cache_read_input_tokens": 640857,
+        "cache_creation_input_tokens": 37204
+      }
+    },
+    "T3": {
+      "exit_code": 0,
+      "duration_s": 719.5,
+      "cost_usd": 0.17190819999999998,
+      "num_turns": 16,
+      "session_id": "a3cd281f-15b4-4e49-93ab-12473013fdbb",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 18,
+        "output_tokens": 4053,
+        "cache_read_input_tokens": 271291,
+        "cache_creation_input_tokens": 19271
+      }
+    },
+    "T4": {
+      "exit_code": 0,
+      "duration_s": 1197.9,
+      "cost_usd": 0.450043,
+      "num_turns": 16,
+      "session_id": "fb835737-78c5-48cb-aa24-65e490184b00",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 32,
+        "output_tokens": 15520,
+        "cache_read_input_tokens": 675475,
+        "cache_creation_input_tokens": 39921
+      }
+    },
+    "T5": {
+      "exit_code": 0,
+      "duration_s": 49.9,
+      "cost_usd": 0.11913500000000002,
+      "num_turns": 10,
+      "session_id": "c31824d5-e022-40ef-a0a4-4ea0f8c7afd2",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 20,
+        "output_tokens": 2375,
+        "cache_read_input_tokens": 284125,
+        "cache_creation_input_tokens": 9630
+      }
+    },
+    "T6": {
+      "exit_code": 0,
+      "duration_s": 54.7,
+      "cost_usd": 0.18359520000000004,
+      "num_turns": 15,
+      "session_id": "822f6e3e-33d7-44a1-9313-c8f49ec962ec",
+      "is_error": false,
+      "terminal_reason": "completed",
+      "api_error": false,
+      "tokens": {
+        "input_tokens": 30,
+        "output_tokens": 3684,
+        "cache_read_input_tokens": 453096,
+        "cache_creation_input_tokens": 14019
+      }
+    }
+  },
+  "medula": {
+    "decisiones": 129,
+    "decisiones_modelo": 63,
+    "por_decisor": {
+      "haiku": 63,
+      "regla": 47,
+      "sonnet": 19
+    },
+    "latencia_p50_ms": 3760.0828330032527,
+    "latencia_p95_ms": 5933.624708093703,
+    "coste_decisiones_usd": 0.493069,
+    "escaladas_sonnet": 18,
+    "escaladas_opus": 0,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "peticiones_duplicadas": 1,
+    "errores_decisor": 1,
+    "esperas": [
+      {
+        "agente": "A3",
+        "espera_a": "A4",
+        "recurso": "app/db.py",
+        "estado": "avisado",
+        "segundos": 1159.2
+      },
+      {
+        "agente": "A2",
+        "espera_a": "A3",
+        "recurso": "app/routes_export.py",
+        "estado": "concedido",
+        "segundos": 568.8
+      },
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "app/consultas.py",
+        "estado": "concedido",
+        "segundos": 385.6
+      }
+    ],
+    "avisos_posibles": 62,
+    "avisos_enviados": 32,
+    "avisos_descartados_lectura": 0,
+    "notificaciones_de_lectura": 0,
+    "pares_con_espera": [
+      "T2-T3",
+      "T3-T4"
+    ],
+    "pares_con_aviso": [
+      "T1-T2",
+      "T1-T3",
+      "T1-T4",
+      "T2-T3",
+      "T2-T4",
+      "T3-T4",
+      "T5-T6"
+    ],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": [
+      "T2-T3"
+    ],
+    "avisos_innecesarios": [
+      "T1-T3",
+      "T1-T4",
+      "T2-T3",
+      "T2-T4",
+      "T5-T6"
+    ]
+  },
+  "totals": {
+    "agents_cost_usd": 1.7268,
+    "decision_cost_usd": 0.493069,
+    "cost_usd": 2.2199,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": {
+    "workspace": "<runs>/e5/repo",
+    "timestamp": "2026-10-02T12:18:05+00:00",
+    "tasks": {
+      "T1": {
+        "passed": 7,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T2": {
+        "passed": 5,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T3": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T4": {
+        "passed": 4,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T5": {
+        "passed": 3,
+        "failed": 0,
+        "failed_tests": []
+      },
+      "T6": {
+        "passed": 9,
+        "failed": 0,
+        "failed_tests": []
+      }
+    },
+    "integration": {
+      "passed": 5,
+      "failed": 0,
+      "failed_tests": []
+    },
+    "total": {
+      "passed": 37,
+      "failed": 0
+    },
+    "all_green": true
+  },
+  "red_tests": 0
+}

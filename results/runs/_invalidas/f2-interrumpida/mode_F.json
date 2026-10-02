@@ -1,0 +1,161 @@
+{
+  "mode": "F",
+  "decisor": "sonnet",
+  "demo": false,
+  "run_id": "f2",
+  "model": "claude-sonnet-5",
+  "effort": "high",
+  "modelo_agentes": "claude-sonnet-5 · effort high",
+  "proveedor_agentes": "suscripcion",
+  "claude_version": "2.1.287",
+  "effort_check": "no_aplica",
+  "umbrales": {
+    "umbral_bajo": 0.55,
+    "umbral_alto": 0.55,
+    "umbral_aviso": 0.5,
+    "espera_max": 600,
+    "pregunta": "choca",
+    "regla_simbolos": false
+  },
+  "started_at": "2026-10-02T12:18:06Z",
+  "completed": true,
+  "agentes_con_error_api": [],
+  "wall_time_s": 64.3,
+  "base_sha": "cc66adc62496e9d58a8a595a5836fe03e0b41ac0",
+  "rounds": [
+    {
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "wall_time_s": 57.1
+    }
+  ],
+  "agents": {
+    "T1": {
+      "exit_code": 143,
+      "duration_s": 56.9,
+      "cost_usd": null,
+      "num_turns": null,
+      "session_id": null,
+      "is_error": true,
+      "terminal_reason": null,
+      "api_error": false
+    },
+    "T2": {
+      "exit_code": 143,
+      "duration_s": 56.9,
+      "cost_usd": null,
+      "num_turns": null,
+      "session_id": null,
+      "is_error": true,
+      "terminal_reason": null,
+      "api_error": false
+    },
+    "T3": {
+      "exit_code": 143,
+      "duration_s": 56.9,
+      "cost_usd": null,
+      "num_turns": null,
+      "session_id": null,
+      "is_error": true,
+      "terminal_reason": null,
+      "api_error": false
+    },
+    "T4": {
+      "exit_code": 143,
+      "duration_s": 56.8,
+      "cost_usd": null,
+      "num_turns": null,
+      "session_id": null,
+      "is_error": true,
+      "terminal_reason": null,
+      "api_error": false
+    },
+    "T5": {
+      "exit_code": null,
+      "duration_s": null,
+      "cost_usd": null,
+      "num_turns": null,
+      "session_id": null,
+      "is_error": null,
+      "terminal_reason": null,
+      "api_error": false
+    },
+    "T6": {
+      "exit_code": null,
+      "duration_s": null,
+      "cost_usd": null,
+      "num_turns": null,
+      "session_id": null,
+      "is_error": null,
+      "terminal_reason": null,
+      "api_error": false
+    }
+  },
+  "medula": {
+    "decisiones": 31,
+    "decisiones_modelo": 18,
+    "por_decisor": {
+      "regla": 8,
+      "sonnet": 23
+    },
+    "latencia_p50_ms": 4104.97522901278,
+    "latencia_p95_ms": 11586.509209009819,
+    "coste_decisiones_usd": 0.227712,
+    "escaladas_sonnet": 5,
+    "escaladas_opus": 0,
+    "verificaciones_spec": 0,
+    "propuestas_rechazadas_por_spec": 0,
+    "reservas": 0,
+    "peticiones_duplicadas": 0,
+    "errores_decisor": 0,
+    "esperas": [
+      {
+        "agente": "A4",
+        "espera_a": "A3",
+        "recurso": "app/consultas.py",
+        "estado": "concedido",
+        "segundos": 30.1
+      },
+      {
+        "agente": "A1",
+        "espera_a": "A2",
+        "recurso": "app/routes_auth.py",
+        "estado": "esperando",
+        "segundos": 0.0
+      }
+    ],
+    "avisos_posibles": 24,
+    "avisos_enviados": 4,
+    "avisos_descartados_lectura": 0,
+    "notificaciones_de_lectura": 0,
+    "pares_con_espera": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "pares_con_aviso": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_reales": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "conflictos_detectados": [
+      "T1-T2",
+      "T3-T4"
+    ],
+    "bloqueos_innecesarios": [],
+    "avisos_innecesarios": []
+  },
+  "totals": {
+    "agents_cost_usd": 0,
+    "decision_cost_usd": 0.227712,
+    "cost_usd": 0.2277,
+    "cost_note": "agentes: total_cost_usd de Claude Code (tarifa de Anthropic); decisiones: usage.cost de OpenRouter"
+  },
+  "evaluation": null
+}

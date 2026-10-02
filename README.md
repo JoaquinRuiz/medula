@@ -279,7 +279,7 @@ Agents are stochastic: expect the same pattern, not identical numbers.
   the working directory (`bench/lib/agent.sh`).
 - In mode B each task gets its own clone, not a worktree, so an agent can't see other tasks' branches
   before the merge.
-- Paths in the published logs are anonymised (`<repo>`, `<runs>`, `<home>`, `<tmp>`).
+- Paths in the published logs are anonymised (`<repo>`, `<runs>`, `<home>`, `<tmp>`) with `bench/lib/anonimizar.py`.
 
 ## Layout
 

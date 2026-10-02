@@ -1,0 +1,5 @@
+{"mode": "E", "decisor": "haiku", "run_id": "e4", "model": "claude-sonnet-5", "effort": "high",
+ "proveedor_agentes": "suscripcion", "claude_version": "2.1.287", "effort_check": "no_aplica",
+ "umbral_bajo": 0.40, "umbral_alto": 0.85, "umbral_aviso": 0.5, "espera_max": 600,
+ "demo": false, "pregunta": "choca", "regla_simbolos": false,
+ "started_at": "2026-10-02T11:46:35Z", "t0": 1790941595.624, "run_dir": "<runs>/e4"}
