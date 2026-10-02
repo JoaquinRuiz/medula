@@ -112,3 +112,74 @@ def test_jev_compatible(config, fake):
     c = config()
     lote = Jev(cliente(c), c.modelos["jev"], 5).compatible(ESTADO, {"A1": {"login"}})
     assert abs(lote.veredictos["A1"].p - 0.1) < 1e-9 and lote.decisor == "regla+jev"
+
+
+def _transporte_con_retrasos(retrasos: list[float], estados: list[int] | None = None):
+    """Cada petición sucesiva tarda lo que diga `retrasos` y responde con `estados` (200 por defecto)."""
+    import itertools
+    import threading
+    import time
+
+    import httpx2 as httpx
+
+    n, cerrojo, llamadas = itertools.count(), threading.Lock(), []
+
+    def responder(req):
+        with cerrojo:
+            i = next(n)
+        llamadas.append(i)
+        time.sleep(retrasos[i])
+        estado = (estados or [200] * len(retrasos))[i]
+        return httpx.Response(estado, json={"i": i, "usage": {"cost": 0.001}})
+
+    return httpx.MockTransport(responder), llamadas
+
+
+def test_peticion_duplicada_gana_la_que_llega_antes():
+    import time
+
+    from medula.decisores import OpenRouter
+
+    transporte, llamadas = _transporte_con_retrasos([1.5, 0.05])
+    t0 = time.perf_counter()
+    datos, _, coste = OpenRouter("clave", transporte).post("/chat/completions", {}, 3.0, duplicar_tras=0.2)
+    assert time.perf_counter() - t0 < 0.8
+    assert datos["i"] == 1 and len(llamadas) == 2
+    assert datos["medula"] == {"duplicada": True, "coste_estimado_perdedora": 0.001}
+    assert coste == 0.002  # la perdedora se estima igual que la ganadora
+
+
+def test_sin_duplicar_si_responde_a_tiempo():
+    from medula.decisores import OpenRouter
+
+    transporte, llamadas = _transporte_con_retrasos([0.05, 0.05])
+    datos, _, coste = OpenRouter("clave", transporte).post("/chat/completions", {}, 3.0, duplicar_tras=0.5)
+    assert len(llamadas) == 1 and "medula" not in datos and coste == 0.001
+
+
+def test_duplicada_con_error_http_espera_a_la_otra():
+    from medula.decisores import OpenRouter
+
+    transporte, _ = _transporte_con_retrasos([0.6, 0.05], estados=[200, 500])
+    datos, _, _ = OpenRouter("clave", transporte).post("/chat/completions", {}, 3.0, duplicar_tras=0.2)
+    assert datos["i"] == 0
+
+
+def test_duplicada_respeta_el_plazo_total():
+    import time
+
+    from medula.decisores import OpenRouter
+
+    transporte, llamadas = _transporte_con_retrasos([2.0, 2.0])
+    t0 = time.perf_counter()
+    with pytest.raises(ErrorDecisor, match="timeout tras 0.6 s .petición duplicada."):
+        OpenRouter("clave", transporte).post("/chat/completions", {}, 0.6, duplicar_tras=0.2)
+    assert time.perf_counter() - t0 < 1.0 and len(llamadas) == 2
+
+
+def test_haiku_duplica_por_defecto_y_los_demas_no(config, fake):
+    from medula.decisores import uno
+
+    c = config()
+    assert uno("haiku", c, cliente(c)).duplicar_tras == 8.0
+    assert uno("sonnet", c, cliente(c)).duplicar_tras is None

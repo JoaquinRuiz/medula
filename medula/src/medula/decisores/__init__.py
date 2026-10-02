@@ -19,7 +19,8 @@ def uno(nombre: str, config: Config, or_: OpenRouter) -> Decisor:
     if nombre == "jev":
         return Jev(or_, config.modelos["jev"], config.timeouts["jev"], config.pregunta)
     if nombre == "haiku":
-        return LLM("haiku", or_, config.modelos["haiku"], config.timeouts["haiku"], None)
+        return LLM("haiku", or_, config.modelos["haiku"], config.timeouts["haiku"], None,
+                   config.duplicar_tras.get("haiku"))
     if nombre == "sonnet":
         return LLM("sonnet", or_, config.modelos["sonnet"], config.timeouts["sonnet"], config.esfuerzo_sonnet)
     if nombre == "locks":
